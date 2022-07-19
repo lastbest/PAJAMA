@@ -30,6 +30,7 @@
   - JWT Authentication
   - REST API
 * 참조 리소스
+  * React
   * Vuetify: 디자인 전반 적용
   * Vue Argon Design System: 디자인 전반 적용
   * Vue Black Dashboard Pro(유료): 캘린더 컴포넌트 사용
