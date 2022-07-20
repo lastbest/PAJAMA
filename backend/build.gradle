@@ -3,7 +3,7 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 }
-
+// 추가
 group = 'com.c203'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
