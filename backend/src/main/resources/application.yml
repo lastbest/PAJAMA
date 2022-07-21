@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    url: jdbc:mariadb://stg-yswa-kr-practice-db-master.mariadb.database.azure.com:3306/S07P11C203?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: S07P11C203
+    password: hhqiKzxIqy
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+#  devtools:
+#    livereload:
+#      enabled: true
+
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        web: debug
+#    sql: debug
+
+
+
