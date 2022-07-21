@@ -1,4 +1,4 @@
-package com.c203.backend;
+package com.c203;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
