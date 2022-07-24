@@ -12,9 +12,9 @@ import java.sql.Blob;
 @Setter
 @NoArgsConstructor
 public class Feed {
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+//
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    private User user3;
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
