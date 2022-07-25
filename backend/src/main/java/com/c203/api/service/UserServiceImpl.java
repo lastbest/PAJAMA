@@ -15,24 +15,34 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     @Override
     public boolean loginUser(UserLoginDto userLoginDto) {
-        Optional<User> res = userRepository.findByUserIdAndUserPwd(userLoginDto.getId(), userLoginDto.getPwd());
+        System.out.println(userLoginDto.getEmail() +"  :  "+userLoginDto.getPwd());
+        Optional<User> res = userRepository.findByUserEmailAndUserPwd(userLoginDto.getEmail(), userLoginDto.getPwd());
+        
         if(res.isPresent()){
+            System.out.println(res.get().getUserEmail());
             return true;
+        }else{
+            System.out.println("res없음");
+             return false;
         }
-        else return false;
     }
 
     @Override
-    public UserInfoDto infoUser(String id) {
-        Optional<User> res = userRepository.findByUserId(id);
+    public UserInfoDto infoUser(String email) {
+        Optional<User> res = userRepository.findByUserEmail(email);
         if(res.isPresent()){
             // 리턴 타입 dto니까
             UserInfoDto userInfoDto = new UserInfoDto();
             // 값이 비어있겠죠
             userInfoDto.setNickname(res.get().getUser_nickname());
-            userInfoDto.setBirthday(res.get().getUser_birthday());
             return userInfoDto;
         }
         else return null;
+    }
+
+    // 이메일 보낼때 user가 맞는지 확인하려고
+    @Override
+    public boolean findUser(String email, String name) {
+        return false;
     }
 }

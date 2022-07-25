@@ -1,5 +1,6 @@
 package com.c203.api.controller;
 
+import com.c203.api.dto.MailDto;
 import com.c203.api.dto.UserInfoDto;
 import com.c203.api.dto.UserLoginDto;
 import com.c203.api.service.JwtService;
@@ -39,8 +40,8 @@ public class UserController
             status = HttpStatus.OK;
             // 로그인 성공했을때 - 엑세스토큰 만들기
             if(is){
-                String accessToken = jwtService.createAccessToken("id",userLoginDto.getId());
-                String refreshToken = jwtService.createRefreshToken("id",userLoginDto.getId());
+                String accessToken = jwtService.createAccessToken("id",userLoginDto.getEmail());
+                String refreshToken = jwtService.createRefreshToken("id",userLoginDto.getEmail());
                 result.put("accessToken",accessToken);
                 result.put("refreshToken",refreshToken);
             }
@@ -85,4 +86,47 @@ public class UserController
         }
         return new ResponseEntity<>(result,status);
     }
+    // 이메일 인증 controller
+    //Email과 name의 일치여부를 check하는 컨트롤러
+//    @GetMapping("/users/find")
+//    public ResponseEntity<?> findUser(HttpServletRequest request){
+//        Map<String,Object> result = new HashMap<>();
+//        HttpStatus status;
+//        try {
+//            String accessToken = request.getHeader("accessToken");
+//            String decodeId = jwtService.decodeToken(accessToken);
+//            if(!decodeId.equals("timeout")){
+//                UserInfoDto userInfoDto = userService.infoUser(decodeId);
+//                result.put("result",userInfoDto);
+//                status = HttpStatus.OK;
+//            }
+//            else{
+//                result.put("result","accessToken 타임아웃");
+//                // 인증만료
+//                status = HttpStatus.UNAUTHORIZED;
+//            }
+//            status = HttpStatus.OK;
+//        }catch (Exception e){
+//            result.put("result","서버에러");
+//            status = HttpStatus.INTERNAL_SERVER_ERROR;
+//        }
+//        return new ResponseEntity<>(result,status);
+//    }
+//
+////    public @ResponseBody Map<String, Boolean> pw_find(String userEmail, String userName){
+////        Map<String,Boolean> json = new HashMap<>();
+////        boolean pwFindCheck = userService.userEmailCheck(userEmail,userName);
+////
+////        System.out.println(pwFindCheck);
+////        json.put("check", pwFindCheck);
+////        return json;
+////    }
+//
+//    //등록된 이메일로 임시비밀번호를 발송하고 발송된 임시비밀번호로 사용자의 pw를 변경하는 컨트롤러
+//    @PostMapping("/users/findPw/sendEmail")
+//    public @ResponseBody void sendEmail(String userEmail, String userName){
+//        MailDto mailDto = sendEmailService.createMailAndChangePassword(userEmail, userName);
+//        sendEmailService.mailSend(dto);
+//
+//    }
 }

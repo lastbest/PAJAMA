@@ -33,10 +33,11 @@ public class User {
 
     @Column(name = "user_id")
     private String userId;
-    private String user_name;
+    @Column(name = "user_name")
+    private String userName;
     @Column(name = "user_pwd")
     private String userPwd;
-    private String user_email;
+    @Column(name = "user_email")
+    private String userEmail;
     private String user_nickname;
-    private LocalDate user_birthday;
 }

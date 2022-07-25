@@ -5,5 +5,6 @@ import com.c203.api.dto.UserLoginDto;
 
 public interface UserService {
     boolean loginUser(UserLoginDto userLoginDto);
-    UserInfoDto infoUser(String id);
+    UserInfoDto infoUser(String email);
+    boolean findUser(String email,String name);
 }

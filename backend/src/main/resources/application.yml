@@ -4,6 +4,14 @@ spring:
     driver-class-name: org.mariadb.jdbc.Driver
     username: S07P11C203
     password: hhqiKzxIqy
+#  mail:
+#    host: smtp.gmail.com
+#    port: 587
+#      username: 본인의 구글 계정 @gmail.com
+#    password: 본인의 구글 계정 비밀번호
+#    properties:
+#      mail.smtp.auth: true
+#      mail.smtp.starttls.enable: true
 
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
