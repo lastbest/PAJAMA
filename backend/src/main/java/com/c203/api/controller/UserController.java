@@ -1,10 +1,11 @@
 package com.c203.api.controller;
 
-import com.c203.api.dto.MailDto;
+import com.c203.api.dto.MailSendDto;
 import com.c203.api.dto.UserInfoDto;
 import com.c203.api.dto.UserLoginDto;
 import com.c203.api.dto.UserRegistDto;
 import com.c203.api.service.JwtService;
+import com.c203.api.service.MailService;
 import com.c203.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,11 +24,13 @@ public class UserController
 
 
     private final UserService userService;
+    private final MailService mailService;
     private final JwtService jwtService;
     @Autowired
-    UserController(UserService userService,JwtService jwtService){
+    UserController(UserService userService,JwtService jwtService,MailService mailService){
         this.userService = userService;
         this.jwtService = jwtService;
+        this.mailService = mailService;
     }
 
     @PostMapping("/auth/login")
@@ -149,5 +152,18 @@ public class UserController
         }
         return new ResponseEntity<>(result,status);
     }
-
+    @PostMapping("/users/mail")
+    public ResponseEntity<?> mailSend(@RequestBody MailSendDto mailSendDto){
+        Map<String,Object> result = new HashMap<>();
+        HttpStatus status;
+        try{
+            mailService.mailSend(mailSendDto);
+            result.put("result","success");
+            status = HttpStatus.OK;
+        }catch (Exception e){
+            result.put("result","서버에러");
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<>(result,status);
+    }
 }

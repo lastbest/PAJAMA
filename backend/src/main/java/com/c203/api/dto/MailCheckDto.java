@@ -7,8 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class MailDto {
-    private String email;
-    private String title;
-    private String message;
+public class MailCheckDto {
+    private String id;
+    private int number;
+    private String type;
 }

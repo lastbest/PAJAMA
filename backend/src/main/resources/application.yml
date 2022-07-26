@@ -7,11 +7,30 @@ spring:
 #  mail:
 #    host: smtp.gmail.com
 #    port: 587
-#      username: c203ssafy@gmail.com
-#    password: partyjoa203
+#    username:
+#    password:
 #    properties:
 #      mail.smtp.auth: true
 #      mail.smtp.starttls.enable: true
+
+  mail:
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: 'true'
+          auth: 'true'
+    host: smtp.gmail.com
+    username: c203ssafy@gmail.com
+    debug: 'true'
+    password: riknhssmiejhjmom
+    default:
+      encoding: UTF-8
+    port: '587'
+    transport:
+      protocol: smtp
+    restart:
+      enabled: true
 
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
