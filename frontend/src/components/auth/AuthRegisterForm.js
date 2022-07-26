@@ -27,22 +27,29 @@ const StyledInput = styled.input`
     color: $oc-teal-7;
     border-bottom: 1px solid #fd7a99;
   }
-  /* Scss 에서 쓰는 요소가 서로 반복될 때 margin-top 을 줌 >>> input 과 input 사이에 margin-top 줌. */
   & + & {
     margin-top: 1rem;
   }
 `;
 
 const Footer = styled.div`
+    display: felx;
+    justify-content: center;
     margin-top: 1rem;
-    text-align: center;
     a {
         color : #9D9D9D;
         text-decoration: none;
         &:hover{
             color: #FD7A99}
         }
-        padding: 2px;
+
+    }
+    .link {
+      margin-right: 5px;
+      margin-left: 5px;
+    }
+    span {
+      color : #9D9D9D;
     }
 
 `;
@@ -176,11 +183,11 @@ const AuthRegisterForm = () => {
         </ButtonWithMarinTop>
       </form>
       <Footer>
-        <Link to="/">HOME</Link>
-        <Link to=""> | </Link>
-        <Link to="/register"> 회원가입</Link>
-        <Link to=""> | </Link>
-        <Link to="/login">로그인</Link>
+        <Link to="/" class='link'>HOME</Link>
+        <span>|</span>
+        <Link to="/register" class='link'>회원가입</Link>
+        <span>|</span>
+        <Link to="/login" class='link'>로그인</Link>
       </Footer>
     </AuthFormBlock>
   );

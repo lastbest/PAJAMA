@@ -1,11 +1,9 @@
 import React from 'react';
-// css import
 import styled,{css} from 'styled-components';
 
-// button styling
 const StyledButton = styled.button`
   border: none;
-  border-radius: 10px; /* 둥근 사각형 */
+  border-radius: 10px;
   font-size: 1rem;
   font-weight: bold;
   padding: 0.25rem 1rem;
@@ -17,7 +15,7 @@ const StyledButton = styled.button`
   &:hover {
     background: #FFA4BD;
   }
-  /* fullWidth props =ture */
+
   ${props =>
   props.fullWidth &&
   css`
@@ -27,14 +25,14 @@ const StyledButton = styled.button`
   font-size: 1.125rem;
   `
   }
-   /* fullWidth cyan =ture */
+ 
   ${
     props =>
     props.cyan &&
     css`
-    background: cyan;
+    background: #FD7A99;
     &:hover{
-      background: cyan;
+      background: #FFA4BD;
     }
     `
 
