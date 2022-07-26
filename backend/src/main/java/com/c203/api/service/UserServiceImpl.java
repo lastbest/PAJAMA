@@ -2,6 +2,7 @@ package com.c203.api.service;
 
 import com.c203.api.dto.UserInfoDto;
 import com.c203.api.dto.UserLoginDto;
+import com.c203.api.dto.UserRegistDto;
 import com.c203.db.Entity.User;
 import com.c203.db.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,6 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     @Override
     public boolean loginUser(UserLoginDto userLoginDto) {
-        System.out.println(userLoginDto.getEmail() +"  :  "+userLoginDto.getPwd());
         Optional<User> res = userRepository.findByUserEmailAndUserPwd(userLoginDto.getEmail(), userLoginDto.getPwd());
         
         if(res.isPresent()){
@@ -44,5 +44,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean findUser(String email, String name) {
         return false;
+    }
+
+    @Override
+    public boolean registUser(UserRegistDto userRegistDto) {
+        User user = new User();
+        user.setUserEmail(userRegistDto.getEmail());
+        user.setUser_nickname(userRegistDto.getNickname());
+        user.setUserPwd(userRegistDto.getPwd());
+        user.setUserName(userRegistDto.getName());
+        userRepository.save(user);
+        return true;
     }
 }

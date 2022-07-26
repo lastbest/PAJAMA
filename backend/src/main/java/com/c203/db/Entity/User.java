@@ -31,8 +31,6 @@ public class User {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer user_idx;
 
-    @Column(name = "user_id")
-    private String userId;
     @Column(name = "user_name")
     private String userName;
     @Column(name = "user_pwd")

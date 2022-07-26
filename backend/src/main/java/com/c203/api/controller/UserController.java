@@ -3,6 +3,7 @@ package com.c203.api.controller;
 import com.c203.api.dto.MailDto;
 import com.c203.api.dto.UserInfoDto;
 import com.c203.api.dto.UserLoginDto;
+import com.c203.api.dto.UserRegistDto;
 import com.c203.api.service.JwtService;
 import com.c203.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,4 +130,24 @@ public class UserController
 //        sendEmailService.mailSend(dto);
 //
 //    }
+    @PostMapping("/users")
+    public ResponseEntity<?> registUser(@RequestBody UserRegistDto userRegistDto){
+        Map<String,Object> result = new HashMap<>();
+        HttpStatus status;
+        try{
+            boolean is = userService.registUser(userRegistDto);
+            if(is){
+                result.put("result","success");
+            }
+            else{
+                result.put("result","fail");
+            }
+            status = HttpStatus.OK;
+        }catch (Exception e){
+            result.put("result","서버에러");
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<>(result,status);
+    }
+
 }

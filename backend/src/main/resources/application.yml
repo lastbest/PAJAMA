@@ -7,8 +7,8 @@ spring:
 #  mail:
 #    host: smtp.gmail.com
 #    port: 587
-#      username: 본인의 구글 계정 @gmail.com
-#    password: 본인의 구글 계정 비밀번호
+#      username: c203ssafy@gmail.com
+#    password: partyjoa203
 #    properties:
 #      mail.smtp.auth: true
 #      mail.smtp.starttls.enable: true
