@@ -9,17 +9,19 @@ const Header = styled.div`
     text-align: center;
     background-color: #FFE9EF;
     padding: 0px 30px;
+    font-size:18px;
 
     a {
+        font-family:"star";
         text-decoration: none;
         color: black;
-        font-weight: bold;
     }
 
     .nav_menu {
         display: flex;
         list-style: none;
         padding-left: 0px;
+        padding-top:10px;
     }
     .nav_menu li {
         padding: 8px 12px;
@@ -36,7 +38,7 @@ const NavBar = () => {
         
         <Header>
             <logo>
-                <img src='/pazamafont.png' alt='logo' width='150px' height='75px'></img>
+                <a href='/'><img src='/pazamafont.png' alt='logo' width='150px' height='75px'></img></a>
             </logo>
             <ul class="nav_menu">
                 <li><a href="/">HOME</a></li>

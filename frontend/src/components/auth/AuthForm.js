@@ -10,6 +10,7 @@ const AuthFormBlock = styled.div`
     margin: 0;
     color: black;
     margin-bottom: 1rem;
+    font-family:"star";
   }
 `;
 
