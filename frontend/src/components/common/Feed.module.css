@@ -1,0 +1,14 @@
+.feeds {
+  border: 1px solid #ffe9ef;
+  background-color: #ffe9ef;
+  border-radius: 10px;
+  text-align: center;
+  position: relative;
+}
+
+.comment {
+  background-color: #ffffff;
+  margin: auto;
+  width: 90%;
+  border-radius: 10px;
+}
