@@ -1,9 +1,6 @@
 package com.c203.api.controller;
 
-import com.c203.api.dto.MailSendDto;
-import com.c203.api.dto.UserInfoDto;
-import com.c203.api.dto.UserLoginDto;
-import com.c203.api.dto.UserRegistDto;
+import com.c203.api.dto.*;
 import com.c203.api.service.JwtService;
 import com.c203.api.service.MailService;
 import com.c203.api.service.UserService;
@@ -158,6 +155,40 @@ public class UserController
         HttpStatus status;
         try{
             mailService.mailSend(mailSendDto);
+            result.put("result","success");
+            status = HttpStatus.OK;
+        }catch (Exception e){
+            result.put("result","서버에러");
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<>(result,status);
+    }
+    @PutMapping("/users")
+    public ResponseEntity<?> modifyUser(@RequestBody UserModifyUser userModifyUser, HttpServletRequest request){
+        Map<String,Object> result = new HashMap<>();
+        HttpStatus status;
+        String accessToken = request.getHeader("accessToken");
+        String decodeEmail = jwtService.decodeToken(accessToken);
+        try{
+            userModifyUser.setEmail(decodeEmail);
+            userService.modifyUser(userModifyUser);
+            result.put("result","success");
+            status = HttpStatus.OK;
+        }catch (Exception e){
+            result.put("result","서버에러");
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<>(result,status);
+    }
+
+    @DeleteMapping("/users")
+    public ResponseEntity<?> deleteUser(HttpServletRequest request ){
+        Map<String,Object> result = new HashMap<>();
+        HttpStatus status;
+        String accessToken = request.getHeader("accessToken");
+        String decodeEmail = jwtService.decodeToken(accessToken);
+        try{
+            userService.deleteUser(decodeEmail);
             result.put("result","success");
             status = HttpStatus.OK;
         }catch (Exception e){

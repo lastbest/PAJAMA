@@ -29,7 +29,7 @@ public class MailServiceImpl implements MailService {
     public void mailSend(MailSendDto mailSendDto) {
         String authKey = makeAuthNumber();
         SimpleMailMessage message = new SimpleMailMessage();
-        String subText = "[PAJAMA] 인증번호 입니다. \n 인증번호 : " + authKey;
+        String subText = "[PAZAMA] 인증번호 입니다. \n 인증번호 : " + authKey;
         System.out.println(mailSendDto.getId());
         message.setTo(mailSendDto.getId());
         message.setFrom(MailServiceImpl.FROM_ADDRESS);
