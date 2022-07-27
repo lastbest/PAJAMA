@@ -36,3 +36,18 @@
     transform: rotate(360deg);
   }
 }
+
+@font-face{
+  font-family: "BRITANIC";
+  src: url("/public/BRITANIC.TTF");
+}
+
+@font-face{
+  font-family: "star";
+  src: url("/public/a북두칠성.ttf");
+}
+
+@font-face{
+  font-family: "oldpicture";
+  src: url("/public/a옛날사진관3.ttf");
+}
