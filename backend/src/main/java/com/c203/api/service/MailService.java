@@ -5,7 +5,7 @@ import com.c203.api.dto.MailSendDto;
 
 public interface MailService {
     void mailSend(MailSendDto mailSendDto);
-    boolean emailCheck(MailSendDto mailSendDto);
-    boolean checkAuthNumber(MailCheckDto mailCheckDto);
     String makeAuthNumber();
+
+    boolean mailCheck(String authNumber, String email);
 }

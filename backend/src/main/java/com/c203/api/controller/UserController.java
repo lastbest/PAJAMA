@@ -77,59 +77,12 @@ public class UserController
                 // 인증만료
                 status = HttpStatus.UNAUTHORIZED;
             }
-//            boolean is = userService.loginUser(userLoginDto);
-//            result.put("result",is);
-//            status = HttpStatus.OK;
-
         }catch (Exception e){
             result.put("result","서버에러");
             status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
         return new ResponseEntity<>(result,status);
     }
-    // 이메일 인증 controller
-    //Email과 name의 일치여부를 check하는 컨트롤러
-//    @GetMapping("/users/find")
-//    public ResponseEntity<?> findUser(HttpServletRequest request){
-//        Map<String,Object> result = new HashMap<>();
-//        HttpStatus status;
-//        try {
-//            String accessToken = request.getHeader("accessToken");
-//            String decodeId = jwtService.decodeToken(accessToken);
-//            if(!decodeId.equals("timeout")){
-//                UserInfoDto userInfoDto = userService.infoUser(decodeId);
-//                result.put("result",userInfoDto);
-//                status = HttpStatus.OK;
-//            }
-//            else{
-//                result.put("result","accessToken 타임아웃");
-//                // 인증만료
-//                status = HttpStatus.UNAUTHORIZED;
-//            }
-//            status = HttpStatus.OK;
-//        }catch (Exception e){
-//            result.put("result","서버에러");
-//            status = HttpStatus.INTERNAL_SERVER_ERROR;
-//        }
-//        return new ResponseEntity<>(result,status);
-//    }
-//
-////    public @ResponseBody Map<String, Boolean> pw_find(String userEmail, String userName){
-////        Map<String,Boolean> json = new HashMap<>();
-////        boolean pwFindCheck = userService.userEmailCheck(userEmail,userName);
-////
-////        System.out.println(pwFindCheck);
-////        json.put("check", pwFindCheck);
-////        return json;
-////    }
-//
-//    //등록된 이메일로 임시비밀번호를 발송하고 발송된 임시비밀번호로 사용자의 pw를 변경하는 컨트롤러
-//    @PostMapping("/users/findPw/sendEmail")
-//    public @ResponseBody void sendEmail(String userEmail, String userName){
-//        MailDto mailDto = sendEmailService.createMailAndChangePassword(userEmail, userName);
-//        sendEmailService.mailSend(dto);
-//
-//    }
     @PostMapping("/users")
     public ResponseEntity<?> registUser(@RequestBody UserRegistDto userRegistDto){
         Map<String,Object> result = new HashMap<>();
@@ -140,7 +93,7 @@ public class UserController
                 result.put("result","success");
             }
             else{
-                result.put("result","fail");
+                result.put("result","이미 존재하는 이메일");
             }
             status = HttpStatus.OK;
         }catch (Exception e){
@@ -163,6 +116,24 @@ public class UserController
         }
         return new ResponseEntity<>(result,status);
     }
+    @GetMapping("/users/mail")
+    public ResponseEntity<?> mailCheck(@RequestParam("authNumber")String authNumber, @RequestParam("email")String email){
+        Map<String,Object> result = new HashMap<>();
+        HttpStatus status;
+        try{
+            if(mailService.mailCheck(authNumber, email)){
+                result.put("result","success");
+            }else{
+                result.put("result","fail");
+            }
+            status = HttpStatus.OK;
+        }catch (Exception e){
+            result.put("result","서버에러");
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<>(result,status);
+    }
+
     @PutMapping("/users")
     public ResponseEntity<?> modifyUser(@RequestBody UserModifyUser userModifyUser, HttpServletRequest request){
         Map<String,Object> result = new HashMap<>();

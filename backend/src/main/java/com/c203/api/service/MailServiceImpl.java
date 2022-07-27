@@ -10,6 +10,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Random;
 
 @Service
@@ -30,7 +31,6 @@ public class MailServiceImpl implements MailService {
         String authKey = makeAuthNumber();
         SimpleMailMessage message = new SimpleMailMessage();
         String subText = "[PAZAMA] 인증번호 입니다. \n 인증번호 : " + authKey;
-        System.out.println(mailSendDto.getId());
         message.setTo(mailSendDto.getId());
         message.setFrom(MailServiceImpl.FROM_ADDRESS);
         message.setSubject("[인증번호]");
@@ -43,26 +43,19 @@ public class MailServiceImpl implements MailService {
 
     }
 
-    @Override
-    public boolean emailCheck(MailSendDto mailSendDto) {
-//        if((mailSendDto.getType().equals("0") && !userRepository.findByUserEmail(mailSendDto.getId()).isPresent()) || (mailSendDto.getType().equals("1") && userRepository.findByUserEmail(mailSendDto.getId()).isPresent())) {
-//            return true;
-//        }
-        return false;
-    }
-
-    @Override
-    public boolean checkAuthNumber(MailCheckDto mailCheckDto) {
-//        if(mailRepository.findById(mailCheckDto.getId(),mailCheckDto.getNumber(), mailCheckDto.getType()) == 1){
-//            mailRepository.deleteById(mailCheckDto.getId());
-//            return true;
-//        }
-        return false;
-    }
-
     public String makeAuthNumber() {
         Random random = new Random();
         String authKey = String.valueOf(random.nextInt(888888)+111111);
         return authKey;
+    }
+
+    @Override
+    @Transactional
+    public boolean mailCheck(String authNumber, String email) {
+        if(mailRepository.findByAuthEmailAndAuthNum(email, authNumber).isPresent()){
+            mailRepository.deleteByAuthEmail(email);
+            return true;
+        }
+        return false;
     }
 }

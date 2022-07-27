@@ -19,14 +19,11 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     @Override
     public boolean loginUser(UserLoginDto userLoginDto) {
-        System.out.println(userLoginDto.getEmail()+ " : "+ userLoginDto.getPwd());
         Optional<User> res = userRepository.findByUserEmailAndUserPwd(userLoginDto.getEmail(), userLoginDto.getPwd());
         
         if(res.isPresent()){
-            System.out.println(res.get().getUserEmail());
             return true;
         }else{
-            System.out.println("res없음");
              return false;
         }
     }
@@ -52,13 +49,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean registUser(UserRegistDto userRegistDto) {
-        User user = new User();
-        user.setUserEmail(userRegistDto.getEmail());
-        user.setUser_nickname(userRegistDto.getNickname());
-        user.setUserPwd(userRegistDto.getPwd());
-        user.setUserName(userRegistDto.getName());
-        userRepository.save(user);
-        return true;
+        Optional<User> userInfo = userRepository.findByUserEmail(userRegistDto.getEmail());
+        if(!userInfo.isPresent()){
+            User user = new User();
+            user.setUserEmail(userRegistDto.getEmail());
+            user.setUser_nickname(userRegistDto.getNickname());
+            user.setUserPwd(userRegistDto.getPwd());
+            user.setUserName(userRegistDto.getName());
+            userRepository.save(user);
+            return true;
+        }
+        return false;
     }
 
     @Override
