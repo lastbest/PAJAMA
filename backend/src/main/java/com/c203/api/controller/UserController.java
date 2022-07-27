@@ -121,7 +121,7 @@ public class UserController
         Map<String,Object> result = new HashMap<>();
         HttpStatus status;
         try{
-            if(mailService.mailCheck(authNumber, email)){
+            if(mailService.mailCheck(authNumber, email)){ //boolean true라면 인증 됨.
                 result.put("result","success");
             }else{
                 result.put("result","fail");
@@ -135,14 +135,14 @@ public class UserController
     }
 
     @PutMapping("/users")
-    public ResponseEntity<?> modifyUser(@RequestBody UserModifyUser userModifyUser, HttpServletRequest request){
+    public ResponseEntity<?> modifyUser(@RequestBody UserModifyDto userModifyDto, HttpServletRequest request){
         Map<String,Object> result = new HashMap<>();
         HttpStatus status;
         String accessToken = request.getHeader("accessToken");
         String decodeEmail = jwtService.decodeToken(accessToken);
         try{
-            userModifyUser.setEmail(decodeEmail);
-            userService.modifyUser(userModifyUser);
+            userModifyDto.setEmail(decodeEmail);
+            userService.modifyUser(userModifyDto);
             result.put("result","success");
             status = HttpStatus.OK;
         }catch (Exception e){

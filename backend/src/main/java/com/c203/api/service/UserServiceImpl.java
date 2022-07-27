@@ -2,7 +2,7 @@ package com.c203.api.service;
 
 import com.c203.api.dto.UserInfoDto;
 import com.c203.api.dto.UserLoginDto;
-import com.c203.api.dto.UserModifyUser;
+import com.c203.api.dto.UserModifyDto;
 import com.c203.api.dto.UserRegistDto;
 import com.c203.db.Entity.User;
 import com.c203.db.Repository.UserRepository;
@@ -20,12 +20,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean loginUser(UserLoginDto userLoginDto) {
         Optional<User> res = userRepository.findByUserEmailAndUserPwd(userLoginDto.getEmail(), userLoginDto.getPwd());
-        
+
         if(res.isPresent()){
             return true;
         }else{
              return false;
         }
+
     }
 
     @Override
@@ -63,10 +64,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean modifyUser(UserModifyUser userModifyUser) { //id pwd nickname
-        User user = userRepository.findByUserEmail(userModifyUser.getEmail()).get();
-        user.setUserPwd(userModifyUser.getPwd());
-        user.setUser_nickname(userModifyUser.getNickname());
+    public boolean modifyUser(UserModifyDto userModifyDto) { //id pwd nickname
+        User user = userRepository.findByUserEmail(userModifyDto.getEmail()).get(); //정확히 동일한 엔티티, 값만 받아오는게 아니라 그 대상을 가지고 있는거
+        user.setUserPwd(userModifyDto.getPwd());
+        user.setUser_nickname(userModifyDto.getNickname());
 
         userRepository.save(user);
         return true;

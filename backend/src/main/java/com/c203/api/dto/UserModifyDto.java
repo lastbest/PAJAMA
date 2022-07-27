@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserModifyUser {
+public class UserModifyDto {
     private String email;
     private String nickname;
     private String pwd;

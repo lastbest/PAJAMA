@@ -11,6 +11,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Random;
 
 @Service
@@ -27,6 +28,7 @@ public class MailServiceImpl implements MailService {
         this.javaMailSender = javaMailSender;
     }
     @Override
+    @Transactional
     public void mailSend(MailSendDto mailSendDto) {
         String authKey = makeAuthNumber();
         SimpleMailMessage message = new SimpleMailMessage();
@@ -36,10 +38,14 @@ public class MailServiceImpl implements MailService {
         message.setSubject("[인증번호]");
         message.setText(subText);
         javaMailSender.send(message); // 메일 전송
+        List<Auth> mailCheck = mailRepository.findByAuthEmail(mailSendDto.getId());
+        if(!mailCheck.isEmpty()){ //기존에 인증번호가 있다면 제거
+            mailRepository.deleteByAuthEmail(mailSendDto.getId());
+        }
         Auth mail = new Auth();
         mail.setAuthEmail(mailSendDto.getId());
         mail.setAuthNum(authKey);
-        mailRepository.saveAndFlush(mail);
+        mailRepository.saveAndFlush(mail); //DB 등록
 
     }
 

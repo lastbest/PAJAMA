@@ -23,5 +23,5 @@ public class Feed {
     private int feed_user;
     private String feed_description;
     @Lob
-    private Blob feed_picture;
+    private Byte[] feed_picture;
 }
