@@ -42,6 +42,7 @@ const NavBar = () => {
                 <li><a href="/">HOME</a></li>
                 <li><a href="/register">회원가입</a></li>
                 <li><a href="/login">로그인</a></li>
+                {/* 수정예정 */}
                 {/* {token ? (
                     <>
                     <li><a href="/">마이페이지</a></li>
