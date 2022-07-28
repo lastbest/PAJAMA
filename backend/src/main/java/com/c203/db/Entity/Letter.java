@@ -12,8 +12,8 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class Letter {
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    private User user2;
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
