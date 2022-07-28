@@ -35,5 +35,8 @@ public class User {
     private String userPwd;
     @Column(name = "user_email")
     private String userEmail;
-    private String user_nickname;
+    @Column(name = "user_nickname")
+    private String userNickname;
+    @Column(name = "user_tel")
+    private String userTel;
 }

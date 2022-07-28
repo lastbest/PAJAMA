@@ -1,4 +1,4 @@
-package com.c203.api.dto;
+package com.c203.api.dto.Participant;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class MailSendDto {
-    private String id;
-    private String type;
+public class ParticipantDto {
+    private int room;
+    private int user;
 }

@@ -1,4 +1,4 @@
-package com.c203.api.dto;
+package com.c203.api.dto.Mail;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,9 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserRegistDto {
+public class MailPwdDto {
     private String email;
-    private String name;
-    private String pwd;
-    private String nickname;
+//  private String name;
 }
