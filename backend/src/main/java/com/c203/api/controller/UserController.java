@@ -83,6 +83,29 @@ public class UserController
         }
         return new ResponseEntity<>(result,status);
     }
+    @GetMapping("/users/me")
+    public ResponseEntity<?> showUser(HttpServletRequest request){
+        Map<String,Object> result = new HashMap<>();
+        HttpStatus status;
+
+        try{
+            String accessToken = request.getHeader("accessToken");
+            String decodeId = jwtService.decodeToken(accessToken);
+            if(!decodeId.equals("timeout")){
+                UserShowDto userShowDto = userService.showUser(decodeId);
+                result.put("result",userShowDto);
+                status = HttpStatus.OK;
+            }
+            else{
+                result.put("result","accessToken 타임아웃");
+                status = HttpStatus.UNAUTHORIZED;
+            }
+        }catch (Exception e){
+            result.put("result","서버에러");
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<>(result,status);
+    }
     @PostMapping("/users")
     public ResponseEntity<?> registUser(@RequestBody UserRegistDto userRegistDto){
         Map<String,Object> result = new HashMap<>();

@@ -1,9 +1,6 @@
 package com.c203.api.service;
 
-import com.c203.api.dto.UserInfoDto;
-import com.c203.api.dto.UserLoginDto;
-import com.c203.api.dto.UserModifyDto;
-import com.c203.api.dto.UserRegistDto;
+import com.c203.api.dto.*;
 import com.c203.db.Entity.User;
 import com.c203.db.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,5 +75,20 @@ public class UserServiceImpl implements UserService {
     public boolean deleteUser(String decodeEmail) {
         userRepository.deleteByUserEmail(decodeEmail);
         return true;
+    }
+
+    @Override
+    public UserShowDto showUser(String email) {
+        Optional<User> res = userRepository.findByUserEmail(email);
+        if(res.isPresent()){
+            // 리턴 타입 dto니까
+            UserShowDto userShowDto = new UserShowDto();
+            // 값이 비어있겠죠
+            userShowDto.setName(res.get().getUserName());
+            userShowDto.setEmail(res.get().getUserEmail());
+            userShowDto.setNickname(res.get().getUser_nickname());
+            return userShowDto;
+        }
+        else return null;
     }
 }
