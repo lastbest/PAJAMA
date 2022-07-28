@@ -1,6 +1,8 @@
 package com.c203.api.controller;
 
-import com.c203.api.dto.*;
+import com.c203.api.dto.Mail.MailPwdDto;
+import com.c203.api.dto.Mail.MailSendDto;
+import com.c203.api.dto.User.*;
 import com.c203.api.service.JwtService;
 import com.c203.api.service.MailService;
 import com.c203.api.service.UserService;
@@ -198,18 +200,33 @@ public class UserController
         return new ResponseEntity<>(result,status);
     }
     // 아이디 찾기
-//    @GetMapping("/users/findId")
-//    public ResponseEntity<?> findId(){
-//        Map<String,Object> result = new HashMap<>();
-//        HttpStatus status;
-//
-//        try{
-//
-//            status = HttpStatus.OK;
-//        }catch (Exception e){
-//            result.put("result","서버에러");
-//            status = HttpStatus.INTERNAL_SERVER_ERROR;
-//        }
-//        return new ResponseEntity<>(result,status);
-//    }
+    @GetMapping("/users/findEmail")
+    public ResponseEntity<?> findEmail(@RequestParam("tel")String tel){
+        Map<String,Object> result = new HashMap<>();
+        HttpStatus status;
+        try{
+            String email = userService.findEmail(tel);
+            result.put("result",email);
+            status = HttpStatus.OK;
+        }catch (Exception e){
+            result.put("result","서버에러");
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<>(result,status);
+    }
+    // 임시비밀번호 발급
+    @PostMapping("/users/mailPwd")
+    public ResponseEntity<?> mailPwd(@RequestBody MailPwdDto mailPwdDto){
+        Map<String,Object> result = new HashMap<>();
+        HttpStatus status;
+        try{
+            mailService.mailPwd(mailPwdDto);
+            result.put("result","success");
+            status = HttpStatus.OK;
+        }catch (Exception e){
+            result.put("result","서버에러");
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<>(result,status);
+    }
 }

@@ -1,8 +1,9 @@
 package com.c203.api.service;
 
-import com.c203.api.dto.MailCheckDto;
-import com.c203.api.dto.MailSendDto;
+import com.c203.api.dto.Mail.MailPwdDto;
+import com.c203.api.dto.Mail.MailSendDto;
 import com.c203.db.Entity.Auth;
+import com.c203.db.Entity.User;
 import com.c203.db.Repository.MailRepository;
 import com.c203.db.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ public class MailServiceImpl implements MailService {
         this.userRepository = userRepository;
         this.javaMailSender = javaMailSender;
     }
+    // 회원가입시 메일 보내기
     @Override
     @Transactional
     public void mailSend(MailSendDto mailSendDto) {
@@ -64,4 +66,37 @@ public class MailServiceImpl implements MailService {
         }
         return false;
     }
+    // 임시비밀번호 발급
+    @Override
+    public void mailPwd(MailPwdDto mailPwdDto) {
+        String authKey = makeRanNumber();
+        SimpleMailMessage message = new SimpleMailMessage();
+        String subText = "[PAZAMA] 임시 비밀번호 안내 관련 입니다. \n임시비밀번호 : " + authKey;
+        message.setTo(mailPwdDto.getEmail());
+        message.setFrom(MailServiceImpl.FROM_ADDRESS);
+        message.setSubject("[임시 비밀번호 발급]"); // 제목
+        message.setText(subText);
+        javaMailSender.send(message); // 메일 전송
+        // 바뀐 임시비밀번호를 DB에 등록해야지
+        User user = userRepository.findByUserEmail(mailPwdDto.getEmail()).get(); // entity
+        System.out.println(authKey);
+        user.setUserPwd(authKey);
+        System.out.println(user.getUserPwd());
+        userRepository.saveAndFlush(user);
+    }
+
+    // 임시 비밀번호 10자리 생성
+    private String makeRanNumber() {
+        char[] charSet = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
+                'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
+        String str = "";
+        int idx = 0;
+        for (int i = 0; i < 10; i++) {
+            idx = (int) (charSet.length * Math.random());
+            str += charSet[idx];
+        }
+        return str;
+    }
+
+
 }

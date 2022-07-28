@@ -1,6 +1,6 @@
 package com.c203.api.service;
 
-import com.c203.api.dto.*;
+import com.c203.api.dto.User.*;
 
 public interface UserService {
     boolean loginUser(UserLoginDto userLoginDto);
@@ -12,4 +12,5 @@ public interface UserService {
 
     boolean deleteUser(String decodeEmail);
     UserShowDto showUser(String email);
+    String findEmail(String tel);
 }

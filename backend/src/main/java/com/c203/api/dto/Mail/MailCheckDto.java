@@ -1,4 +1,4 @@
-package com.c203.api.dto;
+package com.c203.api.dto.Mail;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

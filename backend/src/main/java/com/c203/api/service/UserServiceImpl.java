@@ -1,6 +1,6 @@
 package com.c203.api.service;
 
-import com.c203.api.dto.*;
+import com.c203.api.dto.User.*;
 import com.c203.db.Entity.User;
 import com.c203.db.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,5 +95,24 @@ public class UserServiceImpl implements UserService {
             return userShowDto;
         }
         else return null;
+    }
+
+    // 아이디(이메일) 찾기
+    @Override
+    public String findEmail(String tel) {
+        Optional<User> res = userRepository.findByUserTel(tel); // 전화번호로 가져오기
+        String email = res.get().getUserEmail();
+        // asdfASDF@naver.com = asd*****@naver.com
+        // 이메일 앞자리의 1/3만 보여주기
+        int idx = email.indexOf("@");
+        int num = (idx-1)/3;
+        String front = email.substring(0,num+1);
+        String middle = email.substring(num+1,idx);
+        String star = "";
+        for (int i =0; i<middle.length();i++) star += "*";
+        middle = middle.replaceAll(middle,star);
+        String back = email.substring(idx,email.length());
+        String result = front + middle + back;
+        return result;
     }
 }
