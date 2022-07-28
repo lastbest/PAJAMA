@@ -9,4 +9,5 @@ public interface MailService {
 
     boolean mailCheck(String authNumber, String email);
     void mailPwd(MailPwdDto mailPwdDto);
+    void deleteMail(MailSendDto mailSendDto);
 }

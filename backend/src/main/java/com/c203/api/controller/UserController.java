@@ -229,4 +229,19 @@ public class UserController
         }
         return new ResponseEntity<>(result,status);
     }
+    // 3분이 지나면 메일로 보내진 인증번호를 사용하지 못하게 삭제
+//    @DeleteMapping("/users/mail")
+//    public ResponseEntity<?> deleteMail(){
+//        Map<String,Object> result = new HashMap<>();
+//        HttpStatus status;
+//        try{
+//            mailService.deleteMail(mailSendDto);
+//            result.put("result","success");
+//            status = HttpStatus.OK;
+//        }catch (Exception e){
+//            result.put("result","서버에러");
+//            status = HttpStatus.INTERNAL_SERVER_ERROR;
+//        }
+//        return new ResponseEntity<>(result,status);
+//    }
 }
