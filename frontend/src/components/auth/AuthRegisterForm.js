@@ -18,8 +18,9 @@ const StyledInput = styled.input`
   font-size: 1rem;
   border: none;
   border-bottom: 1px solid #ffe9ef;
-  padding-top: 0.7rem;
-  padding-bottom: 0.7rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
   outline: none;
   width: 100%;
   display: flex;
@@ -33,31 +34,27 @@ const StyledInput = styled.input`
   }
 `;
 
-const Footer = styled.div`
-    display: felx;
-    justify-content: center;
-    margin-top: 1rem;
-    a {
-        color : #9D9D9D;
-        text-decoration: none;
-        &:hover{
-            color: #FD7A99}
-        }
-
-    }
-    .link {
-      margin-right: 5px;
-      margin-left: 5px;
-    }
-    span {
-      color : #9D9D9D;
-    }
-
-`;
-
 const ButtonWithMarinTop = styled(Button)`
   margin-top: 1rem;
 `;
+
+const StyleButton = styled.button`
+  margin-top:4px;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-family:"oldpicture";
+  height: 2rem;
+  color: black;
+  outline: none;
+  cursor: pointer;
+  display: inline;
+  margin-left: -70px;
+  background: #FD7A99;
+  &:hover {
+    background: #FFA4BD;
+  }
+`
 
 const AuthRegisterForm = () => {
   let [credentials, setCredentials] = useState({
@@ -130,16 +127,32 @@ const AuthRegisterForm = () => {
     <AuthFormBlock>
       <h3>회원가입</h3>
       <form onSubmit={onSubmit}>
-        <StyledInput
-          autoComplete="userEmail"
-          name="userEmail"
-          placeholder=" 이메일"
-          type="email"
-          onInput={(event) => {
-            setUserEmail(event.target.value);
-          }}
-          required
-        />
+        <div className="d-flex">
+          <StyledInput
+            autoComplete="userEmail"
+            name="userEmail"
+            placeholder=" 이메일"
+            type="email"
+            onInput={(event) => {
+              setUserEmail(event.target.value);
+            }}
+            required
+          />
+          <StyleButton>인증하기</StyleButton>
+        </div>
+        <div className="d-flex">
+          <StyledInput
+            autoComplete="userEmailCheck"
+            name="userEmailCheck"
+            placeholder=" 이메일 인증번호"
+            type="emailcheck"
+            onInput={(event) => {
+              setUserEmail(event.target.value);
+            }}
+            required
+          />
+          <StyleButton>확인하기</StyleButton>
+        </div>
         <StyledInput
           autoComplete="current-password"
           name="password"
@@ -193,13 +206,6 @@ const AuthRegisterForm = () => {
           회원가입
         </ButtonWithMarinTop>
       </form>
-      <Footer>
-        <Link to="/" className='link'>HOME</Link>
-        <span>|</span>
-        <Link to="/register" className='link'>회원가입</Link>
-        <span>|</span>
-        <Link to="/login" className='link'>로그인</Link>
-      </Footer>
     </AuthFormBlock>
   );
 };

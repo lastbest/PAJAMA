@@ -31,7 +31,7 @@ const AuthTemplate = ({children}) => {
     return (
         <>
         <Header>
-        <img src='/pazamafont.png' alt='logo' width='120px' height='60px'></img>
+        <a href='/'><img src='/pazamafont.png' alt='logo' width='120px' height='60px'></img></a>
         </Header>
         <AuthTemplateBlock>
             <Whitebox>
