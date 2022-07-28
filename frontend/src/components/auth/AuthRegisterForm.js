@@ -61,18 +61,20 @@ const ButtonWithMarinTop = styled(Button)`
 
 const AuthRegisterForm = () => {
   let [credentials, setCredentials] = useState({
-    userEmail: "",
-    password: "",
-    userName: "",
-    userNickname: "",
+    email: "",
+    tel: "",
+    pwd: "",
+    nickname: "",
+    name: ""
   });
   let [password1, setPassword1] = useState("");
   let [password2, setPassword2] = useState("");
-
+  let [tel, setTel] = useState("");
   let [userEmail, setUserEmail] = useState("");
   let [userName, setUserName] = useState("");
   let [userNickname, setUserNickname] = useState("");
-  function onSubmit() {
+  function onSubmit(e) {
+    e.preventDefault();
     if (password2 === password1) {
       if (password1.length < 6 || password1.length > 16) {
         alert("비밀번호는 6~16자리로 설정해야 합니다.");
@@ -91,17 +93,37 @@ const AuthRegisterForm = () => {
           alert("비밀번호는 숫자와 영문자를 혼용하여야 합니다.");
         } else {
           setCredentials(
-            (credentials.userEmail = userEmail),
-            (credentials.password = password1),
-            (credentials.userName = userName),
-            (credentials.userNickname = userNickname)
+            (credentials.email = userEmail),
+            (credentials.pwd = password1),
+            (credentials.name = userName),
+            (credentials.nickname = userNickname),
+            (credentials.tel = tel)
           );
-          console.log(credentials);
-          alert("환영합니다.");
+          axios({
+            url: "http://localhost:8080/users",
+            method: "post",
+            data: credentials
+          })
+            .then((res) => {
+              if (res.data.result === 'success') {
+                window.alert('회원가입 성공')
+                document.location.href="/"
+              } else {
+                window.alert('이미 존재하는 이메일입니다.')
+                document.location.href="/register"
+
+              }
+            })
+            .catch(() => {
+              console.log("회원가입 실패");
+              alert('회원가입 실패')
+              document.location.href="/register"
+            });
         }
       }
     } else {
       alert("비밀번호가 일치하지 않습니다.");
+      document.location.href="/register"
     }
   }
   return (
@@ -141,10 +163,20 @@ const AuthRegisterForm = () => {
         <StyledInput
           autoComplete="userName"
           name="userName"
-          placeholder=" 이름(선택)"
+          placeholder=" 이름"
+          required
           onInput={(event) => {
             setUserName(event.target.value);
           }}
+        />
+        <StyledInput
+          autoComplete="tel"
+          name="tel"
+          placeholder=" 전화번호"
+          onInput={(event) => {
+            setTel(event.target.value);
+          }}
+          required
         />
         <StyledInput
           autoComplete="userNickname"
@@ -157,38 +189,16 @@ const AuthRegisterForm = () => {
         />
         <ButtonWithMarinTop
           fullWidth
-          onClick={() => {
-            //     setCredentials((credentials.username = username));
-            //     setCredentials((credentials.password = password));
-            axios({
-              url: "http://localhost:9999/happyhouse/user",
-              method: "post",
-              data: {
-                email: "16@16",
-                id: "16",
-                name: "16",
-                password: "16",
-                tel: "16",
-              },
-            })
-              .then((res) => {
-                console.log(res.data);
-                alert("로그인 성공하였습니다.");
-              })
-              .catch(() => {
-                console.log("로그인 실패");
-              });
-          }}
         >
           회원가입
         </ButtonWithMarinTop>
       </form>
       <Footer>
-        <Link to="/" class='link'>HOME</Link>
+        <Link to="/" className='link'>HOME</Link>
         <span>|</span>
-        <Link to="/register" class='link'>회원가입</Link>
+        <Link to="/register" className='link'>회원가입</Link>
         <span>|</span>
-        <Link to="/login" class='link'>로그인</Link>
+        <Link to="/login" className='link'>로그인</Link>
       </Footer>
     </AuthFormBlock>
   );

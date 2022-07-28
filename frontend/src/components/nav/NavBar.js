@@ -34,6 +34,7 @@ const Header = styled.div`
 
 
 const NavBar = () => {
+    let token = sessionStorage.getItem('accessToken')
     return (
         
         <Header>
@@ -42,20 +43,19 @@ const NavBar = () => {
             </logo>
             <ul class="nav_menu">
                 <li><a href="/">HOME</a></li>
-                <li><a href="/register">회원가입</a></li>
-                <li><a href="/login">로그인</a></li>
-                {/* 수정예정 */}
-                {/* {token ? (
+                {token ? (
                     <>
                     <li><a href="/">마이페이지</a></li>
-                    <li onClink={}>로그아웃</a></li>
+                    <li><a href="/" onClick={()=>{
+                        sessionStorage.setItem('accessToken','')
+                    }}>로그아웃</a></li>
                     </>
                 ) : (
                     <>
                     <li><a href="/register">회원가입</a></li>
                     <li><a href="/login">로그인</a></li>
                     </>
-                )}      */}
+                )}     
             </ul>
         </Header>
       
