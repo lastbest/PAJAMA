@@ -79,9 +79,7 @@ public class MailServiceImpl implements MailService {
         javaMailSender.send(message); // 메일 전송
         // 바뀐 임시비밀번호를 DB에 등록해야지
         User user = userRepository.findByUserEmail(mailPwdDto.getEmail()).get(); // entity
-        System.out.println(authKey);
         user.setUserPwd(authKey);
-        System.out.println(user.getUserPwd());
         userRepository.saveAndFlush(user);
     }
 
