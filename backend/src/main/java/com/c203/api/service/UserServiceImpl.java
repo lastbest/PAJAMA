@@ -26,6 +26,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    // 로그인 후 정보 보여주기
     @Override
     public UserInfoDto infoUser(String email) {
         Optional<User> res = userRepository.findByUserEmail(email);
@@ -33,7 +34,7 @@ public class UserServiceImpl implements UserService {
             // 리턴 타입 dto니까
             UserInfoDto userInfoDto = new UserInfoDto();
             // 값이 비어있겠죠
-            userInfoDto.setNickname(res.get().getUser_nickname());
+            userInfoDto.setNickname(res.get().getUserNickname());
             return userInfoDto;
         }
         else return null;
@@ -45,31 +46,35 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
+    // 회원 가입
     @Override
     public boolean registUser(UserRegistDto userRegistDto) {
         Optional<User> userInfo = userRepository.findByUserEmail(userRegistDto.getEmail());
         if(!userInfo.isPresent()){
             User user = new User();
             user.setUserEmail(userRegistDto.getEmail());
-            user.setUser_nickname(userRegistDto.getNickname());
+            user.setUserNickname(userRegistDto.getNickname());
             user.setUserPwd(userRegistDto.getPwd());
             user.setUserName(userRegistDto.getName());
+            user.setUserTel(userRegistDto.getTel());
             userRepository.save(user);
             return true;
         }
         return false;
     }
 
+    // 회원 정보 수정
     @Override
-    public boolean modifyUser(UserModifyDto userModifyDto) { //id pwd nickname
-        User user = userRepository.findByUserEmail(userModifyDto.getEmail()).get(); //정확히 동일한 엔티티, 값만 받아오는게 아니라 그 대상을 가지고 있는거
+    public boolean modifyUser(UserModifyDto userModifyDto) { // id pwd nickname
+        User user = userRepository.findByUserEmail(userModifyDto.getEmail()).get(); // 정확히 동일한 엔티티, 값만 받아오는게 아니라 그 대상을 가지고 있는거
         user.setUserPwd(userModifyDto.getPwd());
-        user.setUser_nickname(userModifyDto.getNickname());
+        user.setUserNickname(userModifyDto.getNickname());
 
         userRepository.save(user);
         return true;
     }
 
+    // 회원 탈퇴
     @Override
     @Transactional
     public boolean deleteUser(String decodeEmail) {
@@ -77,16 +82,16 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
+    // 전체 정보 보여주기
     @Override
     public UserShowDto showUser(String email) {
         Optional<User> res = userRepository.findByUserEmail(email);
         if(res.isPresent()){
-            // 리턴 타입 dto니까
             UserShowDto userShowDto = new UserShowDto();
-            // 값이 비어있겠죠
             userShowDto.setName(res.get().getUserName());
             userShowDto.setEmail(res.get().getUserEmail());
-            userShowDto.setNickname(res.get().getUser_nickname());
+            userShowDto.setNickname(res.get().getUserNickname());
+            userShowDto.setTel(res.get().getUserTel());
             return userShowDto;
         }
         else return null;

@@ -10,5 +10,6 @@ import lombok.Setter;
 public class UserShowDto {
     private String email;
     private String name;
+    private String tel;
     private String nickname;
 }

@@ -29,7 +29,7 @@ public class UserController
         this.jwtService = jwtService;
         this.mailService = mailService;
     }
-
+    // 로그인 하기
     @PostMapping("/auth/login")
     public ResponseEntity<?> loginUser(@RequestBody UserLoginDto userLoginDto){
         Map<String,Object> result = new HashMap<>();
@@ -52,7 +52,7 @@ public class UserController
         }
         return new ResponseEntity<>(result,status);
     }
-
+    // 로그인 후 정보 보여주기
     @GetMapping("/auth/login")
     public ResponseEntity<?> infoUser(HttpServletRequest request){
         Map<String,Object> result = new HashMap<>();
@@ -83,6 +83,7 @@ public class UserController
         }
         return new ResponseEntity<>(result,status);
     }
+    // 회원 정보 보여주기
     @GetMapping("/users/me")
     public ResponseEntity<?> showUser(HttpServletRequest request){
         Map<String,Object> result = new HashMap<>();
@@ -106,6 +107,7 @@ public class UserController
         }
         return new ResponseEntity<>(result,status);
     }
+    // 회원가입
     @PostMapping("/users")
     public ResponseEntity<?> registUser(@RequestBody UserRegistDto userRegistDto){
         Map<String,Object> result = new HashMap<>();
@@ -125,6 +127,7 @@ public class UserController
         }
         return new ResponseEntity<>(result,status);
     }
+    // 메일 전송
     @PostMapping("/users/mail")
     public ResponseEntity<?> mailSend(@RequestBody MailSendDto mailSendDto){
         Map<String,Object> result = new HashMap<>();
@@ -139,6 +142,7 @@ public class UserController
         }
         return new ResponseEntity<>(result,status);
     }
+    // 이메일 체크
     @GetMapping("/users/mail")
     public ResponseEntity<?> mailCheck(@RequestParam("authNumber")String authNumber, @RequestParam("email")String email){
         Map<String,Object> result = new HashMap<>();
@@ -157,6 +161,7 @@ public class UserController
         return new ResponseEntity<>(result,status);
     }
 
+    // 사용자 정보 수정
     @PutMapping("/users")
     public ResponseEntity<?> modifyUser(@RequestBody UserModifyDto userModifyDto, HttpServletRequest request){
         Map<String,Object> result = new HashMap<>();
@@ -175,8 +180,9 @@ public class UserController
         return new ResponseEntity<>(result,status);
     }
 
+    // 사용자 탈퇴
     @DeleteMapping("/users")
-    public ResponseEntity<?> deleteUser(HttpServletRequest request ){
+    public ResponseEntity<?> deleteUser(HttpServletRequest request){
         Map<String,Object> result = new HashMap<>();
         HttpStatus status;
         String accessToken = request.getHeader("accessToken");
@@ -191,4 +197,19 @@ public class UserController
         }
         return new ResponseEntity<>(result,status);
     }
+    // 아이디 찾기
+//    @GetMapping("/users/findId")
+//    public ResponseEntity<?> findId(){
+//        Map<String,Object> result = new HashMap<>();
+//        HttpStatus status;
+//
+//        try{
+//
+//            status = HttpStatus.OK;
+//        }catch (Exception e){
+//            result.put("result","서버에러");
+//            status = HttpStatus.INTERNAL_SERVER_ERROR;
+//        }
+//        return new ResponseEntity<>(result,status);
+//    }
 }

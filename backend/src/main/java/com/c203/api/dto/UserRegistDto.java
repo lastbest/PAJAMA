@@ -11,5 +11,6 @@ public class UserRegistDto {
     private String email;
     private String name;
     private String pwd;
+    private String tel;
     private String nickname;
 }
