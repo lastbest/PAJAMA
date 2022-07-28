@@ -5,7 +5,7 @@ const StyledButton = styled.button`
   border: none;
   border-radius: 10px;
   font-size: 1rem;
-  font-weight: bold;
+  font-family:"star";
   padding: 0.25rem 1rem;
   color: black;
   outline: none;
