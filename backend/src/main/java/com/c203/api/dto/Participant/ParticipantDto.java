@@ -1,4 +1,4 @@
-package com.c203.api.dto;
+package com.c203.api.dto.Participant;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,9 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class FeedDto {
-    private int idx;
+public class ParticipantDto {
+    private int room;
     private int user;
-    private String description;
-    private Byte[] picture;
 }

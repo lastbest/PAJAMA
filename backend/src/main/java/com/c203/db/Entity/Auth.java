@@ -10,15 +10,15 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Participant {
-
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private User user4;
-
+public class Auth {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private int participant_idx;
+    private Integer auth_idx;
 
-    private int participant_room;
-    private int participant_user;
+    @Column(name = "auth_email")
+    private String authEmail;
+    @Column(name = "auth_num")
+    private String authNum;
+    @Column(name = "auth_time")
+    private String authTime;
 }

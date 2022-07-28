@@ -6,19 +6,18 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-public class Room {
+public class Room  {
 
     @OneToOne(cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
     private RoomDeco roomDeco;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    private User user1;
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
