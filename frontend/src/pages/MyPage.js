@@ -1,9 +1,28 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import NavBar from "../components/nav/NavBar";
 import Feed from "../components/common/Feed";
 import styles from "./MyPage.module.css";
+import Button from "../components/common/Button";
+import axios from "axios";
 
 function MyPage() {
+  let token = sessionStorage.getItem("accessToken");
+  let [nickname, setNickname] = useState("");
+  useEffect(() => {
+    axios({
+      url: "http://localhost:8080/users/me",
+      method: "get",
+      headers: { accessToken: token },
+    })
+      .then((res) => {
+        setNickname(res.data.result.nickname);
+      })
+      .catch(() => {
+        alert("불러오기 실패");
+      });
+  }, []);
+
   const [loading, setLoading] = useState(true);
   const [feeds, setFeeds] = useState([]);
   const getMovies = async () => {
@@ -19,19 +38,19 @@ function MyPage() {
     getMovies();
   }, []);
   var hasFeed = Object.keys(feeds).length > 0;
-
+  const navigate = useNavigate();
+  function moveUpdate() {
+    navigate("/mypage/update");
+  }
   return (
     <div className={styles.container}>
+      <NavBar></NavBar>
       <header>
         <div className={styles.header}>
-          <span className={styles.userName}>SSAFY님의 Party</span>
-          <Link className={styles.link} to="/">
-            피드 추가하기
-          </Link>
-          <span> {"  "}</span>
-          <Link className={styles.link} to="/">
+          <span className={styles.userName}>${nickname}의 Party</span>
+          <Button className={styles.link} onClick={moveUpdate}>
             회원정보수정
-          </Link>
+          </Button>
         </div>
       </header>
       <div className={styles.feedContainer}>

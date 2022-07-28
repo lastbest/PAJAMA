@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "../common/Button";
 import axios from "axios";
 import { useState } from "react";
@@ -10,7 +10,7 @@ const AuthFormBlock = styled.div`
     margin: 0;
     color: black;
     margin-bottom: 1rem;
-    font-family:"star";
+    font-family: "star";
   }
 `;
 
@@ -66,6 +66,7 @@ const AuthForm = () => {
   let [password, setPassword] = useState("");
   //   let [userid, setUserid] = useState({ id: "" });
   //   setUserid(userid.id="11");
+  const navigate = useNavigate();
   return (
     <AuthFormBlock>
       <h3>로그인</h3>
@@ -78,7 +79,6 @@ const AuthForm = () => {
             setUserEmail(event.target.value);
           }}
         />
-
         <StyledInput
           autoComplete="current-password"
           name="password"
@@ -93,17 +93,25 @@ const AuthForm = () => {
           fullWidth
           onClick={(e) => {
             e.preventDefault();
+
             setCredentials((credentials.email = userEmail));
             setCredentials((credentials.pwd = password));
             axios({
               url: "http://localhost:8080/auth/login",
               method: "post",
-              data: credentials
+              data: credentials,
             })
               .then((res) => {
                 console.log(res.data);
-                sessionStorage.setItem('accessToken',res.data.accessToken)
-                document.location.href="/"
+                if (res.data.accessToken === undefined) {
+                  alert(
+                    " 이메일 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요. "
+                  );
+                  document.location.href = "/login";
+                } else {
+                  sessionStorage.setItem("accessToken", res.data.accessToken);
+                  document.location.href = "/";
+                }
               })
               .catch(() => {
                 console.log("로그인 실패");
@@ -114,11 +122,17 @@ const AuthForm = () => {
         </ButtonWithMarinTop>
       </form>
       <Footer>
-        <Link to="/" className='link'>HOME</Link>
+        <Link to="/" className="link">
+          HOME
+        </Link>
         <span>|</span>
-        <Link to="/register" className='link'>회원가입</Link>
+        <Link to="/register" className="link">
+          회원가입
+        </Link>
         <span>|</span>
-        <Link to="/login" className='link'>로그인</Link>
+        <Link to="/login" className="link">
+          로그인
+        </Link>
       </Footer>
     </AuthFormBlock>
   );
