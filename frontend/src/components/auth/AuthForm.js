@@ -61,8 +61,8 @@ const ButtonWithMarinTop = styled(Button)`
 `;
 
 const AuthForm = () => {
-  let [credentials, setCredentials] = useState({ username: "", password: "" });
-  let [username, setUsername] = useState("");
+  let [credentials, setCredentials] = useState({ email: "", pwd: "" });
+  let [userEmail, setUserEmail] = useState("");
   let [password, setPassword] = useState("");
   //   let [userid, setUserid] = useState({ id: "" });
   //   setUserid(userid.id="11");
@@ -75,7 +75,7 @@ const AuthForm = () => {
           name="username"
           placeholder=" 이메일"
           onInput={(event) => {
-            setUsername(event.target.value);
+            setUserEmail(event.target.value);
           }}
         />
 
@@ -91,19 +91,19 @@ const AuthForm = () => {
 
         <ButtonWithMarinTop
           fullWidth
-          onClick={() => {
-            setCredentials((credentials.username = username));
-            setCredentials((credentials.password = password));
+          onClick={(e) => {
+            e.preventDefault();
+            setCredentials((credentials.email = userEmail));
+            setCredentials((credentials.pwd = password));
             axios({
-              url: "http://localhost:9999/happyhouse/user/login",
+              url: "http://localhost:8080/auth/login",
               method: "post",
-              data: { id: "11", password: "11" },
+              data: credentials
             })
               .then((res) => {
-                console.log(res.data["access-token"]);
-                let token = res.data["access-token"];
-                localStorage.setItem("token", token);
-                alert("로그인 성공하였습니다.");
+                console.log(res.data);
+                sessionStorage.setItem('accessToken',res.data.accessToken)
+                document.location.href="/"
               })
               .catch(() => {
                 console.log("로그인 실패");
@@ -114,11 +114,11 @@ const AuthForm = () => {
         </ButtonWithMarinTop>
       </form>
       <Footer>
-        <Link to="/" class='link'>HOME</Link>
+        <Link to="/" className='link'>HOME</Link>
         <span>|</span>
-        <Link to="/register" class='link'>회원가입</Link>
+        <Link to="/register" className='link'>회원가입</Link>
         <span>|</span>
-        <Link to="/login" class='link'>로그인</Link>
+        <Link to="/login" className='link'>로그인</Link>
       </Footer>
     </AuthFormBlock>
   );

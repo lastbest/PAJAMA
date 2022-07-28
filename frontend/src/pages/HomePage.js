@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import NavBar from '../components/nav/NavBar';
 import HomeCarousel from '../components/homecarousel/HomeCarousel';
 import styled from 'styled-components';
