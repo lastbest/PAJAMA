@@ -1,5 +1,6 @@
 package com.c203.api.service;
 
+import com.c203.api.dto.Mail.MailDeleteDto;
 import com.c203.api.dto.Mail.MailPwdDto;
 import com.c203.api.dto.Mail.MailSendDto;
 import com.c203.db.Entity.Auth;
@@ -84,10 +85,9 @@ public class MailServiceImpl implements MailService {
     }
     // 3분 지나면 DB에 저장된 인증번호 삭제되게 하기
     @Override
-    public void deleteMail(MailSendDto mailSendDto) {
-        Auth auth = (Auth) mailRepository.findByAuthEmail(mailSendDto.getId());
-        auth.setAuthNum("");
-        mailRepository.saveAndFlush(auth);
+    @Transactional
+    public void deleteMail(MailDeleteDto mailDeleteDto) {
+        mailRepository.deleteByAuthEmail(mailDeleteDto.getEmail());
     }
 
     // 임시 비밀번호 10자리 생성

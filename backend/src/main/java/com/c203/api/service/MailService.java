@@ -1,5 +1,6 @@
 package com.c203.api.service;
 
+import com.c203.api.dto.Mail.MailDeleteDto;
 import com.c203.api.dto.Mail.MailPwdDto;
 import com.c203.api.dto.Mail.MailSendDto;
 
@@ -9,5 +10,5 @@ public interface MailService {
 
     boolean mailCheck(String authNumber, String email);
     void mailPwd(MailPwdDto mailPwdDto);
-    void deleteMail(MailSendDto mailSendDto);
+    void deleteMail(MailDeleteDto mailDeleteDto);
 }
