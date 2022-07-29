@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUserEmail(userModifyDto.getEmail()).get(); // 정확히 동일한 엔티티, 값만 받아오는게 아니라 그 대상을 가지고 있는거
         user.setUserPwd(userModifyDto.getPwd());
         user.setUserNickname(userModifyDto.getNickname());
-
+        user.setUserTel(userModifyDto.getTel());
         userRepository.save(user);
         return true;
     }
