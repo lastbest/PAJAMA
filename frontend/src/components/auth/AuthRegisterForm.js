@@ -70,6 +70,7 @@ const AuthRegisterForm = () => {
   let [userEmail, setUserEmail] = useState("");
   let [userName, setUserName] = useState("");
   let [userNickname, setUserNickname] = useState("");
+  let [code, setCode] = useState("");
   function onSubmit(e) {
     e.preventDefault();
     if (password2 === password1) {
@@ -138,7 +139,12 @@ const AuthRegisterForm = () => {
             }}
             required
           />
-          <StyleButton>인증하기</StyleButton>
+          <StyleButton onClick={()=>{
+            axios({
+              url:"http://localhost:8080/users/mail",
+              mehotd:'post'
+            })
+          }}>인증하기</StyleButton>
         </div>
         <div className="d-flex">
           <StyledInput
@@ -147,11 +153,22 @@ const AuthRegisterForm = () => {
             placeholder=" 이메일 인증번호"
             type="emailcheck"
             onInput={(event) => {
-              setUserEmail(event.target.value);
+              setCode(event.target.value);
             }}
             required
           />
-          <StyleButton>확인하기</StyleButton>
+          <StyleButton onClick={()=>{
+            axios({
+              url:"http://localhost:8080/users/mail",
+              method:'get',
+              data: code
+            })
+            .then((res)=>{
+              if (res.data.result === 'success') {
+                
+              }
+            })
+          }}>확인하기</StyleButton>
         </div>
         <StyledInput
           autoComplete="current-password"
