@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Button from "../common/Button";
 import axios from "axios";
 import { useState } from "react";
+import Modal from 'react-bootstrap/Modal';
 
 const AuthFormBlock = styled.div`
   h3 {
@@ -62,6 +63,10 @@ const ButtonWithMarinTop = styled(Button)`
 `;
 
 const AuthForm = () => {
+  const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
   let [credentials, setCredentials] = useState({ email: "", pwd: "" });
   let [userEmail, setUserEmail] = useState("");
   let [password, setPassword] = useState("");
@@ -105,9 +110,7 @@ const AuthForm = () => {
               .then((res) => {
                 console.log(res.data);
                 if (res.data.accessToken === undefined) {
-                  alert(
-                    " 이메일 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요. "
-                  );
+                  handleShow();
                   document.location.href = "/login";
                 } else {
                   sessionStorage.setItem("accessToken", res.data.accessToken);
@@ -135,6 +138,28 @@ const AuthForm = () => {
           회원가입
         </Link>
       </Footer>
+
+      <Modal
+        style={{'top':'200px'}}
+        show={show}
+        onHide={handleClose}
+        backdrop="static"
+        keyboard={false}
+    >
+        <Modal.Header>
+        <Modal.Title style={{'font-family':'star', 'color':'#FD7A99'}}>PAZAMA</Modal.Title>
+        </Modal.Header>
+        <Modal.Body style={{'font-family':'oldpicture', 'font-size':'20px'}}>
+        이메일 또는 비밀번호를 잘못 입력했습니다.
+        <br />
+        입력하신 내용을 다시 확인해주세요.
+        </Modal.Body>
+        <Modal.Footer>
+        <Button style={{'border':'none','font-family':'oldpicture', 'backgroundColor':'#9D9D9D', 'color':'white',}} onClick={handleClose}>
+            Close
+        </Button>
+        </Modal.Footer>
+      </Modal>
     </AuthFormBlock>
   );
 };
