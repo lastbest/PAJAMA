@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import NavBar from '../components/nav/NavBar';
 import HomeCarousel from '../components/homecarousel/HomeCarousel';
 import styled from 'styled-components';
@@ -40,9 +40,6 @@ const HomePage = () => {
         <div>
             <NavBar></NavBar>
             <HomeCarousel></HomeCarousel>
-            {/* <CreateBtn>
-                <a href='/createparty'><StyledBtn>START PARTY</StyledBtn></a>
-            </CreateBtn> */}
             <CreateBtn>
                 <StyledBtn variant="primary" onClick={
                     ()=>{
@@ -71,9 +68,7 @@ const HomePage = () => {
                 로그인이 필요한 서비스입니다.
                 </Modal.Body>
                 <Modal.Footer>
-                <Button variant='secondary' style={{'border':'none','font-family':'oldpicture'}} onClick={handleClose}>
-                    Close
-                </Button>
+                <Button style={{'color':'black', 'backgroundColor':'#FFA4BD', 'border':'none','font-family':'oldpicture', 'box-shadow':'none' }} onClick={()=>{document.location.href='/register'}}>회원가입</Button>
                 <Button style={{'color':'black', 'backgroundColor':'#FD7A99', 'border':'none','font-family':'oldpicture', 'box-shadow':'none' }} onClick={()=>{document.location.href='/login'}}>로그인</Button>
                 </Modal.Footer>
             </Modal>
