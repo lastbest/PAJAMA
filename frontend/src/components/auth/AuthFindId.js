@@ -69,6 +69,7 @@ const AuthFindId = () => {
   const [show2, setShow2] = useState(false);  //아이디찾기 실패
   const handleClose2 = () => setShow2(false);
   const handleShow2 = () => setShow2(true);
+  let [FindId, setFindId] = useState("");
 
   let [tel, setTel] = useState("");
 
@@ -97,7 +98,7 @@ const AuthFindId = () => {
             })
               .then((res) => {
                 console.log(res.data.result)
-                const FindID = res.data.result
+                setFindId(res.data.result);
                 handleShow1();
               })
               .catch(() => {
@@ -133,7 +134,7 @@ const AuthFindId = () => {
         <Modal.Title style={{'font-family':'star', 'color':'#FD7A99'}}>PAZAMA</Modal.Title>
         </Modal.Header>
         <Modal.Body style={{'font-family':'oldpicture', 'font-size':'20px'}}>
-          !!!!아이디가 안뜬다!!!!
+          가입된 이메일은 {FindId} 입니다.
         </Modal.Body>
         <Modal.Footer>
         <Button style={{'border':'none','font-family':'oldpicture', 'backgroundColor':'#9D9D9D', 'color':'white',}} onClick={handleClose1}>
