@@ -1,9 +1,10 @@
 import React from "react";
 import styled from "styled-components";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Button from "../common/Button";
 import axios from "axios";
 import { useState } from "react";
+import Modal from 'react-bootstrap/Modal';
 
 const AuthFormBlock = styled.div`
   h3 {
@@ -38,6 +39,7 @@ const Footer = styled.div`
     display: felx;
     justify-content: center;
     margin-top: 1rem;
+    font-family: 'oldpicture';
     a {
         color : #9D9D9D;
         text-decoration: none;
@@ -61,6 +63,13 @@ const ButtonWithMarinTop = styled(Button)`
 `;
 
 const AuthFindId = () => {
+  const [show1, setShow1] = useState(false);  //아이디찾기 성공
+  const handleClose1 = () => setShow1(false);
+  const handleShow1 = () => setShow1(true);
+  const [show2, setShow2] = useState(false);  //아이디찾기 실패
+  const handleClose2 = () => setShow2(false);
+  const handleShow2 = () => setShow2(true);
+
   let [tel, setTel] = useState("");
 
   return (
@@ -87,10 +96,12 @@ const AuthFindId = () => {
               params: { tel: tel },
             })
               .then((res) => {
-                alert(res.data.result);
+                console.log(res.data.result)
+                const FindID = res.data.result
+                handleShow1();
               })
               .catch(() => {
-                alert("전화번호를 확인해주세요.");
+                handleShow2();
               });
           }}
         >
@@ -110,7 +121,51 @@ const AuthFindId = () => {
           회원가입
         </Link>
       </Footer>
+      {/* 아이디찾기 성공 */}
+      <Modal
+        style={{'top':'200px'}}
+        show={show1}
+        onHide={handleClose1}
+        backdrop="static"
+        keyboard={false}
+    >
+        <Modal.Header closeButton>
+        <Modal.Title style={{'font-family':'star', 'color':'#FD7A99'}}>PAZAMA</Modal.Title>
+        </Modal.Header>
+        <Modal.Body style={{'font-family':'oldpicture', 'font-size':'20px'}}>
+          !!!!아이디가 안뜬다!!!!
+        </Modal.Body>
+        <Modal.Footer>
+        <Button style={{'border':'none','font-family':'oldpicture', 'backgroundColor':'#9D9D9D', 'color':'white',}} onClick={handleClose1}>
+            Close
+        </Button>
+        <Button style={{'color':'black', 'backgroundColor':'#FD7A99', 'border':'none','font-family':'oldpicture', 'box-shadow':'none' }} onClick={()=>{document.location.href='/login'}}>로그인</Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* 아이디찾기 실패 */}
+      <Modal
+        style={{'top':'200px'}}
+        show={show2}
+        onHide={handleClose2}
+        backdrop="static"
+        keyboard={false}
+    >
+        <Modal.Header closeButton>
+        <Modal.Title style={{'font-family':'star', 'color':'#FD7A99'}}>PAZAMA</Modal.Title>
+        </Modal.Header>
+        <Modal.Body style={{'font-family':'oldpicture', 'font-size':'20px'}}>
+        전화번호를 확인해주세요.
+        </Modal.Body>
+        <Modal.Footer>
+        <Button style={{'border':'none','font-family':'oldpicture', 'backgroundColor':'#9D9D9D', 'color':'white',}} onClick={handleClose2}>
+            Close
+        </Button>
+        </Modal.Footer>
+      </Modal>
     </AuthFormBlock>
+    
+    
   );
 };
 
