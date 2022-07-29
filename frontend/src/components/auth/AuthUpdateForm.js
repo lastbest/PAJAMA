@@ -128,7 +128,6 @@ const AuthUpdateForm = () => {
           })
             .then((res) => {
               if (res.data.result === "success") {
-                alert(tel);
                 sessionStorage.clear();
                 window.alert("회원정보수정 성공");
                 navigate("/");

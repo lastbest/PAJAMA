@@ -60,32 +60,19 @@ const ButtonWithMarinTop = styled(Button)`
   margin-top: 1rem;
 `;
 
-const AuthForm = () => {
-  let [credentials, setCredentials] = useState({ email: "", pwd: "" });
+const AuthFindpwd = () => {
   let [userEmail, setUserEmail] = useState("");
-  let [password, setPassword] = useState("");
-  //   let [userid, setUserid] = useState({ id: "" });
-  //   setUserid(userid.id="11");
-  const navigate = useNavigate();
+
   return (
     <AuthFormBlock>
-      <h3>로그인</h3>
+      <h3>비밀번호 찾기</h3>
       <form>
         <StyledInput
-          autoComplete="username"
-          name="username"
-          placeholder=" 이메일"
+          autoComplete="userEmail"
+          name="userEmail"
+          placeholder=" 비밀번호"
           onInput={(event) => {
             setUserEmail(event.target.value);
-          }}
-        />
-        <StyledInput
-          autoComplete="current-password"
-          name="password"
-          placeholder=" 비밀번호"
-          type="password"
-          onInput={(event) => {
-            setPassword(event.target.value);
           }}
         />
 
@@ -94,31 +81,20 @@ const AuthForm = () => {
           onClick={(e) => {
             e.preventDefault();
 
-            setCredentials((credentials.email = userEmail));
-            setCredentials((credentials.pwd = password));
             axios({
-              url: "http://localhost:8080/auth/login",
+              url: "http://localhost:8080/users/mailPwd",
               method: "post",
-              data: credentials,
+              data: { email: userEmail },
             })
               .then((res) => {
-                console.log(res.data);
-                if (res.data.accessToken === undefined) {
-                  alert(
-                    " 이메일 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요. "
-                  );
-                  document.location.href = "/login";
-                } else {
-                  sessionStorage.setItem("accessToken", res.data.accessToken);
-                  document.location.href = "/";
-                }
+                alert(res.data.result);
               })
               .catch(() => {
-                console.log("로그인 실패");
+                alert("이메일을 확인해주세요.");
               });
           }}
         >
-          로그인
+          비밀번호 찾기
         </ButtonWithMarinTop>
       </form>
       <Footer>
@@ -126,7 +102,7 @@ const AuthForm = () => {
           아이디찾기
         </Link>
         <span>|</span>
-        <Link to="/findpwd" className="link">
+        <Link to="/findPwd" className="link">
           비밀번호찾기
         </Link>
         <span>|</span>
@@ -138,4 +114,4 @@ const AuthForm = () => {
   );
 };
 
-export default AuthForm;
+export default AuthFindpwd;
