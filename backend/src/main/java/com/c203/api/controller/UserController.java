@@ -1,5 +1,6 @@
 package com.c203.api.controller;
 
+import com.c203.api.dto.Mail.MailDeleteDto;
 import com.c203.api.dto.Mail.MailPwdDto;
 import com.c203.api.dto.Mail.MailSendDto;
 import com.c203.api.dto.User.*;
@@ -221,6 +222,21 @@ public class UserController
         HttpStatus status;
         try{
             mailService.mailPwd(mailPwdDto);
+            result.put("result","success");
+            status = HttpStatus.OK;
+        }catch (Exception e){
+            result.put("result","서버에러");
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<>(result,status);
+    }
+    // 3분이 지나면 메일로 보내진 인증번호를 사용하지 못하게 삭제
+    @DeleteMapping("/users/mail")
+    public ResponseEntity<?> deleteMail(@RequestBody MailDeleteDto mailDeleteDto){
+        Map<String,Object> result = new HashMap<>();
+        HttpStatus status;
+        try{
+            mailService.deleteMail(mailDeleteDto);
             result.put("result","success");
             status = HttpStatus.OK;
         }catch (Exception e){

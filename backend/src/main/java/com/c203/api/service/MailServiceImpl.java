@@ -1,5 +1,6 @@
 package com.c203.api.service;
 
+import com.c203.api.dto.Mail.MailDeleteDto;
 import com.c203.api.dto.Mail.MailPwdDto;
 import com.c203.api.dto.Mail.MailSendDto;
 import com.c203.db.Entity.Auth;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -48,7 +50,6 @@ public class MailServiceImpl implements MailService {
         mail.setAuthEmail(mailSendDto.getId());
         mail.setAuthNum(authKey);
         mailRepository.saveAndFlush(mail); //DB 등록
-
     }
 
     public String makeAuthNumber() {
@@ -81,6 +82,12 @@ public class MailServiceImpl implements MailService {
         User user = userRepository.findByUserEmail(mailPwdDto.getEmail()).get(); // entity
         user.setUserPwd(authKey);
         userRepository.saveAndFlush(user);
+    }
+    // 3분 지나면 DB에 저장된 인증번호 삭제되게 하기
+    @Override
+    @Transactional
+    public void deleteMail(MailDeleteDto mailDeleteDto) {
+        mailRepository.deleteByAuthEmail(mailDeleteDto.getEmail());
     }
 
     // 임시 비밀번호 10자리 생성

@@ -115,4 +115,5 @@ public class UserServiceImpl implements UserService {
         String result = front + middle + back;
         return result;
     }
+
 }
