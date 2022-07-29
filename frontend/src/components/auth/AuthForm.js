@@ -38,6 +38,7 @@ const Footer = styled.div`
     display: felx;
     justify-content: center;
     margin-top: 1rem;
+    font-family: 'oldpicture';
     a {
         color : #9D9D9D;
         text-decoration: none;
