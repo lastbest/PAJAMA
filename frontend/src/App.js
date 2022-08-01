@@ -6,7 +6,6 @@ import RegisterPage from "./pages/RegisterPage";
 import RoomPage from "./pages/RoomPage";
 import MyPage from "./pages/MyPage";
 import UpdateUserPage from "./pages/UpdateUserPage";
-import FeedPage from "./pages/FeedPage";
 import CreatePartyPage from "./pages/CreatePartyPage";
 import FindIdPage from "./pages/FindIdPage";
 import FindpwdPage from "./pages/FindpwdPage";
@@ -23,7 +22,6 @@ function App() {
         <Route element={<RoomPage />} path="/room" />
         <Route element={<MyPage />} path="/mypage" />
         <Route element={<UpdateUserPage />} path="/mypage/update" />
-        <Route element={<FeedPage />} path="/mypage/feed" />
         <Route element={<CreatePartyPage />} path="/createparty" />
       </Routes>
     </>
