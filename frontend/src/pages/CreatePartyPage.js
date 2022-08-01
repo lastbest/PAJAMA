@@ -6,6 +6,9 @@ import "react-datepicker/dist/react-datepicker.css";
 import Form from "react-bootstrap/Form";
 import { ko } from "date-fns/esm/locale";
 import './CreatePartyPage.css';
+import axios from "axios";
+
+
 
 const CreateBtn = styled.div`
     display: flex;
@@ -119,27 +122,15 @@ const Pinkbox = styled.div`
     border-radius: 10px;
 `;
 
-const DatePickerComponent = () => {
-    const [startDate, setStartDate] = useState(new Date());
-    return (
-        <DatePicker
-    	selected={startDate} 
-	    onChange={(date) => setStartDate(date)}
-        showTimeSelect
-        timeFormat="HH:mm"
-        timeIntervals={5}
-        timeCaption="Time"
-        dateFormat="yyyy/MM/dd eee, aa h:mm"
-        locale={ko}
-        minDate={new Date()}
-        customInput={
-          <Form.Control as="textarea" rows={1} style={{width:"250px"}}/>
-	}
-    />
-    );
-  };
 
 const CreatePartyPage = () => {
+    const [partyName, setPartyName] = useState('')
+    const [partyContent, setPartyContent] = useState('')
+    const [startDate, setStartDate] = useState(new Date());
+    const [backImg, setBackImg] = useState(null)
+    const [cakeImg, setCakeImg] = useState(null)
+    const [candleImg, setCandleImg] = useState(null)
+    const [info, setInfo] = useState({partyName:'', partyContent:'',startDate: null, backImg:'', cakeImg:'', candleImg:''})
     return (
         <>
         <NavBar></NavBar>
@@ -147,7 +138,9 @@ const CreatePartyPage = () => {
             <CreateFormBlock>
                 <div class="item1">
                     <h5>파티 이름</h5>
-                    <StyledInput
+                    <StyledInput onInput={(e)=>{
+                        setPartyName(e.target.value)
+                    }}
                     autoComplete="partyname"
                     name="partyname"
                     placeholder=" PARTY NAME"
@@ -155,11 +148,26 @@ const CreatePartyPage = () => {
                 </div>
                 <div class='item2'>
                     <h5>날짜 선택</h5>
-                    <DatePickerComponent />
+                    <DatePicker
+                        selected={startDate} 
+                        onChange={(date) => setStartDate(date)}
+                        showTimeSelect
+                        timeFormat="HH:mm"
+                        timeIntervals={5}
+                        timeCaption="Time"
+                        dateFormat="yyyy/MM/dd eee, aa h:mm"
+                        locale={ko}
+                        minDate={new Date()}
+                        customInput={
+                        <Form.Control as="textarea" rows={1} style={{width:"250px"}}/>
+                        }
+                    />
                 </div>
                 <div class='item3'>
                     <h5>파티 내용</h5>
-                    <StyledTextArea
+                    <StyledTextArea onInput={(e)=>{
+                        setPartyContent(e.target.value)
+                    }}
                     autoComplete="partydetail"
                     name="partydetail"
                     placeholder=" PARTY DETAIL"
@@ -167,22 +175,70 @@ const CreatePartyPage = () => {
                 </div>
                 <div class="item4">
                     <h5>배경 선택</h5>
-                    <Pinkbox />
+                    <Pinkbox className='d-flex justify-content-around'>
+                        <img src='/frame1.jpg' style={{'width':'250px'}} onClick={()=>{
+                            setBackImg(0)
+                        }}></img>
+                        <img src='/frame2.jpg' style={{'width':'250px'}} onClick={()=>{
+                            setBackImg(1)
+                        }}></img>
+                        <img src='/frame3.jpg' style={{'width':'250px'}} onClick={()=>{
+                            setBackImg(2)
+                        }}></img>
+                    </Pinkbox>
                 </div>
                 <div class="item5">
                     <h5>케이크 선택</h5>
-                    <Pinkbox />
+                    <Pinkbox className='d-flex justify-content-between'>
+                        <img src='/cake1.png' style={{'width':'160px'}} onClick={()=>{
+                            setCakeImg(0)
+                        }}></img>
+                        <img src='/cake1.png' style={{'width':'160px'}} onClick={()=>{
+                            setCakeImg(1)
+                        }}></img>
+                    </Pinkbox>
                 </div>
                 <div class="item6">
                     <h5>초 선택</h5>
-                    <Pinkbox />
+                    <Pinkbox className='d-flex justify-content-around align-items-center'>
+                        <img src='/iloveyou.png' style={{'width':'100px', 'height':'130px'}} onClick={()=>{
+                            setCandleImg(0)
+                        }}></img>
+                        <img src='/heart.png' style={{'width':'100px', 'height':'130px'}} onClick={()=>{
+                            setCandleImg(1)
+                        }}></img>
+                        <img src='/iloveyou.png' style={{'width':'100px', 'height':'130px'}} onClick={()=>{
+                            setCandleImg(2)
+                        }}></img>
+                    </Pinkbox>
                 </div>
             </CreateFormBlock>
         </div>
         <div class="container">
         </div>
         <CreateBtn>
-            <a href='/room'><StyledBtn>CREATE PARTY</StyledBtn></a>
+            {/* <a href='/room'> */}
+                <StyledBtn onClick={()=>{
+                setInfo(info.partyName=partyName);
+                setInfo(info.partyContent=partyContent);
+                setInfo(info.backImg=backImg);
+                setInfo(info.cakeImg=cakeImg);
+                setInfo(info.candleImg=candleImg);
+                setInfo(info.startDate=startDate);
+                axios({
+                    url:"http://localhost:8080/auth/rooms",
+                    method: 'post',
+                    data: info
+                })
+                .then((res)=>{
+                    console.log(res.data)
+                })
+                .catch((err)=>{
+                    console.log(err)
+                    console.log(info)
+                })
+            }}>CREATE PARTY</StyledBtn>
+            {/* </a> */}
         </CreateBtn>
         </>
     )
