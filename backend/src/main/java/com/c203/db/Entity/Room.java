@@ -23,7 +23,7 @@ public class Room  {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private int room_idx;
 
-    private int room_host;
+    private String room_host;
     private String room_name;
     private LocalDateTime room_date;
     private LocalDateTime room_opendate;

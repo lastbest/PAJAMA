@@ -42,6 +42,7 @@ public class RoomController {
             if(!decodeEmail.equals("timeout")){
                 roomCreateDto.setPartyHost(decodeEmail);
                 RoomDecoDto roomDecoDto = roomService.createRoom(roomCreateDto);
+                result.put("result",roomDecoDto);
             }
             status = HttpStatus.OK;
         }catch (Exception e){
