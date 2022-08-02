@@ -176,13 +176,13 @@ const CreatePartyPage = () => {
                 <div class="item4">
                     <h5>배경 선택</h5>
                     <Pinkbox className='d-flex justify-content-around'>
-                        <img src='/frame1.jpg' style={{'width':'250px'}} onClick={()=>{
+                        <img src='/frame1.png' style={{'width':'250px'}} onClick={()=>{
                             setBackImg(0)
                         }}></img>
-                        <img src='/frame2.jpg' style={{'width':'250px'}} onClick={()=>{
+                        <img src='/frame2.png' style={{'width':'250px'}} onClick={()=>{
                             setBackImg(1)
                         }}></img>
-                        <img src='/frame3.jpg' style={{'width':'250px'}} onClick={()=>{
+                        <img src='/frame3.png' style={{'width':'250px'}} onClick={()=>{
                             setBackImg(2)
                         }}></img>
                     </Pinkbox>
@@ -193,7 +193,7 @@ const CreatePartyPage = () => {
                         <img src='/cake1.png' style={{'width':'160px'}} onClick={()=>{
                             setCakeImg(0)
                         }}></img>
-                        <img src='/cake1.png' style={{'width':'160px'}} onClick={()=>{
+                        <img src='/cake2.png' style={{'width':'160px'}} onClick={()=>{
                             setCakeImg(1)
                         }}></img>
                     </Pinkbox>
@@ -207,7 +207,7 @@ const CreatePartyPage = () => {
                         <img src='/heart.png' style={{'width':'100px', 'height':'130px'}} onClick={()=>{
                             setCandleImg(1)
                         }}></img>
-                        <img src='/iloveyou.png' style={{'width':'100px', 'height':'130px'}} onClick={()=>{
+                        <img src='/18th.png' style={{'width':'100px', 'height':'130px'}} onClick={()=>{
                             setCandleImg(2)
                         }}></img>
                     </Pinkbox>
