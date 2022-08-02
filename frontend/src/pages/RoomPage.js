@@ -40,6 +40,9 @@ const RoomPage = () => {
   const [show2, setShow2] = useState(false);
   const toggleShow2 = () => setShow2(!show2);
 
+  const [show3, setShow3] = useState(false);
+  const toggleShow3 = () => setShow3(!show3);
+
   function cake1Show() {
     const cake1 = document.getElementById("cake1")
     
@@ -80,6 +83,16 @@ const RoomPage = () => {
     }
   }
 
+  function eighteenShow() {
+    const eighteen = document.getElementById("eighteen")
+    
+    if (eighteen.style.display === "none") {
+      eighteen.style.display = ""
+    } else {
+      eighteen.style.display = "none"
+    }
+  }
+
   return (
     <>
     <div className={styles.container}>
@@ -92,11 +105,13 @@ const RoomPage = () => {
 
     </div>
     <button onClick={ toggleShow }>{show ? "하트촛불끄기" : "하트촛불켜기"}</button>
-    <button onClick={ toggleShow2 }>{show2 ? "촛불끄기" : "촛불켜기"}</button>
+    <button onClick={ toggleShow2 }>{show2 ? "알러뷰촛불끄기" : "알러뷰촛불켜기"}</button>
+    <button onClick={ toggleShow3 }>{show3 ? "18촛불끄기" : "18촛불켜기"}</button>
     <button onClick={cake1Show}>케이크1</button>
     <button onClick={cake2Show}>케이크2</button>
     <button onClick={heartShow} >하트초</button>
     <button onClick={iloveyouShow} >Iloveyou초</button>
+    <button onClick={eighteenShow} >18th초</button>
     <div className="text-center">
       <img id="cake1" src="/cake1.png" style={{"width":"500px", "height":"500px", "margin-left":"-50px","display":"none"}} alt="cake1"/>
     </div>
@@ -106,6 +121,7 @@ const RoomPage = () => {
     <div className="text-center">
       <img id="heart" src="/heart.png" style={{"width":"100px", "height":"200px","margin-top":"-800px","display":"none"}} alt='heart' />
       <img id="iloveyou" src="/iloveyou.png" style={{"width":"220px", "height":"100px", "margin-top":"-700px","display":"none"}} alt='love' />
+      <img id="eighteen" src="/18th.png" style={{"width":"150px", "height":"150px", "margin-top":"-750px","display":"none"}} alt='eighteen' />
     </div>
 
     {/* 하트초 */}
@@ -122,6 +138,12 @@ const RoomPage = () => {
         <img src="/fire.gif" style={{"width":"70px", "height":"70px", "margin-left":"-5px", "margin-top":"-900px"}} alt='fire3' /> 
         <img src="/fire.gif" style={{"width":"70px", "height":"70px", "margin-left":"-43px", "margin-top":"-900px"}} alt='fire4' /> 
         <img src="/fire.gif" style={{"width":"70px", "height":"70px", "margin-left":"-25px", "margin-top":"-900px"}} alt='fire5' /> 
+      </FadeInOut>
+    </div>
+    {/* eighteen초 */}
+    <div className="text-center">
+      <FadeInOut show={show3} duration={500}>
+        <img id="eighteenfire"  src="/fire.gif" style={{"width":"100px", "height":"100px", "margin-left":"-15px", "margin-top":"-1010px",}} alt='fire' /> 
       </FadeInOut>
     </div>
   </>
