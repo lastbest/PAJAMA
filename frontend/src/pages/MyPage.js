@@ -20,6 +20,7 @@ function MyPage() {
       })
       .catch(() => {
         alert("불러오기 실패");
+        navigate("/login");
       });
   }, []);
 
