@@ -101,3 +101,31 @@
 .react-datepicker__day-name:last-child {
     color: navy;
 }
+
+.pointer:hover {
+    cursor: pointer;
+}
+
+
+.input-hidden {
+    visibility: hidden;
+}
+
+
+
+input[type=radio]:checked + label>img {
+    border: 5px solid #FD7A99;
+    border-radius: 5px;
+} 
+
+input[type=radio] + label>img {
+    width: 150px;
+    height: 150px;
+    transition: 200ms all;
+}
+
+/* input[type=radio]:checked + label>img {
+    transform: 
+    rotateZ(-10deg) 
+    rotateX(10deg);
+} */
