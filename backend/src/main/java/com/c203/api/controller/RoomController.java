@@ -2,8 +2,6 @@ package com.c203.api.controller;
 
 import com.c203.api.dto.Room.RoomCreateDto;
 import com.c203.api.dto.Room.RoomDecoDto;
-import com.c203.api.dto.Room.RoomDeleteDto;
-import com.c203.api.dto.User.UserShowDto;
 import com.c203.api.service.JwtService;
 import com.c203.api.service.RoomService;
 import com.c203.api.service.UserService;
