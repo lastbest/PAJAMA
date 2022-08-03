@@ -17,7 +17,6 @@
 
 .header {
   display: flex;
-  font-size: 26px;
   height: 100px;
   justify-content: space-around;
   text-align: center;
@@ -27,6 +26,7 @@
   vertical-align: middle;
   font-family: 'star';
   padding-top: 50px;
+  font-size: 30px;
 }
 
 .link {
@@ -36,7 +36,7 @@
   background-color: #fD7A99;
   border-radius: 30px;
   height: 50px;
-  width: 200px;
+  width: 150px;
   margin-top: 50px;
   text-decoration: none;
 }

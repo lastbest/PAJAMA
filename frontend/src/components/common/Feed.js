@@ -30,6 +30,10 @@ function Feed({ feed_idx, feed_user, feed_description, feed_picture }) {
   const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+  
+  const [show2, setShow2] = useState(false);
+  const handleClose2 = () => setShow2(false);
+  const handleShow2 = () => setShow2(true);
 
   return (
     <>
@@ -45,7 +49,7 @@ function Feed({ feed_idx, feed_user, feed_description, feed_picture }) {
           <div className={styles.date}>날짜</div>
           <div>
             <button className={styles.downloadbtn}><img src="/download.png" style={{"width":"20px", "height":"20px"}}></img></button>
-            <button className={styles.trashbtn}><img src="/trash.png" style={{"width":"20px", "height":"20px"}}></img></button>
+            <button className={styles.trashbtn} onClick={handleShow2}><img src="/trash.png" style={{"width":"20px", "height":"20px"}}></img></button>
           </div>
         </div>
         <div className={styles.comment}>{feed_description}</div>
@@ -92,6 +96,30 @@ function Feed({ feed_idx, feed_user, feed_description, feed_picture }) {
             })
 
         }}>작성하기</Button>
+      </Modal.Footer>
+    </Modal>
+
+    <Modal
+      style={{'top':'150px'}}
+      show={show2}
+      onHide={handleClose2}
+      backdrop="static"
+      keyboard={false}
+      className={styles.dialog}
+    >
+      <Modal.Header closeButton>
+        <Modal.Title style={{'font-family':'star', "color":"#FD7A99"}}>PAZAMA</Modal.Title>
+      </Modal.Header>
+      <Modal.Body style={{'font-family':'oldpicture'}}>
+        해당 피드를 삭제하시겠습니까?
+      </Modal.Body>
+      <Modal.Footer>
+      <Button 
+        style={{'color':'white', 'backgroundColor':'#9D9D9D', 'border':'none','font-family':'oldpicture', 'box-shadow':'none' }} 
+        onClick={handleClose2}>취소</Button>
+        <Button 
+        style={{'color':'black', 'backgroundColor':'#FD7A99', 'border':'none','font-family':'oldpicture', 'box-shadow':'none' }} 
+        >삭제하기</Button>
       </Modal.Footer>
     </Modal>
     </>
