@@ -149,6 +149,7 @@ const CreatePartyPage = () => {
                 <div class='item2'>
                     <h5>날짜 선택</h5>
                     <DatePicker
+                        className='pointer'
                         selected={startDate} 
                         onChange={(date) => setStartDate(date)}
                         showTimeSelect
@@ -176,40 +177,93 @@ const CreatePartyPage = () => {
                 <div class="item4">
                     <h5>배경 선택</h5>
                     <Pinkbox className='d-flex justify-content-around'>
-                        <img src='/frame1.png' style={{'width':'250px'}} onClick={()=>{
-                            setBackImg(0)
-                        }}></img>
-                        <img src='/frame2.png' style={{'width':'250px'}} onClick={()=>{
-                            setBackImg(1)
-                        }}></img>
-                        <img src='/frame3.png' style={{'width':'250px'}} onClick={()=>{
-                            setBackImg(2)
-                        }}></img>
+                        <input 
+                        type="radio" name="back"
+                        id="back0" className='input-hidden'
+                        />
+                        <label for="back0">
+                            <img className='pointer' src='/frame1.png' style={{'width':'250px'}} onClick={()=>{
+                                setBackImg(0)
+                            }}></img>
+                        </label>
+
+                        <input 
+                        type="radio" name="back"
+                        id="back1" className='input-hidden'
+                        />
+                        <label for="back1">
+                            <img className='pointer' src='/frame2.png' style={{'width':'250px'}} onClick={()=>{
+                                setBackImg(1)
+                            }}></img>
+                        </label>
+
+                        <input 
+                        type="radio" name="back"
+                        id="back2" className='input-hidden'
+                        />
+                        <label for="back2">
+                            <img className='pointer' src='/frame3.png' style={{'width':'250px'}} onClick={()=>{
+                                setBackImg(2)
+                            }}></img>
+                        </label>
                     </Pinkbox>
                 </div>
                 <div class="item5">
                     <h5>케이크 선택</h5>
                     <Pinkbox className='d-flex justify-content-between'>
-                        <img src='/cake1.png' style={{'width':'160px'}} onClick={()=>{
-                            setCakeImg(0)
-                        }}></img>
-                        <img src='/cake2.png' style={{'width':'160px'}} onClick={()=>{
-                            setCakeImg(1)
-                        }}></img>
+                        <input 
+                        type="radio" name="cake"
+                        id="cake0" className='input-hidden'
+                        />
+                        <label for="cake0">
+                            <img className='pointer' src='/cake1.png' style={{'width':'160px'}} onClick={()=>{
+                                setCakeImg(0)
+                            }}></img>
+                        </label>
+
+                        <input 
+                        type="radio" name="cake"
+                        id="cake1" className='input-hidden'
+                        />
+                        <label for="cake1">
+                            <img className='pointer' src='/cake2.png' style={{'width':'160px'}} onClick={()=>{
+                                setCakeImg(1)
+                            }}></img>
+                        </label>
                     </Pinkbox>
                 </div>
                 <div class="item6">
                     <h5>초 선택</h5>
                     <Pinkbox className='d-flex justify-content-around align-items-center'>
-                        <img src='/iloveyou.png' style={{'width':'100px', 'height':'130px'}} onClick={()=>{
-                            setCandleImg(0)
-                        }}></img>
-                        <img src='/heart.png' style={{'width':'100px', 'height':'130px'}} onClick={()=>{
-                            setCandleImg(1)
-                        }}></img>
-                        <img src='/18th.png' style={{'width':'100px', 'height':'130px'}} onClick={()=>{
-                            setCandleImg(2)
-                        }}></img>
+                        <input 
+                        type="radio" name="candle"
+                        id="candle0" className='input-hidden'
+                        />
+                        <label for="candle0">
+                            <img className='pointer' src='/iloveyou.png' style={{'width':'100px', 'height':'130px'}} onClick={()=>{
+                                setCandleImg(0)
+                            }}></img>
+                        </label>
+
+                        <input 
+                        type="radio" name="candle"
+                        id="candle1" className='input-hidden'
+                        />
+                        <label for="candle1">
+                            <img className='pointer' src='/heart.png' style={{'width':'100px', 'height':'130px'}} onClick={()=>{
+                                setCandleImg(1)
+                            }}></img>
+                        </label>
+
+                        <input 
+                        type="radio" name="candle"
+                        id="candle2" className='input-hidden'
+                        />
+                        <label for="candle2">
+                            <img className='pointer' src='/18th.png' style={{'width':'100px', 'height':'130px'}} onClick={()=>{
+                                setCandleImg(2)
+                            }}></img>
+                        </label>
                     </Pinkbox>
                 </div>
             </CreateFormBlock>
