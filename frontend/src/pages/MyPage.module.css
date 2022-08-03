@@ -12,30 +12,32 @@
   font-weight: bold;
   font-size: 50px;
   color: #fd7a99;
+  font-family: 'star';
 }
 
 .header {
-  display: table;
-  font-size: 26px;
+  display: flex;
   height: 100px;
+  justify-content: space-around;
   text-align: center;
-  padding: 100px, 0px;
-  width: 100%;
 }
 .userName {
   display: table-cell;
   vertical-align: middle;
+  font-family: 'star';
+  padding-top: 50px;
+  font-size: 30px;
 }
 
 .link {
   display: table-cell;
   vertical-align: middle;
   text-decoration: none;
-  background-color: #ffe9ef;
+  background-color: #fD7A99;
   border-radius: 30px;
   height: 50px;
-  width: 200px;
-  margin: 100px;
+  width: 150px;
+  margin-top: 50px;
   text-decoration: none;
 }
 
@@ -51,6 +53,7 @@
   height: 100%;
   display: flex;
   justify-content: center;
+  margin:2px;
 }
 
 .feeds {

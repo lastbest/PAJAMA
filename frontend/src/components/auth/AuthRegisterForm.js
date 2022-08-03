@@ -26,7 +26,7 @@ const StyledInput = styled.input`
   outline: none;
   width: 100%;
   display: flex;
-
+  font-family:"oldpicture";
   &:focus {
     color: $oc-teal-7;
     border-bottom: 1px solid #fd7a99;
