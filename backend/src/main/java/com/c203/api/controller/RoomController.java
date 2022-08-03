@@ -51,4 +51,7 @@ public class RoomController {
         }
         return new ResponseEntity<>(result,status);
     }
+    // 파티룸 정보 수정하기
+
+    // 파티룸 삭제하기
 }

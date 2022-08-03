@@ -19,8 +19,11 @@ public class RoomServiceImpl implements RoomService {
     @Autowired
     private RoomDecoRepository roomDecoRepository;
 
+    @Autowired
+    private EncryptionService encryptionService;
+
     @Override
-    public RoomDecoDto createRoom(RoomCreateDto roomCreateDto) {
+    public RoomDecoDto createRoom(RoomCreateDto roomCreateDto) throws Exception {
         Room room = new Room();
         RoomDeco roomDeco = new RoomDeco();
         roomDeco.setRoomdeco_bg(roomCreateDto.getPartyBg());
@@ -35,14 +38,15 @@ public class RoomServiceImpl implements RoomService {
         roomDecoRepository.save(roomDeco);
         // 리턴
         RoomDecoDto roomDecoDto = new RoomDecoDto();
-        roomDecoDto.setRoomId(roomDeco.getRoomdeco_idx());
+
         roomDecoDto.setBg(roomDeco.getRoomdeco_bg());
         roomDecoDto.setCandle(roomDeco.getRoomdeco_candle());
         roomDecoDto.setObject(roomDeco.getRoomdeco_object());
         // 암호화 하기
         int num = room.getRoom_idx();
-
-
+        String n = Integer.toString(num);
+        String temp = encryptionService.encrypt(n);
+        roomDecoDto.setRoomId(temp); // 프론트에 암호화한 room_idx던져주기
         return roomDecoDto;
     }
 }
