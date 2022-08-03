@@ -9,20 +9,20 @@ import axios from "axios";
 function MyPage() {
   let token = sessionStorage.getItem("accessToken");
   let [nickname, setNickname] = useState("");
-  useEffect(() => {
-    axios({
-      url: "http://localhost:8080/users/me",
-      method: "get",
-      headers: { accessToken: token },
-    })
-      .then((res) => {
-        setNickname(res.data.result.nickname);
-      })
-      .catch(() => {
-        alert("불러오기 실패");
-        navigate("/login");
-      });
-  }, []);
+  // useEffect(() => {
+  //   axios({
+  //     url: "http://localhost:8080/users/me",
+  //     method: "get",
+  //     headers: { accessToken: token },
+  //   })
+  //     .then((res) => {
+  //       setNickname(res.data.result.nickname);
+  //     })
+  //     .catch(() => {
+  //       alert("불러오기 실패");
+  //       navigate("/login");
+  //     });
+  // }, []);
 
   const [loading, setLoading] = useState(true);
   const [feeds, setFeeds] = useState([]);
@@ -44,11 +44,12 @@ function MyPage() {
     navigate("/mypage/update");
   }
   return (
-    <div className={styles.container}>
-      <NavBar></NavBar>
+    <>
+    <NavBar></NavBar>
+    <div className="container">
       <header>
         <div className={styles.header}>
-          <span className={styles.userName}>${nickname}의 Party</span>
+          <span className={styles.userName}>{nickname}의 Party</span>
           <Button className={styles.link} onClick={moveUpdate}>
             회원정보수정
           </Button>
@@ -66,7 +67,7 @@ function MyPage() {
                 key={movie.id}
                 feed_idx={movie.id}
                 feed_user={movie.title}
-                feed_description="test_desc"
+                feed_description="파티한 날!"
                 feed_picture={movie.medium_cover_image}
               />
             ))}
@@ -74,6 +75,7 @@ function MyPage() {
         )}
       </div>
     </div>
+    </>
   );
 }
 
