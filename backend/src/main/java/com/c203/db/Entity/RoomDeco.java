@@ -10,6 +10,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(name = "room_deco")
 public class RoomDeco {
 
     @Id

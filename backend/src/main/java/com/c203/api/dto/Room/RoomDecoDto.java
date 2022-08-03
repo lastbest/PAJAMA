@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class RoomDecoDto {
-    private String roomId; // 암호화된 룸 번호
+    private int roomId; // 암호화된 룸 번호
     private int bg;
     private int candle;
     private int object;

@@ -4,6 +4,7 @@ spring:
     driver-class-name: org.mariadb.jdbc.Driver
     username: S07P11C203
     password: hhqiKzxIqy
+
 #  mail:
 #    host: smtp.gmail.com
 #    port: 587
@@ -36,6 +37,7 @@ spring:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
       ddl-auto: none
+      use-new-id-generator-mappings: false
     properties:
       hibernate:
         format_sql: true
