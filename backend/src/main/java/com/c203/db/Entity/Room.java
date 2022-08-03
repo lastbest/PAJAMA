@@ -13,18 +13,21 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class Room  {
 
-    @OneToOne(cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
-    private RoomDeco roomDeco;
+//    @OneToOne(cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
+//    private RoomDeco roomDeco;
 
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    private User user1;
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private int room_idx;
+    @Column(name = "room_idx")
+    private int roomIdx;
 
-    private String room_host;
-    private String room_name;
+    @Column(name = "room_host")
+    private String roomHost;
+    @Column(name = "room_name")
+    private String roomName;
     private LocalDateTime room_date;
     private LocalDateTime room_opendate;
     private String room_link;

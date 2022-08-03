@@ -2,6 +2,7 @@ package com.c203.api.controller;
 
 import com.c203.api.dto.Room.RoomCreateDto;
 import com.c203.api.dto.Room.RoomDecoDto;
+import com.c203.api.dto.Room.RoomDeleteDto;
 import com.c203.api.dto.User.UserShowDto;
 import com.c203.api.service.JwtService;
 import com.c203.api.service.RoomService;
@@ -9,10 +10,7 @@ import com.c203.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -51,7 +49,31 @@ public class RoomController {
         }
         return new ResponseEntity<>(result,status);
     }
-    // 파티룸 정보 수정하기
-
     // 파티룸 삭제하기
+    @DeleteMapping("/rooms")
+    public ResponseEntity<?> deleteRoom(HttpServletRequest request, @RequestParam("roomIdx")String roomIdx){
+        Map<String,Object> result = new HashMap<>();
+        HttpStatus status;
+        String accessToken = request.getHeader("accessToken");
+        String decodeEmail = jwtService.decodeToken(accessToken);
+        try{
+            // %3D 가 = 로 나와요
+            // 특수문자 치환하기
+            roomIdx = roomIdx.replace("&","%26");
+            roomIdx = roomIdx.replace("+","%2B");
+            roomIdx = roomIdx.replace("=","%3D");
+
+            // room_idx와 email이 같으면 삭제 - 만든 사람이 삭제하도록
+            if(!decodeEmail.equals("timeout")){
+                roomService.deleteRoom(decodeEmail,roomIdx);
+            }
+            result.put("result","success");
+            status = HttpStatus.OK;
+        }catch (Exception e){
+            result.put("result","서버에러");
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<>(result,status);
+    }
+
 }

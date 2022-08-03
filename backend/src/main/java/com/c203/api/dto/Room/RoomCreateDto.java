@@ -11,7 +11,7 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 public class RoomCreateDto {
-    private String partyHost; // 호스트 이름
+    private String partyHost; // 호스트 이름 - 로그인된 사용자가 호스트니까 안받아도됨
     private String partyName; // 파티 이름
     private String partyDesc;
     private LocalDateTime partyDate;

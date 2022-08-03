@@ -15,7 +15,8 @@ public class RoomDeco {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private int roomdeco_idx;
+    @Column(name = "roomdeco_idx")
+    private int roomdecoIdx;
 
     private int roomdeco_bg;
     private int roomdeco_candle;
