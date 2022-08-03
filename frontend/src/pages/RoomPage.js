@@ -4,6 +4,7 @@ import styled from "styled-components";
 import styles from "./RoomPage.module.css";
 import Button from "../components/common/Button";
 import FadeInOut from "../components/common/FadeInOut";
+import OpenVideo from "../components/openvidu/OpenVideo";
 
 const Header = styled.div`
   display: grid;
@@ -132,6 +133,9 @@ const RoomPage = () => {
             <Button className={styles.button}>입장하기</Button>
           </div>
         </div>
+      </div>
+      <div>
+        <OpenVideo />
       </div>
       <button onClick={toggleShow}>
         {show ? "하트촛불끄기" : "하트촛불켜기"}
