@@ -7,8 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class FeedDto {
-    private int idx;
+public class FeedRegistDto {
+    private String idx;
     private int user;
     private String description;
     private Byte[] picture;
