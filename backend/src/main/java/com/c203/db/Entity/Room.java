@@ -28,6 +28,8 @@ public class Room  {
     private String roomHost;
     @Column(name = "room_name")
     private String roomName;
+    @Column(name = "room_desc")
+    private String roomDesc;
     private LocalDateTime room_date;
     private LocalDateTime room_opendate;
     private String room_link;

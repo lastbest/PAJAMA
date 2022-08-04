@@ -2,8 +2,10 @@ package com.c203.api.service;
 
 import com.c203.api.dto.Room.RoomCreateDto;
 import com.c203.api.dto.Room.RoomDecoDto;
+import com.c203.api.dto.Room.RoomModifyDto;
 import com.c203.db.Entity.Room;
 import com.c203.db.Entity.RoomDeco;
+import com.c203.db.Entity.User;
 import com.c203.db.Repository.RoomDecoRepository;
 import com.c203.db.Repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 
 @Service
@@ -30,6 +33,7 @@ public class RoomServiceImpl implements RoomService {
         roomDeco.setRoomdeco_bg(roomCreateDto.getPartyBg());
         roomDeco.setRoomdeco_candle(roomCreateDto.getPartyCandle());
         roomDeco.setRoomdeco_object(roomCreateDto.getPartyCake());
+        room.setRoomDesc(roomCreateDto.getPartyDesc());
         room.setRoom_date(roomCreateDto.getPartyDate());
         room.setRoom_opendate(LocalDateTime.now());
         room.setRoomHost(roomCreateDto.getPartyHost());
@@ -39,7 +43,6 @@ public class RoomServiceImpl implements RoomService {
         roomDecoRepository.save(roomDeco);
         // 리턴
         RoomDecoDto roomDecoDto = new RoomDecoDto();
-
         roomDecoDto.setBg(roomDeco.getRoomdeco_bg());
         roomDecoDto.setCandle(roomDeco.getRoomdeco_candle());
         roomDecoDto.setObject(roomDeco.getRoomdeco_object());
@@ -48,7 +51,6 @@ public class RoomServiceImpl implements RoomService {
         String n = Integer.toString(num);
         String temp = encryptionService.encrypt(n);
         roomDecoDto.setRoomId(temp); // 프론트에 암호화한 room_idx던져주기
-        System.out.println(temp);
         return roomDecoDto;
     }
 
@@ -62,6 +64,26 @@ public class RoomServiceImpl implements RoomService {
         roomRepository.deleteByRoomIdxAndRoomHost(id, email);
         // idx값 같은 roomdeco정보 삭제
         roomDecoRepository.deleteByRoomdecoIdx(id);
+        return true;
+    }
+
+    @Override
+    public boolean modifyRoom(RoomModifyDto roomModifyDto, String roomIdx) throws Exception {
+        // 원래 room_idx 원래 값
+        String temp = encryptionService.decrypt(roomIdx);
+        int id = Integer.parseInt(temp);
+        // 기존 방, 기존 데코 값 가져오기
+        Room room = roomRepository.findByRoomIdxAndRoomHost(id, roomModifyDto.getPartyHost());
+        room.setRoom_date(roomModifyDto.getPartyDate());
+        room.setRoomName(roomModifyDto.getPartyName());
+        room.setRoomDesc(roomModifyDto.getPartyDesc());
+        RoomDeco roomDeco = roomDecoRepository.findByRoomdecoIdx(id);
+        roomDeco.setRoomdeco_bg(roomModifyDto.getPartyBg());
+        roomDeco.setRoomdeco_candle(roomModifyDto.getPartyCandle());
+        roomDeco.setRoomdeco_object(roomModifyDto.getPartyCake());
+        // 다시 저장
+        roomRepository.save(room);
+        roomDecoRepository.save(roomDeco);
         return true;
     }
 

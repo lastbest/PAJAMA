@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mariadb://i7c203.p.ssafy.io:3306/s07p11c203?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
+    url: jdbc:mariadb://i7c203.p.ssafy.io:3306/s07p11c203?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true&useSSL=false
     driver-class-name: org.mariadb.jdbc.Driver
     username: ssafy
     password: ssafy
@@ -36,7 +36,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
       use-new-id-generator-mappings: false
     properties:
       hibernate:
