@@ -143,7 +143,7 @@ const AuthRegisterForm = () => {
               (credentials.tel = tel)
             );
             axios({
-              url: "http://localhost:8080/users",
+              url: "http://i7c203.p.ssafy.io:8082/users",
               method: "post",
               data: credentials,
             })

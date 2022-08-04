@@ -92,7 +92,7 @@ const AuthFindId = () => {
             e.preventDefault();
 
             axios({
-              url: "http://localhost:8080/users/findEmail",
+              url: "http://i7c203.p.ssafy.io:8082/users/findEmail",
               method: "get",
               params: { tel: tel },
             })

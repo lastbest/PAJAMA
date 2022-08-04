@@ -103,7 +103,7 @@ const AuthForm = () => {
             setCredentials((credentials.email = userEmail));
             setCredentials((credentials.pwd = password));
             axios({
-              url: "http://localhost:8080/auth/login",
+              url: "http://i7c203.p.ssafy.io:8082/auth/login",
               method: "post",
               data: credentials,
             })

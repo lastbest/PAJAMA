@@ -91,7 +91,7 @@ const AuthFindpwd = () => {
             e.preventDefault();
 
             axios({
-              url: "http://localhost:8080/users/mailPwd",
+              url: "http://i7c203.p.ssafy.io:8082/users/mailPwd",
               method: "post",
               data: { email: userEmail },
             })
