@@ -61,7 +61,7 @@ const AuthUpdateForm = () => {
   let token = sessionStorage.getItem("accessToken");
   useEffect(() => {
     axios({
-      url: "http://localhost:8080/users/me",
+      url: "http://i7c203.p.ssafy.io:8082/users/me",
       method: "get",
       headers: { accessToken: token },
     })
@@ -121,7 +121,7 @@ const AuthUpdateForm = () => {
           );
 
           axios({
-            url: "http://localhost:8080/users",
+            url: "http://i7c203.p.ssafy.io:8082/users",
             method: "put",
             data: credentials,
             headers: { accessToken: token },
@@ -149,7 +149,7 @@ const AuthUpdateForm = () => {
     if (window.confirm("정말 삭제합니까?")) {
       alert("삭제되었습니다.");
       axios({
-        url: "http://localhost:8080/users",
+        url: "http://i7c203.p.ssafy.io:8082/users",
         method: "delete",
         headers: { accessToken: token },
       })
