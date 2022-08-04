@@ -12,8 +12,8 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class Participant {
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    private User user4;
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)

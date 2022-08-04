@@ -1,15 +1,17 @@
 import React from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "../common/Button";
 import axios from "axios";
 import { useState } from "react";
+import Modal from 'react-bootstrap/Modal';
 
 const AuthFormBlock = styled.div`
   h3 {
     margin: 0;
     color: black;
     margin-bottom: 1rem;
+    font-family: "star";
   }
 `;
 
@@ -23,7 +25,7 @@ const StyledInput = styled.input`
   outline: none;
   width: 100%;
   display: flex;
-
+  font-family:"oldpicture";
   &:focus {
     color: $oc-teal-7;
     border-bottom: 1px solid #fd7a99;
@@ -37,6 +39,7 @@ const Footer = styled.div`
     display: felx;
     justify-content: center;
     margin-top: 1rem;
+    font-family: 'oldpicture';
     a {
         color : #9D9D9D;
         text-decoration: none;
@@ -60,11 +63,16 @@ const ButtonWithMarinTop = styled(Button)`
 `;
 
 const AuthForm = () => {
-  let [credentials, setCredentials] = useState({ username: "", password: "" });
-  let [username, setUsername] = useState("");
+  const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+  let [credentials, setCredentials] = useState({ email: "", pwd: "" });
+  let [userEmail, setUserEmail] = useState("");
   let [password, setPassword] = useState("");
   //   let [userid, setUserid] = useState({ id: "" });
   //   setUserid(userid.id="11");
+  const navigate = useNavigate();
   return (
     <AuthFormBlock>
       <h3>로그인</h3>
@@ -74,10 +82,9 @@ const AuthForm = () => {
           name="username"
           placeholder=" 이메일"
           onInput={(event) => {
-            setUsername(event.target.value);
+            setUserEmail(event.target.value);
           }}
         />
-
         <StyledInput
           autoComplete="current-password"
           name="password"
@@ -90,19 +97,25 @@ const AuthForm = () => {
 
         <ButtonWithMarinTop
           fullWidth
-          onClick={() => {
-            setCredentials((credentials.username = username));
-            setCredentials((credentials.password = password));
+          onClick={(e) => {
+            e.preventDefault();
+
+            setCredentials((credentials.email = userEmail));
+            setCredentials((credentials.pwd = password));
             axios({
-              url: "http://localhost:9999/happyhouse/user/login",
+              url: "http://localhost:8080/auth/login",
               method: "post",
-              data: { id: "11", password: "11" },
+              data: credentials,
             })
               .then((res) => {
-                console.log(res.data["access-token"]);
-                let token = res.data["access-token"];
-                localStorage.setItem("token", token);
-                alert("로그인 성공하였습니다.");
+                console.log(res.data);
+                if (res.data.accessToken === undefined) {
+                  handleShow();
+                  document.location.href = "/login";
+                } else {
+                  sessionStorage.setItem("accessToken", res.data.accessToken);
+                  document.location.href = "/";
+                }
               })
               .catch(() => {
                 console.log("로그인 실패");
@@ -113,12 +126,40 @@ const AuthForm = () => {
         </ButtonWithMarinTop>
       </form>
       <Footer>
-        <Link to="/" class='link'>HOME</Link>
+        <Link to="/findId" className="link">
+          아이디찾기
+        </Link>
         <span>|</span>
-        <Link to="/register" class='link'>회원가입</Link>
+        <Link to="/findpwd" className="link">
+          비밀번호찾기
+        </Link>
         <span>|</span>
-        <Link to="/login" class='link'>로그인</Link>
+        <Link to="/register" className="link">
+          회원가입
+        </Link>
       </Footer>
+
+      <Modal
+        style={{'top':'200px'}}
+        show={show}
+        onHide={handleClose}
+        backdrop="static"
+        keyboard={false}
+    >
+        <Modal.Header>
+        <Modal.Title style={{'font-family':'star', 'color':'#FD7A99'}}>PAZAMA</Modal.Title>
+        </Modal.Header>
+        <Modal.Body style={{'font-family':'oldpicture', 'font-size':'20px'}}>
+        이메일 또는 비밀번호를 잘못 입력했습니다.
+        <br />
+        입력하신 내용을 다시 확인해주세요.
+        </Modal.Body>
+        <Modal.Footer>
+        <Button style={{'border':'none','font-family':'oldpicture', 'backgroundColor':'#9D9D9D', 'color':'white',}} onClick={handleClose}>
+            Close
+        </Button>
+        </Modal.Footer>
+      </Modal>
     </AuthFormBlock>
   );
 };
