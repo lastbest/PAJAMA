@@ -7,7 +7,7 @@ import Form from "react-bootstrap/Form";
 import { ko } from "date-fns/esm/locale";
 import './CreatePartyPage.css';
 import axios from "axios";
-
+import { FiCheckCircle } from "react-icons/fi";
 
 
 const CreateBtn = styled.div`
@@ -181,30 +181,33 @@ const CreatePartyPage = () => {
                         type="radio" name="back"
                         id="back0" className='input-hidden'
                         />
-                        <label for="back0">
-                            <img className='pointer' src='/frame1.png' style={{'width':'250px'}} onClick={()=>{
-                                setBackImg(0)
-                            }}></img>
+                        <label className='itemBox' for="back0">
+                                <img className='pointer' src='/frame1.png' style={{'width':'250px'}} onClick={()=>{
+                                    setBackImg(0)
+                                }}></img>
+                                <FiCheckCircle id='itemImg' className='backCheckIcon'/>
                         </label>
 
                         <input 
                         type="radio" name="back"
                         id="back1" className='input-hidden'
                         />
-                        <label for="back1">
-                            <img className='pointer' src='/frame2.png' style={{'width':'250px'}} onClick={()=>{
-                                setBackImg(1)
-                            }}></img>
+                        <label className='itemBox' for="back1">
+                                <img className='pointer' src='/frame2.png' style={{'width':'250px'}} onClick={()=>{
+                                    setBackImg(1)
+                                }}></img>
+                                <FiCheckCircle id='itemImg' className='backCheckIcon'/>
                         </label>
 
                         <input 
                         type="radio" name="back"
                         id="back2" className='input-hidden'
                         />
-                        <label for="back2">
-                            <img className='pointer' src='/frame3.png' style={{'width':'250px'}} onClick={()=>{
-                                setBackImg(2)
-                            }}></img>
+                        <label className='itemBox' for="back2">
+                                <img className='pointer' src='/frame3.png' style={{'width':'250px'}} onClick={()=>{
+                                    setBackImg(2)
+                                }}></img>
+                                <FiCheckCircle id='itemImg' className='backCheckIcon'/>
                         </label>
                     </Pinkbox>
                 </div>
@@ -215,20 +218,22 @@ const CreatePartyPage = () => {
                         type="radio" name="cake"
                         id="cake0" className='input-hidden'
                         />
-                        <label for="cake0">
+                        <label className='itemBox' for="cake0">
                             <img className='pointer' src='/cake1.png' style={{'width':'160px'}} onClick={()=>{
                                 setCakeImg(0)
                             }}></img>
+                            <FiCheckCircle id='itemImg' className='cake0CheckIcon' />
                         </label>
 
                         <input 
                         type="radio" name="cake"
                         id="cake1" className='input-hidden'
                         />
-                        <label for="cake1">
+                        <label className='itemBox' for="cake1">
                             <img className='pointer' src='/cake2.png' style={{'width':'160px'}} onClick={()=>{
                                 setCakeImg(1)
                             }}></img>
+                            <FiCheckCircle id='itemImg' className='cake1CheckIcon' />
                         </label>
                     </Pinkbox>
                 </div>
@@ -239,30 +244,33 @@ const CreatePartyPage = () => {
                         type="radio" name="candle"
                         id="candle0" className='input-hidden'
                         />
-                        <label for="candle0">
+                        <label className='itemBox' for="candle0">
                             <img className='pointer' src='/iloveyou.png' style={{'width':'100px', 'height':'130px'}} onClick={()=>{
                                 setCandleImg(0)
                             }}></img>
+                            <FiCheckCircle id='itemImg' className='candle0CheckIcon' />
                         </label>
 
                         <input 
                         type="radio" name="candle"
                         id="candle1" className='input-hidden'
                         />
-                        <label for="candle1">
+                        <label className='itemBox' for="candle1">
                             <img className='pointer' src='/heart.png' style={{'width':'100px', 'height':'130px'}} onClick={()=>{
                                 setCandleImg(1)
                             }}></img>
+                            <FiCheckCircle id='itemImg' className='candle1CheckIcon' />
                         </label>
 
                         <input 
                         type="radio" name="candle"
                         id="candle2" className='input-hidden'
                         />
-                        <label for="candle2">
+                        <label className='itemBox' for="candle2">
                             <img className='pointer' src='/18th.png' style={{'width':'100px', 'height':'130px'}} onClick={()=>{
                                 setCandleImg(2)
                             }}></img>
+                            <FiCheckCircle id='itemImg' className='candle2CheckIcon' />
                         </label>
                     </Pinkbox>
                 </div>
@@ -280,7 +288,7 @@ const CreatePartyPage = () => {
                 setInfo(info.candleImg=candleImg);
                 setInfo(info.startDate=startDate);
                 axios({
-                    url:"http://localhost:8080/auth/rooms",
+                    url:"https://i7c203.p.ssafy.io:8082",
                     method: 'post',
                     data: info
                 })
