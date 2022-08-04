@@ -2,6 +2,8 @@ package com.c203.api.controller;
 
 import com.c203.api.dto.Room.RoomCreateDto;
 import com.c203.api.dto.Room.RoomDecoDto;
+import com.c203.api.dto.Room.RoomModifyDto;
+import com.c203.api.dto.User.UserModifyDto;
 import com.c203.api.service.JwtService;
 import com.c203.api.service.RoomService;
 import com.c203.api.service.UserService;
@@ -73,5 +75,27 @@ public class RoomController {
         }
         return new ResponseEntity<>(result,status);
     }
+    // 파티룸 정보 수정하기 - 암호화된 룸 번호 param으로 받기
+    @PutMapping("/rooms")
+    public ResponseEntity<?> modifyRoom(@RequestBody RoomModifyDto roomModifyDto, HttpServletRequest request, @RequestParam("roomIdx")String roomIdx){
+        Map<String,Object> result = new HashMap<>();
+        HttpStatus status;
+        String accessToken = request.getHeader("accessToken");
+        String decodeEmail = jwtService.decodeToken(accessToken);
+        try{
+            // 호스트만 정보 수정가능 하도록 하기
+            if(!decodeEmail.equals("timeout")){
+                roomModifyDto.setPartyHost(decodeEmail);
+                roomService.modifyRoom(roomModifyDto,roomIdx);
+            }
+            result.put("result","success");
+            status = HttpStatus.OK;
+        }catch (Exception e){
+            result.put("result","서버에러");
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<>(result,status);
+    }
+    // 파티정보 불러오기
 
 }
