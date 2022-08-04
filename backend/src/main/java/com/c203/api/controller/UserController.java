@@ -245,5 +245,4 @@ public class UserController
         }
         return new ResponseEntity<>(result,status);
     }
-    // 포스트매핑에서 dto두개 받아올수있어요?
 }

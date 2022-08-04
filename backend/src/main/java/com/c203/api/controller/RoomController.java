@@ -3,7 +3,9 @@ package com.c203.api.controller;
 import com.c203.api.dto.Room.RoomCreateDto;
 import com.c203.api.dto.Room.RoomDecoDto;
 import com.c203.api.dto.Room.RoomModifyDto;
+import com.c203.api.dto.Room.RoomShowDto;
 import com.c203.api.dto.User.UserModifyDto;
+import com.c203.api.dto.User.UserShowDto;
 import com.c203.api.service.JwtService;
 import com.c203.api.service.RoomService;
 import com.c203.api.service.UserService;
@@ -97,5 +99,25 @@ public class RoomController {
         return new ResponseEntity<>(result,status);
     }
     // 파티정보 불러오기
-
+    @GetMapping("/rooms")
+    public ResponseEntity<?> showRoom(HttpServletRequest request,@RequestParam("roomIdx")String roomIdx) {
+        Map<String, Object> result = new HashMap<>();
+        HttpStatus status;
+        String accessToken = request.getHeader("accessToken");
+        String decodeEmail = jwtService.decodeToken(accessToken);
+        try {
+            // 호스트만 정보 수정가능이니까 보여질때도 그러겠지
+            if (!decodeEmail.equals("timeout")) {
+                RoomShowDto roomShowDto = roomService.showRoom(decodeEmail,roomIdx);
+                roomShowDto.setPartyHost(decodeEmail);
+                roomShowDto.setRoomId(roomIdx);
+            }
+            result.put("result", "success");
+            status = HttpStatus.OK;
+        } catch (Exception e) {
+            result.put("result", "서버에러");
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<>(result, status);
+    }
 }

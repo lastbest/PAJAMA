@@ -3,6 +3,7 @@ package com.c203.api.service;
 import com.c203.api.dto.Room.RoomCreateDto;
 import com.c203.api.dto.Room.RoomDecoDto;
 import com.c203.api.dto.Room.RoomModifyDto;
+import com.c203.api.dto.Room.RoomShowDto;
 import com.c203.db.Entity.Room;
 import com.c203.db.Entity.RoomDeco;
 import com.c203.db.Entity.User;
@@ -43,6 +44,7 @@ public class RoomServiceImpl implements RoomService {
         roomDecoRepository.save(roomDeco);
         // 리턴
         RoomDecoDto roomDecoDto = new RoomDecoDto();
+        roomDecoDto.setDate(room.getRoom_date());
         roomDecoDto.setBg(roomDeco.getRoomdeco_bg());
         roomDecoDto.setCandle(roomDeco.getRoomdeco_candle());
         roomDecoDto.setObject(roomDeco.getRoomdeco_object());
@@ -85,6 +87,25 @@ public class RoomServiceImpl implements RoomService {
         roomRepository.save(room);
         roomDecoRepository.save(roomDeco);
         return true;
+    }
+
+    @Override
+    public RoomShowDto showRoom(String email, String idx) throws Exception {// 원래 room_idx 원래 값
+        String temp = encryptionService.decrypt(idx);
+        int id = Integer.parseInt(temp);
+        Room room = roomRepository.findByRoomIdxAndRoomHost(id,email);
+        RoomDeco roomDeco = roomDecoRepository.findByRoomdecoIdx(id);
+        if(room != null && roomDeco != null){
+            RoomShowDto roomShowDto = new RoomShowDto();
+            roomShowDto.setPartyBg(roomDeco.getRoomdeco_bg());
+            roomShowDto.setPartyCake(roomDeco.getRoomdeco_object());
+            roomShowDto.setPartyCandle(roomDeco.getRoomdeco_candle());
+            roomShowDto.setPartyDate(room.getRoom_date());
+            roomShowDto.setPartyDesc(room.getRoomDesc());
+            roomShowDto.setPartyName(room.getRoomName());
+            return roomShowDto;
+        }
+        else return null;
     }
 
 }
