@@ -10,6 +10,8 @@ import React, { Component } from "react";
 import "./OpenVideo.css";
 import UserVideoComponent from "./UserVideoComponent";
 import Messages from "./Messages";
+import Button from "../common/Button"
+import FadeInOut from "../common/FadeInOut";
 
 import html2canvas from "html2canvas";
 import * as tf from "@tensorflow/tfjs";
@@ -78,6 +80,9 @@ class OpenVideo extends Component {
       subscribers: [],
       messages: [],
       message: "",
+      show: false,
+      show2: false,
+      show3: false,
     };
 
     this.joinSession = this.joinSession.bind(this);
@@ -91,6 +96,9 @@ class OpenVideo extends Component {
     this.onbeforeunload = this.onbeforeunload.bind(this);
     this.chattoggle = this.chattoggle.bind(this);
     this.handleChatMessageChange = this.handleChatMessageChange.bind(this);
+    this.toggleShow = this.toggleShow.bind(this);
+    this.toggleShow2 = this.toggleShow2.bind(this);
+    this.toggleShow3 = this.toggleShow3.bind(this);
   }
 
   componentDidMount() {
@@ -192,6 +200,31 @@ class OpenVideo extends Component {
       });
     }
   }
+
+  toggleShow() {
+
+    if (this.state.show === false) {
+      this.setState({show:true})
+    } else {
+      this.setState({show:false})
+    }
+  };
+
+  toggleShow2() {
+    if (this.state.show2 === false) {
+      this.setState({show2:true})
+    } else {
+      this.setState({show2:false})
+    }
+  };
+  
+  toggleShow3() {
+    if (this.state.show3 === false) {
+      this.setState({show3:true})
+    } else {
+      this.setState({show3:false})
+    }
+  };
 
   joinSession() {
     // --- 1) Get an OpenVidu object ---
@@ -364,18 +397,69 @@ class OpenVideo extends Component {
     const mySessionId = this.state.mySessionId;
     const myUserName = this.state.myUserName;
     const messages = this.state.messages;
+  
+    function cake1Show() {
+      const cake1 = document.getElementById("cake1");
+  
+      if (cake1.style.display === "none") {
+        cake1.style.display = "";
+      } else {
+        cake1.style.display = "none";
+      }
+    }
+  
+    function cake2Show() {
+      const cake2 = document.getElementById("cake2");
+  
+      if (cake2.style.display === "none") {
+        cake2.style.display = "";
+      } else {
+        cake2.style.display = "none";
+      }
+    }
+  
+    function heartShow() {
+      const heart = document.getElementById("heart");
+  
+      if (heart.style.display === "none") {
+        heart.style.display = "";
+      } else {
+        heart.style.display = "none";
+      }
+    }
+  
+    function iloveyouShow() {
+      const iloveyou = document.getElementById("iloveyou");
+  
+      if (iloveyou.style.display === "none") {
+        iloveyou.style.display = "";
+      } else {
+        iloveyou.style.display = "none";
+      }
+    }
+  
+    function eighteenShow() {
+      const eighteen = document.getElementById("eighteen");
+  
+      if (eighteen.style.display === "none") {
+        eighteen.style.display = "";
+      } else {
+        eighteen.style.display = "none";
+      }
+    }
+
     return (
       <div className="container">
         {this.state.session === undefined ? (
           <div id="join">
             <div id="img-div">
               <img
-                src="resources/images/openvidu_grey_bg_transp_cropped.png"
-                alt="OpenVidu logo"
+                src="/pazamafont.png"
+                alt="pajama logo"
+                style={{"width":"200px", "height":"100px"}}
               />
             </div>
             <div id="join-dialog" className="jumbotron vertical-center">
-              <h1> Join a video session </h1>
               <form className="form-group" onSubmit={this.joinSession}>
                 <p>
                   <label>Participant: </label>
@@ -492,40 +576,211 @@ class OpenVideo extends Component {
                 Take photo
               </button>
             </div>
+            <div>
+            <button onClick={this.toggleShow}>
+              {this.state.show ? "하트촛불끄기" : "하트촛불켜기"}
+            </button>
+            <button onClick={this.toggleShow2}>
+              {this.state.show2 ? "알러뷰촛불끄기" : "알러뷰촛불켜기"}
+            </button>
+            <button onClick={this.toggleShow3}>
+              {this.state.show3 ? "18촛불끄기" : "18촛불켜기"}
+            </button>
+            <button onClick={cake1Show}>케이크1</button>
+            <button onClick={cake2Show}>케이크2</button>
+            <button onClick={heartShow}>하트초</button>
+            <button onClick={iloveyouShow}>Iloveyou초</button>
+            <button onClick={eighteenShow}>18th초</button>
+            <div className="text-center">
+              <img
+                id="cake1"
+                src="/cake1.png"
+                style={{
+                  width: "500px",
+                  height: "500px",
+                  "margin-left": "-50px",
+                  display: "none",
+                }}
+                alt="cake1"
+              />
+            </div>
+            <div className="text-center">
+              <img
+                id="cake2"
+                src="/cake2.png"
+                style={{
+                  width: "500px",
+                  height: "400px",
+                  "margin-top": "200px",
+                  display: "none",
+                }}
+                alt="cake2"
+              />
+            </div>
+            <div className="text-center">
+              <img
+                id="heart"
+                src="/heart.png"
+                style={{
+                  width: "100px",
+                  height: "200px",
+                  "margin-top": "-800px",
+                  display: "none",
+                }}
+                alt="heart"
+              />
+              <img
+                id="iloveyou"
+                src="/iloveyou.png"
+                style={{
+                  width: "220px",
+                  height: "100px",
+                  "margin-top": "-700px",
+                  display: "none",
+                }}
+                alt="love"
+              />
+              <img
+                id="eighteen"
+                src="/18th.png"
+                style={{
+                  width: "150px",
+                  height: "150px",
+                  "margin-top": "-750px",
+                  display: "none",
+                }}
+                alt="eighteen"
+              />
+            </div>
+
+            {/* 하트초 */}
+            <div className="text-center">
+              <FadeInOut show={this.state.show} duration={500}>
+                <img
+                  id="heartfire"
+                  src="/fire.gif"
+                  style={{
+                    width: "100px",
+                    height: "100px",
+                    "margin-left": "0px",
+                    "margin-top": "-1050px",
+                  }}
+                  alt="fire"
+                />
+              </FadeInOut>
+            </div>
+            {/* iloveyou초 */}
+            <div
+              id="iloveyoufire"
+              className="text-center"
+              style={{ marginLeft: "-340px" }}
+            >
+              <FadeInOut show={this.state.show2} duration={500}>
+                <img
+                  src="/fire.gif"
+                  style={{
+                    width: "70px",
+                    height: "70px",
+                    "margin-left": "345px",
+                    "margin-top": "-890px",
+                  }}
+                  alt="fire1"
+                />
+                <img
+                  src="/fire.gif"
+                  style={{
+                    width: "70px",
+                    height: "70px",
+                    "margin-left": "-28px",
+                    "margin-top": "-890px",
+                  }}
+                  alt="fire2"
+                />
+                <img
+                  src="/fire.gif"
+                  style={{
+                    width: "70px",
+                    height: "70px",
+                    "margin-left": "-5px",
+                    "margin-top": "-900px",
+                  }}
+                  alt="fire3"
+                />
+                <img
+                  src="/fire.gif"
+                  style={{
+                    width: "70px",
+                    height: "70px",
+                    "margin-left": "-43px",
+                    "margin-top": "-900px",
+                  }}
+                  alt="fire4"
+                />
+                <img
+                  src="/fire.gif"
+                  style={{
+                    width: "70px",
+                    height: "70px",
+                    "margin-left": "-25px",
+                    "margin-top": "-900px",
+                  }}
+                  alt="fire5"
+                />
+              </FadeInOut>
+            </div>
+            {/* eighteen초 */}
+            <div className="text-center">
+              <FadeInOut show={this.state.show3} duration={500}>
+                <img
+                  id="eighteenfire"
+                  src="/fire.gif"
+                  style={{
+                    width: "100px",
+                    height: "100px",
+                    "margin-left": "-15px",
+                    "margin-top": "-1010px",
+                  }}
+                  alt="fire"
+                />
+              </FadeInOut>
+            </div>
           </div>
+          <div className="chatbox">
+            {this.state.chaton ? (
+              <div className="chat chatbox__support chatbox--active">
+                <div className="chat chatbox__header" />
+                <div className="chatbox__messages" ref="chatoutput">
+                  {/* {this.displayElements} */}
+                  <Messages messages={messages} />
+                  <div />
+                </div>
+                <div className="chat chatbox__footer">
+                  <input
+                    id="chat_message"
+                    type="text"
+                    placeholder="Write a message..."
+                    onChange={this.handleChatMessageChange}
+                    onKeyPress={this.sendmessageByEnter}
+                    value={this.state.message}
+                  />
+                  <button
+                    className="chat chatbox__send--footer"
+                    onClick={this.sendmessageByClick}
+                  >
+                    Send
+                  </button>
+                </div>
+              </div>
+            ) : null}
+            <div className="chatbox__button" ref={this.chatButton}>
+              <button onClick={this.chattoggle}>채팅</button>
+            </div>
+          </div>
+          </div>
+          
         ) : null}
         <div class="canvas-wrapper"></div>
-        <div className="chatbox">
-          {this.state.chaton ? (
-            <div className="chat chatbox__support chatbox--active">
-              <div className="chat chatbox__header" />
-              <div className="chatbox__messages" ref="chatoutput">
-                {/* {this.displayElements} */}
-                <Messages messages={messages} />
-                <div />
-              </div>
-              <div className="chat chatbox__footer">
-                <input
-                  id="chat_message"
-                  type="text"
-                  placeholder="Write a message..."
-                  onChange={this.handleChatMessageChange}
-                  onKeyPress={this.sendmessageByEnter}
-                  value={this.state.message}
-                />
-                <button
-                  className="chat chatbox__send--footer"
-                  onClick={this.sendmessageByClick}
-                >
-                  Send
-                </button>
-              </div>
-            </div>
-          ) : null}
-          <div className="chatbox__button" ref={this.chatButton}>
-            <button onClick={this.chattoggle}>채팅</button>
-          </div>
-        </div>
+        
       </div>
     );
   }
