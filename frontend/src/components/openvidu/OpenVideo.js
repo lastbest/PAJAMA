@@ -9,6 +9,7 @@ import { OpenVidu } from "openvidu-browser";
 import React, { Component } from "react";
 import "./OpenVideo.css";
 import UserVideoComponent from "./UserVideoComponent";
+import Messages from "./Messages";
 
 import html2canvas from "html2canvas";
 import * as tf from "@tensorflow/tfjs";
@@ -61,7 +62,7 @@ function isMobile() {
   return isAndroid() || isiOS();
 }
 
-const OPENVIDU_SERVER_URL = "https://i7c203.p.ssafy.io:443";
+const OPENVIDU_SERVER_URL = "https://i7c203.p.ssafy.io:8447";
 const OPENVIDU_SERVER_SECRET = "PAZAMA";
 
 class OpenVideo extends Component {
@@ -75,6 +76,8 @@ class OpenVideo extends Component {
       mainStreamManager: undefined,
       publisher: undefined,
       subscribers: [],
+      messages: [],
+      message: "",
     };
 
     this.joinSession = this.joinSession.bind(this);
@@ -83,7 +86,11 @@ class OpenVideo extends Component {
     this.handleChangeSessionId = this.handleChangeSessionId.bind(this);
     this.handleChangeUserName = this.handleChangeUserName.bind(this);
     this.handleMainVideoStream = this.handleMainVideoStream.bind(this);
+    this.sendmessageByClick = this.sendmessageByClick.bind(this);
+    this.sendmessageByEnter = this.sendmessageByEnter.bind(this);
     this.onbeforeunload = this.onbeforeunload.bind(this);
+    this.chattoggle = this.chattoggle.bind(this);
+    this.handleChatMessageChange = this.handleChatMessageChange.bind(this);
   }
 
   componentDidMount() {
@@ -109,13 +116,20 @@ class OpenVideo extends Component {
       myUserName: e.target.value,
     });
   }
-
+  chattoggle() {
+    this.setState({ chaton: !this.state.chaton });
+  }
   handleMainVideoStream(stream) {
     if (this.state.mainStreamManager !== stream) {
       this.setState({
         mainStreamManager: stream,
       });
     }
+  }
+  handleChatMessageChange(e) {
+    this.setState({
+      message: e.target.value,
+    });
   }
 
   deleteSubscriber(streamManager) {
@@ -125,6 +139,56 @@ class OpenVideo extends Component {
       subscribers.splice(index, 1);
       this.setState({
         subscribers: subscribers,
+      });
+    }
+  }
+
+  sendmessageByClick() {
+    this.setState({
+      messages: [
+        ...this.state.messages,
+        {
+          userName: this.state.myUserName,
+          text: this.state.message,
+          chatClass: "messages__item--operator",
+        },
+      ],
+    });
+    const mySession = this.state.session;
+
+    mySession.signal({
+      data: `${this.state.myUserName},${this.state.message}`,
+      to: [],
+      type: "chat",
+    });
+
+    this.setState({
+      message: "",
+    });
+  }
+
+  sendmessageByEnter(e) {
+    if (e.key === "Enter") {
+      this.setState({
+        messages: [
+          ...this.state.messages,
+          {
+            userName: this.state.myUserName,
+            text: this.state.message,
+            chatClass: "messages__item--operator",
+          },
+        ],
+      });
+      const mySession = this.state.session;
+
+      mySession.signal({
+        data: `${this.state.myUserName},${this.state.message}`,
+        to: [],
+        type: "chat",
+      });
+
+      this.setState({
+        message: "",
       });
     }
   }
@@ -158,7 +222,21 @@ class OpenVideo extends Component {
             subscribers: subscribers,
           });
         });
-
+        mySession.on("signal:chat", (event) => {
+          let chatdata = event.data.split(",");
+          if (chatdata[0] !== this.state.myUserName) {
+            this.setState({
+              messages: [
+                ...this.state.messages,
+                {
+                  userName: chatdata[0],
+                  text: chatdata[1],
+                  chatClass: "messages__item--visitor",
+                },
+              ],
+            });
+          }
+        });
         // On every Stream destroyed...
         mySession.on("streamDestroyed", (event) => {
           // Remove the stream from 'subscribers' array
@@ -285,7 +363,7 @@ class OpenVideo extends Component {
   render() {
     const mySessionId = this.state.mySessionId;
     const myUserName = this.state.myUserName;
-
+    const messages = this.state.messages;
     return (
       <div className="container">
         {this.state.session === undefined ? (
@@ -417,6 +495,37 @@ class OpenVideo extends Component {
           </div>
         ) : null}
         <div class="canvas-wrapper"></div>
+        <div className="chatbox">
+          {this.state.chaton ? (
+            <div className="chat chatbox__support chatbox--active">
+              <div className="chat chatbox__header" />
+              <div className="chatbox__messages" ref="chatoutput">
+                {/* {this.displayElements} */}
+                <Messages messages={messages} />
+                <div />
+              </div>
+              <div className="chat chatbox__footer">
+                <input
+                  id="chat_message"
+                  type="text"
+                  placeholder="Write a message..."
+                  onChange={this.handleChatMessageChange}
+                  onKeyPress={this.sendmessageByEnter}
+                  value={this.state.message}
+                />
+                <button
+                  className="chat chatbox__send--footer"
+                  onClick={this.sendmessageByClick}
+                >
+                  Send
+                </button>
+              </div>
+            </div>
+          ) : null}
+          <div className="chatbox__button" ref={this.chatButton}>
+            <button onClick={this.chattoggle}>채팅</button>
+          </div>
+        </div>
       </div>
     );
   }
