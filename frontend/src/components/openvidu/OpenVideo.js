@@ -181,7 +181,9 @@ class OpenVideo extends Component {
             .connect(token, { clientData: this.state.myUserName })
             .then(async () => {
               var devices = await this.OV.getDevices();
-              var videoDevices = devices.filter((device) => device.kind === "videoinput");
+              var videoDevices = devices.filter(
+                (device) => device.kind === "videoinput"
+              );
 
               // --- 5) Get your own camera stream ---
 
@@ -245,7 +247,9 @@ class OpenVideo extends Component {
   async switchCamera() {
     try {
       const devices = await this.OV.getDevices();
-      var videoDevices = devices.filter((device) => device.kind === "videoinput");
+      var videoDevices = devices.filter(
+        (device) => device.kind === "videoinput"
+      );
 
       if (videoDevices && videoDevices.length > 1) {
         var newVideoDevice = videoDevices.filter(
@@ -287,7 +291,10 @@ class OpenVideo extends Component {
         {this.state.session === undefined ? (
           <div id="join">
             <div id="img-div">
-              <img src="resources/images/openvidu_grey_bg_transp_cropped.png" alt="OpenVidu logo" />
+              <img
+                src="resources/images/openvidu_grey_bg_transp_cropped.png"
+                alt="OpenVidu logo"
+              />
             </div>
             <div id="join-dialog" className="jumbotron vertical-center">
               <h1> Join a video session </h1>
@@ -328,7 +335,7 @@ class OpenVideo extends Component {
         ) : null}
 
         {this.state.session !== undefined ? (
-          <div id="session">
+          <div id="session" className="con">
             <div id="session-header">
               <h1 id="session-title">{mySessionId}</h1>
               <input
@@ -339,10 +346,20 @@ class OpenVideo extends Component {
                 value="Leave session"
               />
             </div>
-
+            {this.state.subscribers.map((sub, i) => (
+              <div
+                key={i}
+                className="stream-container col-md-6 col-xs-6"
+                onClick={() => this.handleMainVideoStream(sub)}
+              >
+                <UserVideoComponent streamManager={sub} />
+              </div>
+            ))}
             {this.state.mainStreamManager !== undefined ? (
               <div id="main-video" className="col-md-6">
-                <UserVideoComponent streamManager={this.state.mainStreamManager} />
+                <UserVideoComponent
+                  streamManager={this.state.mainStreamManager}
+                />
                 <input
                   className="btn btn-large btn-success"
                   type="button"
@@ -356,20 +373,41 @@ class OpenVideo extends Component {
               {this.state.publisher !== undefined ? (
                 <div
                   className="stream-container col-md-6 col-xs-6"
-                  onClick={() => this.handleMainVideoStream(this.state.publisher)}
+                  onClick={() =>
+                    this.handleMainVideoStream(this.state.publisher)
+                  }
                 >
+                  {this.state.videostate === undefined || this.state.videostate
+                    ? (this.state.videostate = true)
+                    : (this.state.videostate = this.state.videostate)}
+                  <input
+                    className="btn btn-large btn-success"
+                    type="button"
+                    id="buttonTurnCamera"
+                    onClick={() => {
+                      this.state.publisher.publishVideo(!this.state.videostate);
+                      this.setState({ videostate: !this.state.videostate });
+                    }}
+                    value={this.state.videostate ? "Cam OFF" : "Cam ON"}
+                  />
+
+                  {this.state.audiostate === undefined || this.state.audiostate
+                    ? (this.state.audiostate = true)
+                    : (this.state.audiostate = this.state.audiostate)}
+                  <input
+                    className="btn btn-large btn-success"
+                    type="button"
+                    id="buttonTurnAudio"
+                    onClick={() => {
+                      this.state.publisher.publishAudio(!this.state.audiostate);
+                      this.setState({ audiostate: !this.state.audiostate });
+                    }}
+                    value={this.state.audiostate ? "Voice OFF" : "Voice ON"}
+                  />
+
                   <UserVideoComponent streamManager={this.state.publisher} />
                 </div>
               ) : null}
-              {this.state.subscribers.map((sub, i) => (
-                <div
-                  key={i}
-                  className="stream-container col-md-6 col-xs-6"
-                  onClick={() => this.handleMainVideoStream(sub)}
-                >
-                  <UserVideoComponent streamManager={sub} />
-                </div>
-              ))}
             </div>
             <div>
               <button id="tstartbutton" onClick={this.takepicture}>
@@ -407,7 +445,8 @@ class OpenVideo extends Component {
       axios
         .post(OPENVIDU_SERVER_URL + "/openvidu/api/sessions", data, {
           headers: {
-            Authorization: "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
+            Authorization:
+              "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
             "Content-Type": "application/json",
           },
         })
@@ -435,7 +474,9 @@ class OpenVideo extends Component {
                   '"'
               )
             ) {
-              window.location.assign(OPENVIDU_SERVER_URL + "/accept-certificate");
+              window.location.assign(
+                OPENVIDU_SERVER_URL + "/accept-certificate"
+              );
             }
           }
         });
@@ -446,12 +487,20 @@ class OpenVideo extends Component {
     return new Promise((resolve, reject) => {
       var data = {};
       axios
-        .post(OPENVIDU_SERVER_URL + "/openvidu/api/sessions/" + sessionId + "/connection", data, {
-          headers: {
-            Authorization: "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
-            "Content-Type": "application/json",
-          },
-        })
+        .post(
+          OPENVIDU_SERVER_URL +
+            "/openvidu/api/sessions/" +
+            sessionId +
+            "/connection",
+          data,
+          {
+            headers: {
+              Authorization:
+                "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
+              "Content-Type": "application/json",
+            },
+          }
+        )
         .then((response) => {
           console.log("TOKEN", response);
           resolve(response.data.token);
@@ -498,7 +547,9 @@ class Camera {
    */
   static async setupCamera() {
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      throw new Error("Browser API navigator.mediaDevices.getUserMedia not available");
+      throw new Error(
+        "Browser API navigator.mediaDevices.getUserMedia not available"
+      );
     }
 
     const $size = { width: 640, height: 480 }; //desktop용 사이즈
@@ -590,19 +641,18 @@ class Camera {
 
       if (emo_type == "v") {
         //v포즈 취할 경우
-        emo.innerHTML = '<img src="./resources/images/v.jpg" width="300" height="300">';
+        emo.innerHTML = '<img src="/v.jpg" width="300" height="300">';
       } else if (emo_type == "heart") {
         //손꾸락하트
-        emo.innerHTML = '<img src="./resources/images/heart.gif" width="300" height="300">';
+        emo.innerHTML = '<img src="/heart.gif" width="300" height="300">';
       } else if (emo_type == "test") {
-        emo.innerHTML = '<img src="./resources/images/test.gif" width="300" height="300">';
+        emo.innerHTML = '<img src="/test.gif" width="300" height="300">';
         // console.log("emo test" + firework_timer);
       } else if (firework_timer > 0) {
         // console.log("emo ft" + firework_timer);
-        emo.innerHTML = '<img src="./resources/images/test.gif" width="300" height="300">';
+        emo.innerHTML = '<img src="/test.gif" width="300" height="300">';
       } else {
         //이외일 경우 아무것도 보여주지 않음
-        emo.innerHTML = "<p></p>";
       }
     }
   }
@@ -721,7 +771,11 @@ class Camera {
     const pinky_finger_pip = keypointsArray[18].x;
 
     //손바닥
-    if (check == "palm" && thumb_ip < middle_finger_pip && middle_finger_pip < pinky_finger_pip) {
+    if (
+      check == "palm" &&
+      thumb_ip < middle_finger_pip &&
+      middle_finger_pip < pinky_finger_pip
+    ) {
       if (test_hand == 0) {
         hand_timer = timer_limit;
         test_hand = 1;
@@ -733,7 +787,11 @@ class Camera {
     }
 
     //손등
-    if (check == "palm" && thumb_ip > middle_finger_pip && middle_finger_pip > pinky_finger_pip) {
+    if (
+      check == "palm" &&
+      thumb_ip > middle_finger_pip &&
+      middle_finger_pip > pinky_finger_pip
+    ) {
       if (test_hand == 0) {
         hand_timer = timer_limit;
         test_hand = 2;
