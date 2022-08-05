@@ -124,7 +124,7 @@ const AuthFindId = () => {
       </Footer>
       {/* 아이디찾기 성공 */}
       <Modal
-        style={{'top':'200px'}}
+        centered
         show={show1}
         onHide={handleClose1}
         backdrop="static"
@@ -146,7 +146,7 @@ const AuthFindId = () => {
 
       {/* 아이디찾기 실패 */}
       <Modal
-        style={{'top':'200px'}}
+        centered
         show={show2}
         onHide={handleClose2}
         backdrop="static"

@@ -121,7 +121,7 @@ const AuthFindpwd = () => {
       </Footer>
       {/* 비밀번호찾기 성공 */}
       <Modal
-        style={{'top':'200px'}}
+        centered
         show={show1}
         onHide={handleClose1}
         backdrop="static"
@@ -143,7 +143,7 @@ const AuthFindpwd = () => {
 
       {/* 비밀번호찾기 실패 */}
       <Modal
-        style={{'top':'200px'}}
+        centered
         show={show2}
         onHide={handleClose2}
         backdrop="static"
