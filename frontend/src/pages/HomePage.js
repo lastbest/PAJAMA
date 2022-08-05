@@ -55,7 +55,7 @@ const HomePage = () => {
             </CreateBtn>
 
             <Modal
-                style={{'top':'200px'}}
+                centered
                 show={show}
                 onHide={handleClose}
                 backdrop="static"

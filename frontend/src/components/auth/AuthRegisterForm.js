@@ -314,7 +314,7 @@ const AuthRegisterForm = () => {
       </form>
       {/* 이메일인증안했을때 */}
       <Modal
-        style={{'top':'200px'}}
+        centered
         show={show1}
         onHide={handleClose1}
         backdrop="static"
@@ -335,7 +335,7 @@ const AuthRegisterForm = () => {
 
       {/* 비밀번호자릿수 */}
       <Modal
-        style={{'top':'200px'}}
+        centered
         show={show2}
         onHide={handleClose2}
         backdrop="static"
@@ -356,7 +356,7 @@ const AuthRegisterForm = () => {
 
       {/* 이메일인증실패 */}
       <Modal
-        style={{'top':'200px'}}
+        centered
         show={show3}
         onHide={handleClose3}
         backdrop="static"
@@ -377,7 +377,7 @@ const AuthRegisterForm = () => {
 
       {/* 비밀번호영문자혼합 */}
       <Modal
-        style={{'top':'200px'}}
+        centered
         show={show4}
         onHide={handleClose4}
         backdrop="static"
@@ -398,7 +398,7 @@ const AuthRegisterForm = () => {
 
       {/* 비밀번호불일치 */}
       <Modal
-        style={{'top':'200px'}}
+        centered
         show={show5}
         onHide={handleClose5}
         backdrop="static"
@@ -419,7 +419,7 @@ const AuthRegisterForm = () => {
 
       {/* 존재하는 이메일 */}
       <Modal
-        style={{'top':'200px'}}
+        centered
         show={show6}
         onHide={handleClose6}
         backdrop="static"
@@ -441,7 +441,7 @@ const AuthRegisterForm = () => {
       
       {/* 회원가입성공 */}
       <Modal
-        style={{'top':'200px'}}
+        centered
         show={show7}
         onHide={handleClose7}
         backdrop="static"
@@ -464,7 +464,7 @@ const AuthRegisterForm = () => {
       
       {/* 회원가입 실패 */}
       <Modal
-        style={{'top':'200px'}}
+        centered
         show={show8}
         onHide={handleClose8}
         backdrop="static"

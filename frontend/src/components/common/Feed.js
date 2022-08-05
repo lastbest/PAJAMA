@@ -100,7 +100,7 @@ function Feed({ feed_idx, feed_user, feed_description, feed_picture }) {
     </Modal>
 
     <Modal
-      style={{'top':'150px'}}
+      centered
       show={show2}
       onHide={handleClose2}
       backdrop="static"
