@@ -10,8 +10,8 @@ import React, { Component } from "react";
 import "./OpenVideo.css";
 import UserVideoComponent from "./UserVideoComponent";
 import Messages from "./Messages";
-import Button from "../common/Button"
 import FadeInOut from "../common/FadeInOut";
+import Modal from 'react-bootstrap/Modal';
 
 import html2canvas from "html2canvas";
 import * as tf from "@tensorflow/tfjs";
@@ -97,8 +97,6 @@ class OpenVideo extends Component {
     this.chattoggle = this.chattoggle.bind(this);
     this.handleChatMessageChange = this.handleChatMessageChange.bind(this);
     this.toggleShow = this.toggleShow.bind(this);
-    this.toggleShow2 = this.toggleShow2.bind(this);
-    this.toggleShow3 = this.toggleShow3.bind(this);
   }
 
   componentDidMount() {
@@ -210,21 +208,6 @@ class OpenVideo extends Component {
     }
   };
 
-  toggleShow2() {
-    if (this.state.show2 === false) {
-      this.setState({show2:true})
-    } else {
-      this.setState({show2:false})
-    }
-  };
-  
-  toggleShow3() {
-    if (this.state.show3 === false) {
-      this.setState({show3:true})
-    } else {
-      this.setState({show3:false})
-    }
-  };
 
   joinSession() {
     // --- 1) Get an OpenVidu object ---
@@ -400,11 +383,15 @@ class OpenVideo extends Component {
   
     function cake1Show() {
       const cake1 = document.getElementById("cake1");
+      const heart = document.getElementById("heart");
   
       if (cake1.style.display === "none") {
         cake1.style.display = "";
+        heart.style.display = "";
+
       } else {
         cake1.style.display = "none";
+        heart.style.display = "none";
       }
     }
   
@@ -418,15 +405,15 @@ class OpenVideo extends Component {
       }
     }
   
-    function heartShow() {
-      const heart = document.getElementById("heart");
+    // function heartShow() {
+    //   const heart = document.getElementById("heart");
   
-      if (heart.style.display === "none") {
-        heart.style.display = "";
-      } else {
-        heart.style.display = "none";
-      }
-    }
+    //   if (heart.style.display === "none") {
+    //     heart.style.display = "";
+    //   } else {
+    //     heart.style.display = "none";
+    //   }
+    // }
   
     function iloveyouShow() {
       const iloveyou = document.getElementById("iloveyou");
@@ -449,7 +436,7 @@ class OpenVideo extends Component {
     }
 
     return (
-      <div className="container">
+      <div>
         {this.state.session === undefined ? (
           <div id="join">
             <div id="img-div">
@@ -485,10 +472,10 @@ class OpenVideo extends Component {
                 </p>
                 <p className="text-center">
                   <input
-                    className="btn btn-lg btn-success"
+                    className="joinbtn"
                     name="commit"
                     type="submit"
-                    value="JOIN"
+                    value="참여하기"
                   />
                 </p>
               </form>
@@ -497,289 +484,140 @@ class OpenVideo extends Component {
         ) : null}
 
         {this.state.session !== undefined ? (
-          <div id="session" className="con">
-            <div id="session-header">
-              <h1 id="session-title">{mySessionId}</h1>
-              <input
-                className="btn btn-large btn-danger"
-                type="button"
-                id="buttonLeaveSession"
-                onClick={this.leaveSession}
-                value="Leave session"
-              />
+          <div className="partyroom">
+            <div className="header">
+              <img src="/pazamafont.png" alt="logo" width="150px" height="75px"></img>
+              <button className="navbtn" onClick={cake1Show}><img src="/birthday-cake.png" alt="logo" width="75px" height="75px"></img></button>
+              <button className="navbtn" id="tstartbutton" onClick={this.takepicture}><img src="/camera.png" alt="logo" width="75px" height="75px"></img></button>
+              <button className="navbtn"><img src="/music.png" alt="logo" width="75px" height="75px"></img></button>
+
             </div>
-            {this.state.subscribers.map((sub, i) => (
-              <div
-                key={i}
-                className="stream-container col-md-6 col-xs-6"
-                onClick={() => this.handleMainVideoStream(sub)}
-              >
-                <UserVideoComponent streamManager={sub} />
+            <div id="session" className="main-session">
+              <div id="main-container" className="main-container">
+                {this.state.mainStreamManager !== undefined ? (
+                  <div id="main-video" className="main-video">
+                    <UserVideoComponent
+                      streamManager={this.state.mainStreamManager}
+                    />
+                    {/* <input
+                      className="btn btn-large btn-success"
+                      type="button"
+                      id="buttonSwitchCamera"
+                      onClick={this.switchCamera}
+                      value="Switch Camera"
+                    /> */}
+                  </div>
+                ) : null}
+
+                {this.state.subscribers.map((sub, i) => (
+                  <div
+                    key={i}
+                    className="stream-container"
+                    onClick={() => this.handleMainVideoStream(sub)}
+                  >
+                    <UserVideoComponent streamManager={sub} />
+                  </div>
+                ))}
+                <img id="cake1" className="cake" src="/cake1.png" style={{"display":"none"}} alt="cake1"></img>
+                <img id="heart" className="candle" src="/heart.png" style={{ display: "none",}} alt="heart" />
               </div>
-            ))}
-            {this.state.mainStreamManager !== undefined ? (
-              <div id="main-video" className="col-md-6">
-                <UserVideoComponent
-                  streamManager={this.state.mainStreamManager}
-                />
-                <input
-                  className="btn btn-large btn-success"
-                  type="button"
-                  id="buttonSwitchCamera"
-                  onClick={this.switchCamera}
-                  value="Switch Camera"
-                />
+
+              <div id="video-container" className="col-md-6">
+                {this.state.publisher !== undefined ? (
+                  <div
+                    className="stream-container col-md-6 col-xs-6"
+                    onClick={() =>
+                      this.handleMainVideoStream(this.state.publisher)
+                    }
+                  >
+                    {this.state.videostate === undefined || this.state.videostate
+                      ? (this.state.videostate = true)
+                      : (this.state.videostate = this.state.videostate)}
+                    <button
+                      className="cam-btn"
+                      id="buttonTurnCamera"
+                      onClick={() => {
+                        this.state.publisher.publishVideo(!this.state.videostate);
+                        this.setState({ videostate: !this.state.videostate });
+                      }}
+                    >{this.state.videostate ? <img className="camoff" src="/videocamoff.png"/> : <img className="camon" src="/videocamon.png"/> }</button>
+
+                    {this.state.audiostate === undefined || this.state.audiostate
+                      ? (this.state.audiostate = true)
+                      : (this.state.audiostate = this.state.audiostate)}
+                    <button
+                      className="mic-btn"
+                      id="buttonTurnAudio"
+                      onClick={() => {
+                        this.state.publisher.publishAudio(!this.state.audiostate);
+                        this.setState({ audiostate: !this.state.audiostate });
+                      }}
+                    >{this.state.audiostate ? <img className="micoff" src="/micoff.png"/> : <img className="micon" src="/micon.png"/>}</button>
+                    {/* <UserVideoComponent streamManager={this.state.publisher} /> */}
+                  </div>
+                ) : null}
               </div>
-            ) : null}
-            <div id="video-container" className="col-md-6">
-              {this.state.publisher !== undefined ? (
-                <div
-                  className="stream-container col-md-6 col-xs-6"
-                  onClick={() =>
-                    this.handleMainVideoStream(this.state.publisher)
-                  }
-                >
-                  {this.state.videostate === undefined || this.state.videostate
-                    ? (this.state.videostate = true)
-                    : (this.state.videostate = this.state.videostate)}
-                  <input
-                    className="btn btn-large btn-success"
-                    type="button"
-                    id="buttonTurnCamera"
-                    onClick={() => {
-                      this.state.publisher.publishVideo(!this.state.videostate);
-                      this.setState({ videostate: !this.state.videostate });
+
+              <div>
+              {/* 하트초 */}
+              <div className="text-center">
+                <FadeInOut show={this.state.show2} duration={500}>
+                  <img
+                    id="heartfire"
+                    src="/fire.gif"
+                    style={{
+                      width: "100px",
+                      height: "100px",
+                      "margin-left": "0px",
+                      "margin-top": "-1050px",
                     }}
-                    value={this.state.videostate ? "Cam OFF" : "Cam ON"}
+                    alt="fire"
                   />
-
-                  {this.state.audiostate === undefined || this.state.audiostate
-                    ? (this.state.audiostate = true)
-                    : (this.state.audiostate = this.state.audiostate)}
-                  <input
-                    className="btn btn-large btn-success"
-                    type="button"
-                    id="buttonTurnAudio"
-                    onClick={() => {
-                      this.state.publisher.publishAudio(!this.state.audiostate);
-                      this.setState({ audiostate: !this.state.audiostate });
-                    }}
-                    value={this.state.audiostate ? "Voice OFF" : "Voice ON"}
-                  />
-
-                  <UserVideoComponent streamManager={this.state.publisher} />
-                </div>
-              ) : null}
+                </FadeInOut>
+              </div>
             </div>
-            <div>
-              <button id="tstartbutton" onClick={this.takepicture}>
-                Take photo
-              </button>
             </div>
-            <div>
-            <button onClick={this.toggleShow}>
-              {this.state.show ? "하트촛불끄기" : "하트촛불켜기"}
-            </button>
-            <button onClick={this.toggleShow2}>
-              {this.state.show2 ? "알러뷰촛불끄기" : "알러뷰촛불켜기"}
-            </button>
-            <button onClick={this.toggleShow3}>
-              {this.state.show3 ? "18촛불끄기" : "18촛불켜기"}
-            </button>
-            <button onClick={cake1Show}>케이크1</button>
-            <button onClick={cake2Show}>케이크2</button>
-            <button onClick={heartShow}>하트초</button>
-            <button onClick={iloveyouShow}>Iloveyou초</button>
-            <button onClick={eighteenShow}>18th초</button>
-            <div className="text-center">
-              <img
-                id="cake1"
-                src="/cake1.png"
-                style={{
-                  width: "500px",
-                  height: "500px",
-                  "margin-left": "-50px",
-                  display: "none",
-                }}
-                alt="cake1"
-              />
-            </div>
-            <div className="text-center">
-              <img
-                id="cake2"
-                src="/cake2.png"
-                style={{
-                  width: "500px",
-                  height: "400px",
-                  "margin-top": "200px",
-                  display: "none",
-                }}
-                alt="cake2"
-              />
-            </div>
-            <div className="text-center">
-              <img
-                id="heart"
-                src="/heart.png"
-                style={{
-                  width: "100px",
-                  height: "200px",
-                  "margin-top": "-800px",
-                  display: "none",
-                }}
-                alt="heart"
-              />
-              <img
-                id="iloveyou"
-                src="/iloveyou.png"
-                style={{
-                  width: "220px",
-                  height: "100px",
-                  "margin-top": "-700px",
-                  display: "none",
-                }}
-                alt="love"
-              />
-              <img
-                id="eighteen"
-                src="/18th.png"
-                style={{
-                  width: "150px",
-                  height: "150px",
-                  "margin-top": "-750px",
-                  display: "none",
-                }}
-                alt="eighteen"
-              />
-            </div>
-
-            {/* 하트초 */}
-            <div className="text-center">
-              <FadeInOut show={this.state.show} duration={500}>
-                <img
-                  id="heartfire"
-                  src="/fire.gif"
-                  style={{
-                    width: "100px",
-                    height: "100px",
-                    "margin-left": "0px",
-                    "margin-top": "-1050px",
-                  }}
-                  alt="fire"
-                />
-              </FadeInOut>
-            </div>
-            {/* iloveyou초 */}
-            <div
-              id="iloveyoufire"
-              className="text-center"
-              style={{ marginLeft: "-340px" }}
-            >
-              <FadeInOut show={this.state.show2} duration={500}>
-                <img
-                  src="/fire.gif"
-                  style={{
-                    width: "70px",
-                    height: "70px",
-                    "margin-left": "345px",
-                    "margin-top": "-890px",
-                  }}
-                  alt="fire1"
-                />
-                <img
-                  src="/fire.gif"
-                  style={{
-                    width: "70px",
-                    height: "70px",
-                    "margin-left": "-28px",
-                    "margin-top": "-890px",
-                  }}
-                  alt="fire2"
-                />
-                <img
-                  src="/fire.gif"
-                  style={{
-                    width: "70px",
-                    height: "70px",
-                    "margin-left": "-5px",
-                    "margin-top": "-900px",
-                  }}
-                  alt="fire3"
-                />
-                <img
-                  src="/fire.gif"
-                  style={{
-                    width: "70px",
-                    height: "70px",
-                    "margin-left": "-43px",
-                    "margin-top": "-900px",
-                  }}
-                  alt="fire4"
-                />
-                <img
-                  src="/fire.gif"
-                  style={{
-                    width: "70px",
-                    height: "70px",
-                    "margin-left": "-25px",
-                    "margin-top": "-900px",
-                  }}
-                  alt="fire5"
-                />
-              </FadeInOut>
-            </div>
-            {/* eighteen초 */}
-            <div className="text-center">
-              <FadeInOut show={this.state.show3} duration={500}>
-                <img
-                  id="eighteenfire"
-                  src="/fire.gif"
-                  style={{
-                    width: "100px",
-                    height: "100px",
-                    "margin-left": "-15px",
-                    "margin-top": "-1010px",
-                  }}
-                  alt="fire"
-                />
-              </FadeInOut>
+            <div className="main-footer">
+              <div className="footer">
+                <button className="chatbtn" onClick={this.toggleShow}><img className="chat" src="chat.png" /></button>
+                <buton id="buttonLeaveSession" onClick={this.leaveSession}><img className="leave" src="/shutdown.png"/></buton>
+              </div>
             </div>
           </div>
-          <div className="chatbox">
-            {this.state.chaton ? (
-              <div className="chat chatbox__support chatbox--active">
-                <div className="chat chatbox__header" />
-                <div className="chatbox__messages" ref="chatoutput">
-                  {/* {this.displayElements} */}
-                  <Messages messages={messages} />
-                  <div />
+        ) : null}
+        {/* <div class="canvas-wrapper"></div> */}
+        
+        <Modal show={this.state.show} className="chatmodal" onHide={this.toggleShow}>
+            <div>
+              <div className="chatbox__support chatbox--active">
+                <div style={{"text-align":"center"}}>
+                  <img src="/pazamafont.png" alt="logo" width="80px" height="40px"></img>
                 </div>
-                <div className="chat chatbox__footer">
+
+                <div className="chatbox__messages" ref="chatoutput">
+                  <Messages messages={messages} />
+                </div>
+
+                <div className="chatbox__footer">
                   <input
                     id="chat_message"
+                    className="chat_message"
                     type="text"
-                    placeholder="Write a message..."
+                    placeholder="메세지를 작성하세요."
                     onChange={this.handleChatMessageChange}
                     onKeyPress={this.sendmessageByEnter}
                     value={this.state.message}
                   />
                   <button
-                    className="chat chatbox__send--footer"
+                    className="chatbox__send--footer"
                     onClick={this.sendmessageByClick}
                   >
-                    Send
+                    전송
                   </button>
                 </div>
               </div>
-            ) : null}
-            <div className="chatbox__button" ref={this.chatButton}>
-              <button onClick={this.chattoggle}>채팅</button>
             </div>
-          </div>
-          </div>
-          
-        ) : null}
-        <div class="canvas-wrapper"></div>
+        </Modal>
         
       </div>
     );
@@ -880,7 +718,7 @@ class OpenVideo extends Component {
 
   //캡처기능
   takepicture() {
-    const targetvideo = document.querySelector("video");
+    const targetvideo = document.querySelector("video")
     // const targetvideo = document.querySelector("#localUser").querySelector("video");
     html2canvas(targetvideo).then((xcanvas) => {
       const canvdata = xcanvas.toDataURL("image/png");
