@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Blob;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -13,8 +14,9 @@ import java.sql.Blob;
 @NoArgsConstructor
 public class Feed {
 //
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private User user3;
+//    @ManyToOne
+//    @JoinColumn(name = "user_idx")
+//    private User user;
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -22,6 +24,5 @@ public class Feed {
 
     private int feed_user;
     private String feed_description;
-    @Lob
-    private Byte[] feed_picture;
+    private LocalDate feed_time;
 }

@@ -22,6 +22,7 @@ public class FeedController {
         Map<String,Object> result = new HashMap<>();
         HttpStatus status;
         try{
+
             result.put("result","success");
             status = HttpStatus.OK;
         }catch (Exception e){
