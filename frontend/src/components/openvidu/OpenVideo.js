@@ -21,6 +21,7 @@ tfjsWasm.setWasmPaths(
   `https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm@${tfjsWasm.version_wasm}/dist/`
 );
 
+var publisher;
 //모션캡처 온오프
 let tracking = true;
 // function toggleTraking() {
@@ -217,7 +218,7 @@ class OpenVideo extends Component {
       this.setState({show2:false})
     }
   };
-  
+
   toggleShow3() {
     if (this.state.show3 === false) {
       this.setState({show3:true})
@@ -300,7 +301,7 @@ class OpenVideo extends Component {
 
               // Init a publisher passing undefined as targetElement (we don't want OpenVidu to insert a video
               // element: we will manage it on our own) and with the desired properties
-              let publisher = this.OV.initPublisher(undefined, {
+              publisher = this.OV.initPublisher(undefined, {
                 audioSource: undefined, // The source of audio. If undefined default microphone
                 videoSource: videoDevices[0].deviceId, // The source of video. If undefined default webcam
                 publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
@@ -344,6 +345,7 @@ class OpenVideo extends Component {
     }
 
     // Empty all properties...
+    publisher = undefined;
     this.OV = null;
     this.setState({
       session: undefined,
@@ -397,55 +399,131 @@ class OpenVideo extends Component {
     const mySessionId = this.state.mySessionId;
     const myUserName = this.state.myUserName;
     const messages = this.state.messages;
-  
+
     function cake1Show() {
       const cake1 = document.getElementById("cake1");
-  
+
       if (cake1.style.display === "none") {
         cake1.style.display = "";
       } else {
         cake1.style.display = "none";
       }
     }
-  
+
     function cake2Show() {
       const cake2 = document.getElementById("cake2");
-  
+
       if (cake2.style.display === "none") {
         cake2.style.display = "";
       } else {
         cake2.style.display = "none";
       }
     }
-  
+
     function heartShow() {
       const heart = document.getElementById("heart");
-  
+
       if (heart.style.display === "none") {
         heart.style.display = "";
       } else {
         heart.style.display = "none";
       }
     }
-  
+
     function iloveyouShow() {
       const iloveyou = document.getElementById("iloveyou");
-  
+
       if (iloveyou.style.display === "none") {
         iloveyou.style.display = "";
       } else {
         iloveyou.style.display = "none";
       }
     }
-  
+
     function eighteenShow() {
       const eighteen = document.getElementById("eighteen");
-  
+
       if (eighteen.style.display === "none") {
         eighteen.style.display = "";
       } else {
         eighteen.style.display = "none";
       }
+    }
+
+    //오픈비두 필터
+    function textOverlay() {
+      publisher.stream
+        .applyFilter("GStreamerFilter", {
+          command: "timeoverlay valignment=bottom halignment=right font-desc='Sans, 20'",
+        })
+        .then(() => {
+          console.log("time added!");
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+
+    function higherPitch() {
+      publisher.stream
+        .applyFilter("GStreamerFilter", {
+          command: "pitch pitch=2",
+        })
+        .then(() => {
+          console.log("picth adjusted!");
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+
+    function lowerPitch() {
+      publisher.stream
+        .applyFilter("GStreamerFilter", {
+          command: "pitch pitch=0.7",
+        })
+        .then(() => {
+          console.log("picth adjusted!");
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+
+    function showHat() {
+      publisher.stream.applyFilter("FaceOverlayFilter").then((filter) => {
+        filter.execMethod("setOverlayedImage", {
+          uri: "https://cdn.pixabay.com/photo/2013/07/12/14/14/derby-148046_960_720.png",
+          offsetXPercent: "-0.2F",
+          offsetYPercent: "-0.8F",
+          widthPercent: "1.3F",
+          heightPercent: "1.0F",
+        });
+      });
+    }
+
+    function filterTest() {
+      publisher.stream
+        .applyFilter("GStreamerFilter", {
+          command: "bulge",
+        })
+        .then(() => {
+          console.log("picth adjusted!");
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+
+    function removeFilters() {
+      publisher.stream
+        .removeFilter()
+        .then(() => {
+          console.log("Filters removed");
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
 
     return (
@@ -577,205 +655,211 @@ class OpenVideo extends Component {
               </button>
             </div>
             <div>
-            <button onClick={this.toggleShow}>
-              {this.state.show ? "하트촛불끄기" : "하트촛불켜기"}
-            </button>
-            <button onClick={this.toggleShow2}>
-              {this.state.show2 ? "알러뷰촛불끄기" : "알러뷰촛불켜기"}
-            </button>
-            <button onClick={this.toggleShow3}>
-              {this.state.show3 ? "18촛불끄기" : "18촛불켜기"}
-            </button>
-            <button onClick={cake1Show}>케이크1</button>
-            <button onClick={cake2Show}>케이크2</button>
-            <button onClick={heartShow}>하트초</button>
-            <button onClick={iloveyouShow}>Iloveyou초</button>
-            <button onClick={eighteenShow}>18th초</button>
-            <div className="text-center">
-              <img
-                id="cake1"
-                src="/cake1.png"
-                style={{
-                  width: "500px",
-                  height: "500px",
-                  "margin-left": "-50px",
-                  display: "none",
-                }}
-                alt="cake1"
-              />
-            </div>
-            <div className="text-center">
-              <img
-                id="cake2"
-                src="/cake2.png"
-                style={{
-                  width: "500px",
-                  height: "400px",
-                  "margin-top": "200px",
-                  display: "none",
-                }}
-                alt="cake2"
-              />
-            </div>
-            <div className="text-center">
-              <img
-                id="heart"
-                src="/heart.png"
-                style={{
-                  width: "100px",
-                  height: "200px",
-                  "margin-top": "-800px",
-                  display: "none",
-                }}
-                alt="heart"
-              />
-              <img
-                id="iloveyou"
-                src="/iloveyou.png"
-                style={{
-                  width: "220px",
-                  height: "100px",
-                  "margin-top": "-700px",
-                  display: "none",
-                }}
-                alt="love"
-              />
-              <img
-                id="eighteen"
-                src="/18th.png"
-                style={{
-                  width: "150px",
-                  height: "150px",
-                  "margin-top": "-750px",
-                  display: "none",
-                }}
-                alt="eighteen"
-              />
-            </div>
-
-            {/* 하트초 */}
-            <div className="text-center">
-              <FadeInOut show={this.state.show} duration={500}>
+              <button onClick={this.toggleShow}>
+                {this.state.show ? "하트촛불끄기" : "하트촛불켜기"}
+              </button>
+              <button onClick={this.toggleShow2}>
+                {this.state.show2 ? "알러뷰촛불끄기" : "알러뷰촛불켜기"}
+              </button>
+              <button onClick={this.toggleShow3}>
+                {this.state.show3 ? "18촛불끄기" : "18촛불켜기"}
+              </button>
+              <button onClick={cake1Show}>케이크1</button>
+              <button onClick={cake2Show}>케이크2</button>
+              <button onClick={heartShow}>하트초</button>
+              <button onClick={iloveyouShow}>Iloveyou초</button>
+              <button onClick={eighteenShow}>18th초</button>
+              <button onClick={textOverlay}>텍스트오버레이</button>
+              <button onClick={higherPitch}>피치+</button>
+              <button onClick={lowerPitch}>피치-</button>
+              <button onClick={showHat}>모자보이기</button>
+              <button onClick={removeFilters}>모든 필터 제거</button>
+              <button onClick={filterTest}>test</button>
+              <div className="text-center">
                 <img
-                  id="heartfire"
-                  src="/fire.gif"
+                  id="cake1"
+                  src="/cake1.png"
+                  style={{
+                    width: "500px",
+                    height: "500px",
+                    "margin-left": "-50px",
+                    display: "none",
+                  }}
+                  alt="cake1"
+                />
+              </div>
+              <div className="text-center">
+                <img
+                  id="cake2"
+                  src="/cake2.png"
+                  style={{
+                    width: "500px",
+                    height: "400px",
+                    "margin-top": "200px",
+                    display: "none",
+                  }}
+                  alt="cake2"
+                />
+              </div>
+              <div className="text-center">
+                <img
+                  id="heart"
+                  src="/heart.png"
                   style={{
                     width: "100px",
-                    height: "100px",
-                    "margin-left": "0px",
-                    "margin-top": "-1050px",
+                    height: "200px",
+                    "margin-top": "-800px",
+                    display: "none",
                   }}
-                  alt="fire"
+                  alt="heart"
                 />
-              </FadeInOut>
-            </div>
-            {/* iloveyou초 */}
+                <img
+                  id="iloveyou"
+                  src="/iloveyou.png"
+                  style={{
+                    width: "220px",
+                    height: "100px",
+                    "margin-top": "-700px",
+                    display: "none",
+                  }}
+                  alt="love"
+                />
+                <img
+                  id="eighteen"
+                  src="/18th.png"
+                  style={{
+                    width: "150px",
+                    height: "150px",
+                    "margin-top": "-750px",
+                    display: "none",
+                  }}
+                  alt="eighteen"
+                />
+              </div>
+
+              {/* 하트초 */}
+              <div className="text-center">
+                <FadeInOut show={this.state.show} duration={500}>
+                  <img
+                    id="heartfire"
+                    src="/fire.gif"
+                    style={{
+                      width: "100px",
+                      height: "100px",
+                      "margin-left": "0px",
+                      "margin-top": "-1050px",
+                    }}
+                    alt="fire"
+                  />
+                </FadeInOut>
+              </div>
+              {/* iloveyou초 */}
             <div
               id="iloveyoufire"
               className="text-center"
               style={{ marginLeft: "-340px" }}
             >
-              <FadeInOut show={this.state.show2} duration={500}>
-                <img
-                  src="/fire.gif"
-                  style={{
-                    width: "70px",
-                    height: "70px",
-                    "margin-left": "345px",
-                    "margin-top": "-890px",
-                  }}
-                  alt="fire1"
-                />
-                <img
-                  src="/fire.gif"
-                  style={{
-                    width: "70px",
-                    height: "70px",
-                    "margin-left": "-28px",
-                    "margin-top": "-890px",
-                  }}
-                  alt="fire2"
-                />
-                <img
-                  src="/fire.gif"
-                  style={{
-                    width: "70px",
-                    height: "70px",
-                    "margin-left": "-5px",
-                    "margin-top": "-900px",
-                  }}
-                  alt="fire3"
-                />
-                <img
-                  src="/fire.gif"
-                  style={{
-                    width: "70px",
-                    height: "70px",
-                    "margin-left": "-43px",
-                    "margin-top": "-900px",
-                  }}
-                  alt="fire4"
-                />
-                <img
-                  src="/fire.gif"
-                  style={{
-                    width: "70px",
-                    height: "70px",
-                    "margin-left": "-25px",
-                    "margin-top": "-900px",
-                  }}
-                  alt="fire5"
-                />
-              </FadeInOut>
-            </div>
-            {/* eighteen초 */}
-            <div className="text-center">
-              <FadeInOut show={this.state.show3} duration={500}>
-                <img
-                  id="eighteenfire"
-                  src="/fire.gif"
-                  style={{
-                    width: "100px",
-                    height: "100px",
-                    "margin-left": "-15px",
-                    "margin-top": "-1010px",
-                  }}
-                  alt="fire"
-                />
-              </FadeInOut>
-            </div>
-          </div>
-          <div className="chatbox">
-            {this.state.chaton ? (
-              <div className="chat chatbox__support chatbox--active">
-                <div className="chat chatbox__header" />
-                <div className="chatbox__messages" ref="chatoutput">
-                  {/* {this.displayElements} */}
-                  <Messages messages={messages} />
-                  <div />
-                </div>
-                <div className="chat chatbox__footer">
-                  <input
-                    id="chat_message"
-                    type="text"
-                    placeholder="Write a message..."
-                    onChange={this.handleChatMessageChange}
-                    onKeyPress={this.sendmessageByEnter}
-                    value={this.state.message}
+                <FadeInOut show={this.state.show2} duration={500}>
+                  <img
+                    src="/fire.gif"
+                    style={{
+                      width: "70px",
+                      height: "70px",
+                      "margin-left": "345px",
+                      "margin-top": "-890px",
+                    }}
+                    alt="fire1"
                   />
-                  <button
-                    className="chat chatbox__send--footer"
-                    onClick={this.sendmessageByClick}
-                  >
-                    Send
-                  </button>
-                </div>
+                  <img
+                    src="/fire.gif"
+                    style={{
+                      width: "70px",
+                      height: "70px",
+                      "margin-left": "-28px",
+                      "margin-top": "-890px",
+                    }}
+                    alt="fire2"
+                  />
+                  <img
+                    src="/fire.gif"
+                    style={{
+                      width: "70px",
+                      height: "70px",
+                      "margin-left": "-5px",
+                      "margin-top": "-900px",
+                    }}
+                    alt="fire3"
+                  />
+                  <img
+                    src="/fire.gif"
+                    style={{
+                      width: "70px",
+                      height: "70px",
+                      "margin-left": "-43px",
+                      "margin-top": "-900px",
+                    }}
+                    alt="fire4"
+                  />
+                  <img
+                    src="/fire.gif"
+                    style={{
+                      width: "70px",
+                      height: "70px",
+                      "margin-left": "-25px",
+                      "margin-top": "-900px",
+                    }}
+                    alt="fire5"
+                  />
+                </FadeInOut>
               </div>
-            ) : null}
-            <div className="chatbox__button" ref={this.chatButton}>
-              <button onClick={this.chattoggle}>채팅</button>
+              {/* eighteen초 */}
+              <div className="text-center">
+                <FadeInOut show={this.state.show3} duration={500}>
+                  <img
+                    id="eighteenfire"
+                    src="/fire.gif"
+                    style={{
+                      width: "100px",
+                      height: "100px",
+                      "margin-left": "-15px",
+                      "margin-top": "-1010px",
+                    }}
+                    alt="fire"
+                  />
+                </FadeInOut>
+              </div>
             </div>
-          </div>
+            <div className="chatbox">
+              {this.state.chaton ? (
+                <div className="chat chatbox__support chatbox--active">
+                  <div className="chat chatbox__header" />
+                  <div className="chatbox__messages" ref="chatoutput">
+                    {/* {this.displayElements} */}
+                    <Messages messages={messages} />
+                    <div />
+                  </div>
+                  <div className="chat chatbox__footer">
+                    <input
+                      id="chat_message"
+                      type="text"
+                      placeholder="Write a message..."
+                      onChange={this.handleChatMessageChange}
+                      onKeyPress={this.sendmessageByEnter}
+                      value={this.state.message}
+                    />
+                    <button
+                      className="chat chatbox__send--footer"
+                      onClick={this.sendmessageByClick}
+                    >
+                      Send
+                    </button>
+                  </div>
+                </div>
+              ) : null}
+              <div className="chatbox__button" ref={this.chatButton}>
+                <button onClick={this.chattoggle}>채팅</button>
+              </div>
+            </div>
           </div>
           
         ) : null}
@@ -805,12 +889,16 @@ class OpenVideo extends Component {
 
   createSession(sessionId) {
     return new Promise((resolve, reject) => {
-      var data = JSON.stringify({ customSessionId: sessionId });
+      var data = JSON.stringify({
+        customSessionId: sessionId,
+        kurentoOptions: {
+          allowedFilters: ["GStreamerFilter", "FaceOverlayFilter"],
+        },
+      });
       axios
         .post(OPENVIDU_SERVER_URL + "/openvidu/api/sessions", data, {
           headers: {
-            Authorization:
-              "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
+            Authorization: "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
             "Content-Type": "application/json",
           },
         })
@@ -849,22 +937,19 @@ class OpenVideo extends Component {
 
   createToken(sessionId) {
     return new Promise((resolve, reject) => {
-      var data = {};
+      // var data = {};
+      var data = JSON.stringify({
+        kurentoOptions: {
+          allowedFilters: ["GStreamerFilter", "FaceOverlayFilter"],
+        },
+      });
       axios
-        .post(
-          OPENVIDU_SERVER_URL +
-            "/openvidu/api/sessions/" +
-            sessionId +
-            "/connection",
-          data,
-          {
-            headers: {
-              Authorization:
-                "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
-              "Content-Type": "application/json",
-            },
-          }
-        )
+        .post(OPENVIDU_SERVER_URL + "/openvidu/api/sessions/" + sessionId + "/connection", data, {
+          headers: {
+            Authorization: "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
+            "Content-Type": "application/json",
+          },
+        })
         .then((response) => {
           console.log("TOKEN", response);
           resolve(response.data.token);
