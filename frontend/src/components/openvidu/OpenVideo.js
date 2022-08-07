@@ -82,7 +82,6 @@ class OpenVideo extends Component {
       message: "",
       show: false,
       show2: false,
-      show3: false,
     };
 
     this.joinSession = this.joinSession.bind(this);
@@ -384,54 +383,20 @@ class OpenVideo extends Component {
     function cake1Show() {
       const cake1 = document.getElementById("cake1");
       const heart = document.getElementById("heart");
+      const maincontainer = document.getElementById("main-container");
+    
   
       if (cake1.style.display === "none") {
         cake1.style.display = "";
         heart.style.display = "";
+        maincontainer.style.gridTemplateColumns = "15% 50% 15%"
+        maincontainer.style.gridTemplateRows = "repeat(3, 33%)"
 
       } else {
         cake1.style.display = "none";
         heart.style.display = "none";
-      }
-    }
-  
-    function cake2Show() {
-      const cake2 = document.getElementById("cake2");
-  
-      if (cake2.style.display === "none") {
-        cake2.style.display = "";
-      } else {
-        cake2.style.display = "none";
-      }
-    }
-  
-    // function heartShow() {
-    //   const heart = document.getElementById("heart");
-  
-    //   if (heart.style.display === "none") {
-    //     heart.style.display = "";
-    //   } else {
-    //     heart.style.display = "none";
-    //   }
-    // }
-  
-    function iloveyouShow() {
-      const iloveyou = document.getElementById("iloveyou");
-  
-      if (iloveyou.style.display === "none") {
-        iloveyou.style.display = "";
-      } else {
-        iloveyou.style.display = "none";
-      }
-    }
-  
-    function eighteenShow() {
-      const eighteen = document.getElementById("eighteen");
-  
-      if (eighteen.style.display === "none") {
-        eighteen.style.display = "";
-      } else {
-        eighteen.style.display = "none";
+        maincontainer.style.gridTemplateColumns = "repeat(3, 25%)"
+        maincontainer.style.gridTemplateRows = "repeat(2, 50%)"
       }
     }
 
@@ -487,9 +452,9 @@ class OpenVideo extends Component {
           <div className="partyroom">
             <div className="header">
               <img src="/pazamafont.png" alt="logo" width="150px" height="75px"></img>
-              <button className="navbtn" onClick={cake1Show}><img src="/birthday-cake.png" alt="logo" width="75px" height="75px"></img></button>
-              <button className="navbtn" id="tstartbutton" onClick={this.takepicture}><img src="/camera.png" alt="logo" width="75px" height="75px"></img></button>
-              <button className="navbtn"><img src="/music.png" alt="logo" width="75px" height="75px"></img></button>
+              <button className="navbtn" onClick={cake1Show}><img src="/birthday-cake.png" alt="logo" width="60px" height="60px"></img></button>
+              <button className="navbtn" id="tstartbutton" onClick={this.takepicture}><img src="/camera.png" alt="logo" width="60px" height="60px"></img></button>
+              <button className="navbtn"><img src="/music.png" alt="logo" width="60px" height="60px"></img></button>
 
             </div>
             <div id="session" className="main-session">
@@ -508,54 +473,20 @@ class OpenVideo extends Component {
                     /> */}
                   </div>
                 ) : null}
-
+  
                 {this.state.subscribers.map((sub, i) => (
                   <div
                     key={i}
-                    className="stream-container"
+                    className="stream-video"
+                    id = "stream-video"
                     onClick={() => this.handleMainVideoStream(sub)}
                   >
                     <UserVideoComponent streamManager={sub} />
                   </div>
                 ))}
+
                 <img id="cake1" className="cake" src="/cake1.png" style={{"display":"none"}} alt="cake1"></img>
                 <img id="heart" className="candle" src="/heart.png" style={{ display: "none",}} alt="heart" />
-              </div>
-
-              <div id="video-container" className="col-md-6">
-                {this.state.publisher !== undefined ? (
-                  <div
-                    className="stream-container col-md-6 col-xs-6"
-                    onClick={() =>
-                      this.handleMainVideoStream(this.state.publisher)
-                    }
-                  >
-                    {this.state.videostate === undefined || this.state.videostate
-                      ? (this.state.videostate = true)
-                      : (this.state.videostate = this.state.videostate)}
-                    <button
-                      className="cam-btn"
-                      id="buttonTurnCamera"
-                      onClick={() => {
-                        this.state.publisher.publishVideo(!this.state.videostate);
-                        this.setState({ videostate: !this.state.videostate });
-                      }}
-                    >{this.state.videostate ? <img className="camoff" src="/videocamoff.png"/> : <img className="camon" src="/videocamon.png"/> }</button>
-
-                    {this.state.audiostate === undefined || this.state.audiostate
-                      ? (this.state.audiostate = true)
-                      : (this.state.audiostate = this.state.audiostate)}
-                    <button
-                      className="mic-btn"
-                      id="buttonTurnAudio"
-                      onClick={() => {
-                        this.state.publisher.publishAudio(!this.state.audiostate);
-                        this.setState({ audiostate: !this.state.audiostate });
-                      }}
-                    >{this.state.audiostate ? <img className="micoff" src="/micoff.png"/> : <img className="micon" src="/micon.png"/>}</button>
-                    {/* <UserVideoComponent streamManager={this.state.publisher} /> */}
-                  </div>
-                ) : null}
               </div>
 
               <div>
@@ -579,6 +510,29 @@ class OpenVideo extends Component {
             </div>
             <div className="main-footer">
               <div className="footer">
+                {this.state.videostate === undefined || this.state.videostate
+                  ? (this.state.videostate = true)
+                  : (this.state.videostate = this.state.videostate)}
+                <button
+                  className="cam-btn"
+                  id="buttonTurnCamera"
+                  onClick={() => {
+                    this.state.publisher.publishVideo(!this.state.videostate);
+                    this.setState({ videostate: !this.state.videostate });
+                  }}
+                >{this.state.videostate ? <img className="camoff" src="/videocamoff.png"/> : <img className="camon" src="/videocamon.png"/> }</button>
+
+                {this.state.audiostate === undefined || this.state.audiostate
+                  ? (this.state.audiostate = true)
+                  : (this.state.audiostate = this.state.audiostate)}
+                <button
+                  className="mic-btn"
+                  id="buttonTurnAudio"
+                  onClick={() => {
+                    this.state.publisher.publishAudio(!this.state.audiostate);
+                    this.setState({ audiostate: !this.state.audiostate });
+                  }}
+                >{this.state.audiostate ? <img className="micoff" src="/micoff.png"/> : <img className="micon" src="/micon.png"/>}</button>
                 <button className="chatbtn" onClick={this.toggleShow}><img className="chat" src="chat.png" /></button>
                 <buton id="buttonLeaveSession" onClick={this.leaveSession}><img className="leave" src="/shutdown.png"/></buton>
               </div>
