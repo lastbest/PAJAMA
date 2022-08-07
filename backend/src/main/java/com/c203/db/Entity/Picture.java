@@ -8,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -20,7 +19,8 @@ public class Picture {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private int picture_idx;
-    private LocalDateTime picture_time;
+
+    private LocalDateTime picture_time; // now()
     private int picture_roomIdx;
     private Byte[] picture;
 }
