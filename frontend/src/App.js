@@ -9,6 +9,7 @@ import UpdateUserPage from "./pages/UpdateUserPage";
 import CreatePartyPage from "./pages/CreatePartyPage";
 import FindIdPage from "./pages/FindIdPage";
 import FindpwdPage from "./pages/FindpwdPage";
+import InvitePage from "./pages/InvitePage";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route element={<MyPage />} path="/mypage" />
         <Route element={<UpdateUserPage />} path="/mypage/update" />
         <Route element={<CreatePartyPage />} path="/createparty" />
+        <Route element={<InvitePage />} path="/invite" />
       </Routes>
     </>
   );
