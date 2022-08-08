@@ -21,6 +21,7 @@ tfjsWasm.setWasmPaths(
   `https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm@${tfjsWasm.version_wasm}/dist/`
 );
 
+var publisher;
 //모션캡처 온오프
 let tracking = true;
 // function toggleTraking() {
@@ -282,7 +283,7 @@ class OpenVideo extends Component {
 
               // Init a publisher passing undefined as targetElement (we don't want OpenVidu to insert a video
               // element: we will manage it on our own) and with the desired properties
-              let publisher = this.OV.initPublisher(undefined, {
+              publisher = this.OV.initPublisher(undefined, {
                 audioSource: undefined, // The source of audio. If undefined default microphone
                 videoSource: videoDevices[0].deviceId, // The source of video. If undefined default webcam
                 publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
@@ -326,6 +327,7 @@ class OpenVideo extends Component {
     }
 
     // Empty all properties...
+    publisher = undefined;
     this.OV = null;
     this.setState({
       session: undefined,
@@ -379,7 +381,7 @@ class OpenVideo extends Component {
     const mySessionId = this.state.mySessionId;
     const myUserName = this.state.myUserName;
     const messages = this.state.messages;
-  
+
     function cake1Show() {
       const cake1 = document.getElementById("cake1");
       const heart = document.getElementById("heart");
@@ -398,6 +400,82 @@ class OpenVideo extends Component {
         maincontainer.style.gridTemplateColumns = "repeat(3, 25%)"
         maincontainer.style.gridTemplateRows = "repeat(2, 50%)"
       }
+    }
+
+    //오픈비두 필터
+    function textOverlay() {
+      publisher.stream
+        .applyFilter("GStreamerFilter", {
+          command: "timeoverlay valignment=bottom halignment=right font-desc='Sans, 20'",
+        })
+        .then(() => {
+          console.log("time added!");
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+
+    function higherPitch() {
+      publisher.stream
+        .applyFilter("GStreamerFilter", {
+          command: "pitch pitch=2",
+        })
+        .then(() => {
+          console.log("picth adjusted!");
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+
+    function lowerPitch() {
+      publisher.stream
+        .applyFilter("GStreamerFilter", {
+          command: "pitch pitch=0.7",
+        })
+        .then(() => {
+          console.log("picth adjusted!");
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+
+    function showHat() {
+      publisher.stream.applyFilter("FaceOverlayFilter").then((filter) => {
+        filter.execMethod("setOverlayedImage", {
+          uri: "https://cdn.pixabay.com/photo/2013/07/12/14/14/derby-148046_960_720.png",
+          offsetXPercent: "-0.2F",
+          offsetYPercent: "-0.8F",
+          widthPercent: "1.3F",
+          heightPercent: "1.0F",
+        });
+      });
+    }
+
+    function filterTest() {
+      publisher.stream
+        .applyFilter("GStreamerFilter", {
+          command: "bulge",
+        })
+        .then(() => {
+          console.log("picth adjusted!");
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+
+    function removeFilters() {
+      publisher.stream
+        .removeFilter()
+        .then(() => {
+          console.log("Filters removed");
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
 
     return (
@@ -597,12 +675,16 @@ class OpenVideo extends Component {
 
   createSession(sessionId) {
     return new Promise((resolve, reject) => {
-      var data = JSON.stringify({ customSessionId: sessionId });
+      var data = JSON.stringify({
+        customSessionId: sessionId,
+        kurentoOptions: {
+          allowedFilters: ["GStreamerFilter", "FaceOverlayFilter"],
+        },
+      });
       axios
         .post(OPENVIDU_SERVER_URL + "/openvidu/api/sessions", data, {
           headers: {
-            Authorization:
-              "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
+            Authorization: "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
             "Content-Type": "application/json",
           },
         })
@@ -641,22 +723,19 @@ class OpenVideo extends Component {
 
   createToken(sessionId) {
     return new Promise((resolve, reject) => {
-      var data = {};
+      // var data = {};
+      var data = JSON.stringify({
+        kurentoOptions: {
+          allowedFilters: ["GStreamerFilter", "FaceOverlayFilter"],
+        },
+      });
       axios
-        .post(
-          OPENVIDU_SERVER_URL +
-            "/openvidu/api/sessions/" +
-            sessionId +
-            "/connection",
-          data,
-          {
-            headers: {
-              Authorization:
-                "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
-              "Content-Type": "application/json",
-            },
-          }
-        )
+        .post(OPENVIDU_SERVER_URL + "/openvidu/api/sessions/" + sessionId + "/connection", data, {
+          headers: {
+            Authorization: "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
+            "Content-Type": "application/json",
+          },
+        })
         .then((response) => {
           console.log("TOKEN", response);
           resolve(response.data.token);
