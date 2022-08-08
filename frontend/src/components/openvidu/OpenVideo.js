@@ -751,13 +751,13 @@ class OpenVideo extends Component {
 
   //캡처기능
   takepicture() {
-    const targetvideo = document.querySelector("video")
+    const targetvideo = document.getElementById("session")
     // const targetvideo = document.querySelector("#localUser").querySelector("video");
     html2canvas(targetvideo).then((xcanvas) => {
       const canvdata = xcanvas.toDataURL("image/png");
       var photo = document.createElement("img");
       photo.setAttribute("src", canvdata);
-      photo.setAttribute("width", 100);
+      photo.setAttribute("width", 200);
       photo.setAttribute("height", 100);
       document.body.appendChild(photo);
     });
