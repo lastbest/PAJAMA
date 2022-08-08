@@ -8,9 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface RoomRepository extends JpaRepository<Room, Integer> {
-   // @Query(value = "delete Room r where r.roomIdx = :roomIdx and r.roomHost = :roomHost")
     void deleteByRoomIdxAndRoomHost(int roomIdx,String roomHost);
     Room findByRoomIdxAndRoomHost(int roomIdx, String roomHost);
-
     Optional<Room> findByRoomIdx(int id);
 }

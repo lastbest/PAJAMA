@@ -1,8 +1,5 @@
 package com.c203.api.controller;
 
-import com.c203.api.dto.Feed.FeedRegistDto;
-import com.c203.api.dto.Participant.ParticipantRegistDto;
-import com.c203.api.dto.User.UserInfoDto;
 import com.c203.api.service.JwtService;
 import com.c203.api.service.ParticipantService;
 import com.c203.api.service.RoomService;

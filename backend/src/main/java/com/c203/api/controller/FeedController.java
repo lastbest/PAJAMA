@@ -1,7 +1,6 @@
 package com.c203.api.controller;
 
 import com.c203.api.dto.Feed.FeedRegistDto;
-import com.c203.api.dto.User.UserRegistDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
