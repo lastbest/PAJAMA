@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -21,7 +21,14 @@ public class Feed {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private int feed_idx;
 
-    private int feed_user;
+    @Column(name = "feed_user")
+    private String feedUser;
     private String feed_description;
-    private LocalDate feed_time;
+    @Column(name = "feed_roomIdx")
+    private int feedRoomIdx;
+    @Column(name = "feed_represent")
+    private Boolean feedRepresent; // 대표하는 사진인지 체크
+    private LocalDateTime feed_time;
+    @Column(name = "feed_picture")
+    private Byte[] feedPicture;
 }

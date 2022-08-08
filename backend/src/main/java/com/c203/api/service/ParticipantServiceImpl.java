@@ -7,14 +7,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ParticipantServiceImpl implements ParticipantService{
-
     @Autowired
     private EncryptionService encryptionService;
-
     @Autowired
     private ParticipantRepository participantRepository;
-
-
     @Override
     public boolean registParticipant(String roomIdx,String email) throws Exception {
         String temp = encryptionService.decrypt(roomIdx);
