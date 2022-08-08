@@ -6,7 +6,6 @@ import com.c203.api.dto.Room.RoomModifyDto;
 import com.c203.api.dto.Room.RoomShowDto;
 import com.c203.db.Entity.Room;
 import com.c203.db.Entity.RoomDeco;
-import com.c203.db.Entity.User;
 import com.c203.db.Repository.RoomDecoRepository;
 import com.c203.db.Repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 
 @Service

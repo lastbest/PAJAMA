@@ -4,12 +4,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
-public class FeedDto {
-    private int idx;
-    private int user;
+public class FeedShowDto {
     private String description;
     private Byte[] picture;
+    private LocalDateTime time;
 }

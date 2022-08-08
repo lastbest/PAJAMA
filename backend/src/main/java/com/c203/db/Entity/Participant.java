@@ -12,13 +12,21 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class Participant {
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private User user4;
+    // room_idx
+//    @ManyToOne
+//    @JoinColumn(name = "room_idx")
+//    private Room room;
+
+    // user_idx
+//    @ManyToOne
+//    @JoinColumn(name = "user_idx")
+//    private User user;
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private int participant_idx;
-
-    private int participant_room;
-    private int participant_user;
+    @Column(name = "participant_room")
+    private int participantRoom;
+    @Column(name = "participant_user")
+    private String participantUser;
 }

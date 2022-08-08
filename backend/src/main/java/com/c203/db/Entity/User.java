@@ -21,9 +21,7 @@ public class User {
 //
 //    @OneToMany(mappedBy = "user3")
 //    private List<Feed> feeds = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "user4")
-//    private List<Participant> participants = new ArrayList<>();
+
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
