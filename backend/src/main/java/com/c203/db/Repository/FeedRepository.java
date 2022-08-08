@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface FeedRepository extends JpaRepository<Feed, Integer> {
     Feed findByFeedRoomIdxAndFeedPictureAndFeedUser(int roomIdx,Byte[] picture,String email);
     List<Feed> findByFeedRoomIdxAndFeedUser(int roomIdx, String email);
-//    Feed findByFeedRoomIdxAndFeedPictureAndFeedUserAndFeedRepresent(int roomIdx,Byte[] picture,String email,boolean represent);
+    void deleteByFeedRoomIdxAndFeedUser(int roomIdx, String email);
 }

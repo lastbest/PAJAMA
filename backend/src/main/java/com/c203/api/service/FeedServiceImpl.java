@@ -7,6 +7,7 @@ import com.c203.db.Repository.FeedRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -39,5 +40,14 @@ public class FeedServiceImpl implements FeedService {
         feedShowDto.setDescription(feed.getFeed_description());
         feedShowDto.setPicture(feed.getFeedPicture());
         return feedShowDto;
+    }
+
+    @Override
+    @Transactional
+    public boolean deleteFeed(String email, String roomIdx) throws Exception {
+        String temp = encryptionService.decrypt(roomIdx);
+        int id = Integer.parseInt(temp); // room_idx
+        feedRepository.deleteByFeedRoomIdxAndFeedUser(id,email);
+        return true;
     }
 }

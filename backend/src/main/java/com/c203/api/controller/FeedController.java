@@ -52,27 +52,23 @@ public class FeedController {
         }
         return new ResponseEntity<>(result,status);
     }
-    // 피드 내용 보여주기
-//    @GetMapping("/mypage/{roomIdx}")
-//    public ResponseEntity<?> showFeed(HttpServletRequest request,@PathVariable("roomIdx") String roomIdx){
-//        Map<String,Object> result = new HashMap<>();
-//        HttpStatus status;
-//        try{
-//            String accessToken = request.getHeader("accessToken");
-//            String decodeEmail = jwtService.decodeToken(accessToken);
-//            if(!decodeEmail.equals("timeout")){
-//
-//                result.put("result",feedShowDto);
-//                status = HttpStatus.OK;
-//            }
-//            else{
-//                result.put("result","accessToken 타임아웃");
-//                status = HttpStatus.UNAUTHORIZED;
-//            }
-//        }catch (Exception e){
-//            result.put("result","서버에러");
-//            status = HttpStatus.INTERNAL_SERVER_ERROR;
-//        }
-//        return new ResponseEntity<>(result,status);
-//    }
+    // 피드 삭제
+    @DeleteMapping("/mypage/{roomIdx}")
+    public ResponseEntity<?> deleteUser(HttpServletRequest request,@PathVariable("roomIdx") String roomIdx){
+        Map<String,Object> result = new HashMap<>();
+        HttpStatus status;
+        String accessToken = request.getHeader("accessToken");
+        String decodeEmail = jwtService.decodeToken(accessToken);
+        try{
+            boolean is = feedService.deleteFeed(decodeEmail,roomIdx);
+            if(is){
+                result.put("result","success");
+            }
+            status = HttpStatus.OK;
+        }catch (Exception e){
+            result.put("result","서버에러");
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<>(result,status);
+    }
 }
