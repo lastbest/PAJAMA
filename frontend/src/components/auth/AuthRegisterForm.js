@@ -193,7 +193,7 @@ const AuthRegisterForm = () => {
               console.log(check);
               console.log("시작");
               axios({
-                url: "http://localhost:8080/users/mail",
+                url: "http://i7c203.p.ssafy.io:8082/users/mail",
                 method: "post",
                 data: check,
               })
@@ -241,7 +241,7 @@ const AuthRegisterForm = () => {
                 console.log("확인시작");
 
                 axios({
-                  url: "http://localhost:8080/users/mail",
+                  url: "http://i7c203.p.ssafy.io:8082/users/mail",
                   method: "get",
                   params: credential,
                 })
