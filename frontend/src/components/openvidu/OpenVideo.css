@@ -53,6 +53,19 @@
 	padding:40px;
 }
 
+.main-container1 {
+	display: grid;
+	text-align: center;
+	justify-content: center;
+	align-items: center;
+    grid-template-columns: 15% 50% 15%;
+	grid-template-rows: repeat(3, 33%);
+	grid-auto-flow: row;
+	width: 100%;
+	max-height:80vh;
+	padding:40px;
+}
+
 .main-video {
 	margin:auto;
 	display: flex;
@@ -71,7 +84,32 @@
 	grid-row-end: 4;
 }
 
+.cake1 {
+	display: none;
+	text-align: center;
+	width:400px;
+	height:400px;
+	margin: auto;
+	grid-column-start:2;
+	grid-column-end:3;
+	grid-row-start: 1;
+	grid-row-end: 4;
+}
+
 .candle {
+	width: 85px;
+	height: 150px;
+	margin: auto;
+	margin-top: 5%;
+	grid-column-start:2;
+	grid-column-end:3;
+	grid-row-start: 1;
+	grid-row-end: 4;
+	/* text-align: center; */
+}
+
+.candle1 {
+	display: none;
 	width: 85px;
 	height: 150px;
 	margin: auto;

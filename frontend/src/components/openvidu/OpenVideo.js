@@ -6,7 +6,7 @@ app.js에 이미지 경로 수정해야합니다(drawResult(hand))
  */
 import axios from "axios";
 import { OpenVidu } from "openvidu-browser";
-import React, { Component } from "react";
+import React, { Component, useEffect, useState } from "react";
 import "./OpenVideo.css";
 import UserVideoComponent from "./UserVideoComponent";
 import Messages from "./Messages";
@@ -83,6 +83,7 @@ class OpenVideo extends Component {
       message: "",
       show: false,
       show2: false,
+      cakeshow: false,
     };
 
     this.joinSession = this.joinSession.bind(this);
@@ -97,6 +98,7 @@ class OpenVideo extends Component {
     this.chattoggle = this.chattoggle.bind(this);
     this.handleChatMessageChange = this.handleChatMessageChange.bind(this);
     this.toggleShow = this.toggleShow.bind(this);
+    this.sendcakeByClick = this.sendcakeByClick.bind(this);
   }
 
   componentDidMount() {
@@ -170,6 +172,22 @@ class OpenVideo extends Component {
 
     this.setState({
       message: "",
+    });
+  }
+
+  sendcakeByClick() {
+    this.setState({
+      cakeshow: !this.state.cakeshow,
+
+    });
+
+    const mySession = this.state.session;
+    console.log(this.state.cakeshow, this.state.myUserName)
+
+    mySession.signal({
+      data: `${this.state.myUserName},${this.state.cakeshow},${this.state.Cakeshow},${this.state.Candleshow},${this.state.Main}`,
+      to: [],
+      type: "cakeshow",
     });
   }
 
@@ -253,6 +271,16 @@ class OpenVideo extends Component {
             });
           }
         });
+
+        mySession.on("signal:cakeshow", (event) => {
+          let cakeShow = event.data.split(",");
+          if (cakeShow[0] !== this.state.myUserName) {
+            this.setState({
+              cakeshow: cakeShow[1],
+            });
+          }
+        });
+
         // On every Stream destroyed...
         mySession.on("streamDestroyed", (event) => {
           // Remove the stream from 'subscribers' array
@@ -381,7 +409,22 @@ class OpenVideo extends Component {
     const mySessionId = this.state.mySessionId;
     const myUserName = this.state.myUserName;
     const messages = this.state.messages;
+    let cakeshow = this.state.cakeshow
 
+    let Main = ""
+    let Cakeshow = ""
+    let Candleshow = ""
+    if (cakeshow) {
+      Cakeshow = "cake"
+      Main = "main-container1"
+      Candleshow = "candle"
+
+    } else {
+      Cakeshow = "cake1"
+      Main = "main-container"
+      Candleshow = "candle1"
+
+    }
     function cake1Show() {
       const cake1 = document.getElementById("cake1");
       const heart = document.getElementById("heart");
@@ -536,7 +579,7 @@ class OpenVideo extends Component {
 
             </div>
             <div id="session" className="main-session">
-              <div id="main-container" className="main-container">
+              <div id="main-container" className={Main}>
                 {this.state.mainStreamManager !== undefined ? (
                   <div id="main-video" className="main-video">
                     <UserVideoComponent
@@ -563,8 +606,8 @@ class OpenVideo extends Component {
                   </div>
                 ))}
 
-                <img id="cake1" className="cake" src="/cake1.png" style={{"display":"none"}} alt="cake1"></img>
-                <img id="heart" className="candle" src="/heart.png" style={{ display: "none",}} alt="heart" />
+                <img id="cake1" className={Cakeshow} src="/cake1.png" alt="cake1"></img>
+                <img id="heart" className={Candleshow} src="/heart.png" alt="heart" />
               </div>
 
               <div>
@@ -613,6 +656,7 @@ class OpenVideo extends Component {
                 >{this.state.audiostate ? <img className="micoff" src="/micoff.png"/> : <img className="micon" src="/micon.png"/>}</button>
                 <button className="chatbtn" onClick={this.toggleShow}><img className="chat" src="chat.png" /></button>
                 <buton id="buttonLeaveSession" onClick={this.leaveSession}><img className="leave" src="/shutdown.png"/></buton>
+                <button onClick={this.sendcakeByClick}>케이크</button>
               </div>
             </div>
           </div>
