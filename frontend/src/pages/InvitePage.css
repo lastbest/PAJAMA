@@ -1,0 +1,36 @@
+.letterheader{
+    margin-top: 10%;
+    margin-left: 10%;
+}
+
+.headerlogo {
+    margin-top: 10%;
+}
+
+.lettercontainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10%;
+}
+
+.partyinfo {
+    font-family: "oldpicture";
+    margin-left: 20%;
+    margin-top:10%;
+}
+
+.Main {
+    font-family: "star";
+    text-align: center;
+    margin-top: 10%;
+    font-size: large;
+}
+
+.clicklink {
+    color: #9D9D9D;
+    text-decoration: none;
+    font-family: "star";
+    display: flex;
+    justify-content: center;
+}
