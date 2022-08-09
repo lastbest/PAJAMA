@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 
 @Service
@@ -91,16 +92,17 @@ public class RoomServiceImpl implements RoomService {
     public RoomShowDto showRoom(String email, String idx) throws Exception {// 원래 room_idx 원래 값
         String temp = encryptionService.decrypt(idx);
         int id = Integer.parseInt(temp);
-        Room room = roomRepository.findByRoomIdxAndRoomHost(id,email);
+        // 룸 번호로만 찾기
+        Optional<Room> room = roomRepository.findByRoomIdx(id);
         RoomDeco roomDeco = roomDecoRepository.findByRoomdecoIdx(id);
         if(room != null && roomDeco != null){
             RoomShowDto roomShowDto = new RoomShowDto();
             roomShowDto.setPartyBg(roomDeco.getRoomdeco_bg());
             roomShowDto.setPartyCake(roomDeco.getRoomdeco_object());
             roomShowDto.setPartyCandle(roomDeco.getRoomdeco_candle());
-            roomShowDto.setPartyDate(room.getRoom_date());
-            roomShowDto.setPartyDesc(room.getRoomDesc());
-            roomShowDto.setPartyName(room.getRoomName());
+            roomShowDto.setPartyDate(room.get().getRoom_date());
+            roomShowDto.setPartyDesc(room.get().getRoomDesc());
+            roomShowDto.setPartyName(room.get().getRoomName());
             return roomShowDto;
         }
         else return null;

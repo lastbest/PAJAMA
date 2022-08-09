@@ -104,7 +104,7 @@ public class RoomController {
         String accessToken = request.getHeader("accessToken");
         String decodeEmail = jwtService.decodeToken(accessToken);
         try {
-            // 호스트만 정보 수정가능이니까 보여질때도 그러겠지
+            // 모두 보여지게 수정하기
             if (!decodeEmail.equals("timeout")) {
                 RoomShowDto roomShowDto = roomService.showRoom(decodeEmail,roomIdx);
                 roomShowDto.setPartyHost(decodeEmail);
