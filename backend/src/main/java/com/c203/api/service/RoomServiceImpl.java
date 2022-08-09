@@ -87,7 +87,7 @@ public class RoomServiceImpl implements RoomService {
         roomDecoRepository.save(roomDeco);
         return true;
     }
-
+    // 룸정보 보여주기
     @Override
     public RoomShowDto showRoom(String email, String idx) throws Exception {// 원래 room_idx 원래 값
         String temp = encryptionService.decrypt(idx);
@@ -100,6 +100,8 @@ public class RoomServiceImpl implements RoomService {
             roomShowDto.setPartyBg(roomDeco.getRoomdeco_bg());
             roomShowDto.setPartyCake(roomDeco.getRoomdeco_object());
             roomShowDto.setPartyCandle(roomDeco.getRoomdeco_candle());
+            // 호스트 설정
+            roomShowDto.setPartyHost(room.get().getRoomHost());
             roomShowDto.setPartyDate(room.get().getRoom_date());
             roomShowDto.setPartyDesc(room.get().getRoomDesc());
             roomShowDto.setPartyName(room.get().getRoomName());
