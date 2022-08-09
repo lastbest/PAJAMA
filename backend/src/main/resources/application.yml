@@ -41,6 +41,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
+server.port: 8082
 #  devtools:
 #    livereload:
 #      enabled: true
