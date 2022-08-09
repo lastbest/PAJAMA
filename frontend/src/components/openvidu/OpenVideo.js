@@ -12,10 +12,8 @@ import UserVideoComponent from "./UserVideoComponent";
 import Messages from "./Messages";
 import FadeInOut from "../common/FadeInOut";
 import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Popover from "react-bootstrap/Popover";
 import Camera from "./Camera";
+import ReactDOM from "react-dom";
 
 import html2canvas from "html2canvas";
 import * as tf from "@tensorflow/tfjs";
@@ -78,7 +76,7 @@ class OpenVideo extends Component {
 
     this.state = {
       mySessionId: "SessionA",
-      myUserName: "Participant" + Math.floor(Math.random() * 100),
+      myUserName: "temp",
       session: undefined,
       mainStreamManager: undefined,
       publisher: undefined,
@@ -88,7 +86,57 @@ class OpenVideo extends Component {
       show: false,
       show2: false,
       cakeshow: false,
+
+      myEmail: "",
+      roomId: "",
+      partyHost: "",
+      partyName: "",
+      partyDesc: "",
+      partyDate: "",
     };
+
+    // 자신의 회원정보 불러오기
+    let token = sessionStorage.getItem("accessToken");
+    axios({
+      url: "http://i7c203.p.ssafy.io:8082/users/me",
+      method: "get",
+      headers: { accessToken: token },
+    })
+      .then((res) => {
+        this.setState({
+          myUserName: res.data.result.nickname,
+          myEmail: res.data.result.email,
+        });
+        console.log("회원정보 불러오기 성공");
+        console.log(res);
+        console.log(this.state.myUserName);
+      })
+      .catch(() => {
+        alert("회원정보 불러오기 실패");
+      });
+
+    // 현재 방정보 불로오기
+    axios({
+      url: "http://localhost:8082/rooms",
+      method: "get",
+      headers: { accessToken: token },
+      params: {
+        roomIdx: "MJktgPP9VHR5cwtdJ5IVtQ%3D%3D", // params
+      },
+    })
+      .then((res) => {
+        console.log("방정보 불러오기 성공");
+        this.setState({
+          partyHost: res.data.result.partyHost,
+          partyName: res.data.result.partyName,
+          partyDesc: res.data.result.partyDesc,
+          partyDate: res.data.result.partyDate,
+        });
+      })
+      .then((res) => {})
+      .catch(() => {
+        alert("방정보 불러오기 실패");
+      });
 
     this.joinSession = this.joinSession.bind(this);
     this.leaveSession = this.leaveSession.bind(this);
@@ -103,8 +151,27 @@ class OpenVideo extends Component {
     this.handleChatMessageChange = this.handleChatMessageChange.bind(this);
     this.toggleShow = this.toggleShow.bind(this);
     this.sendcakeByClick = this.sendcakeByClick.bind(this);
+    this.tick = this.tick.bind(this);
   }
-
+  tick() {
+    let token = sessionStorage.getItem("accessToken");
+    axios({
+      url: "http://i7c203.p.ssafy.io:8082/users/me",
+      method: "get",
+      headers: { accessToken: token },
+    })
+      .then((res) => {
+        this.state.myUserName = res.data.result.nickname;
+        this.state.myEmail = res.data.result.email;
+        console.log("회원정보 불러오기 성공");
+        console.log(res);
+        console.log(this.state.myUserName);
+      })
+      .catch(() => {
+        alert("회원정보 불러오기 실패");
+      });
+    ReactDOM.render(this.state.myUserName, document.getElementById("root"));
+  }
   componentDidMount() {
     window.addEventListener("beforeunload", this.onbeforeunload);
   }
@@ -304,7 +371,9 @@ class OpenVideo extends Component {
             .connect(token, { clientData: this.state.myUserName })
             .then(async () => {
               var devices = await this.OV.getDevices();
-              var videoDevices = devices.filter((device) => device.kind === "videoinput");
+              var videoDevices = devices.filter(
+                (device) => device.kind === "videoinput"
+              );
 
               // --- 5) Get your own camera stream ---
 
@@ -360,7 +429,7 @@ class OpenVideo extends Component {
       session: undefined,
       subscribers: [],
       mySessionId: "SessionA",
-      myUserName: "Participant" + Math.floor(Math.random() * 100),
+      myUserName: this.state.myUserName,
       mainStreamManager: undefined,
       publisher: undefined,
     });
@@ -369,7 +438,9 @@ class OpenVideo extends Component {
   async switchCamera() {
     try {
       const devices = await this.OV.getDevices();
-      var videoDevices = devices.filter((device) => device.kind === "videoinput");
+      var videoDevices = devices.filter(
+        (device) => device.kind === "videoinput"
+      );
 
       if (videoDevices && videoDevices.length > 1) {
         var newVideoDevice = videoDevices.filter(
@@ -426,7 +497,8 @@ class OpenVideo extends Component {
     function textOverlay() {
       publisher.stream
         .applyFilter("GStreamerFilter", {
-          command: "timeoverlay valignment=bottom halignment=right font-desc='Sans, 20'",
+          command:
+            "timeoverlay valignment=bottom halignment=right font-desc='Sans, 20'",
         })
         .then(() => {
           console.log("time added!");
@@ -511,17 +583,24 @@ class OpenVideo extends Component {
             </div>
             <div id="join-dialog" className="jumbotron vertical-center">
               <form className="form-group" onSubmit={this.joinSession}>
-                <p>
-                  <label>Participant: </label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    id="userName"
-                    value={myUserName}
-                    onChange={this.handleChangeUserName}
-                    required
-                  />
-                </p>
+                <span>
+                  유저 & 방정보
+                  <br />
+                  ------------------------------
+                  <br />
+                  마이닉네임: {this.state.myUserName}
+                  <br />
+                  마이이메일: {this.state.myEmail}
+                  <br />
+                  방이름 : {this.state.partyName}
+                  <br />
+                  방설명 : {this.state.partyDesc}
+                  <br />
+                  파티시간 : {this.state.partyDate}
+                  <br />
+                  파티호스트 : {this.state.partyHost}
+                </span>
+
                 <p>
                   <label> Session: </label>
                   <input
@@ -534,7 +613,12 @@ class OpenVideo extends Component {
                   />
                 </p>
                 <p className="text-center">
-                  <input className="joinbtn" name="commit" type="submit" value="참여하기" />
+                  <input
+                    className="joinbtn"
+                    name="commit"
+                    type="submit"
+                    value="참여하기"
+                  />
                 </p>
               </form>
             </div>
@@ -544,22 +628,48 @@ class OpenVideo extends Component {
         {this.state.session !== undefined ? (
           <div className="partyroom">
             <div className="header">
-              <img src="/pazamafont.png" alt="logo" width="150px" height="75px"></img>
+              <img
+                src="/pazamafont.png"
+                alt="logo"
+                width="150px"
+                height="75px"
+              ></img>
               <button className="navbtn" onClick={this.sendcakeByClick}>
-                <img src="/birthday-cake.png" alt="logo" width="60px" height="60px"></img>
+                <img
+                  src="/birthday-cake.png"
+                  alt="logo"
+                  width="60px"
+                  height="60px"
+                ></img>
               </button>
-              <button className="navbtn" id="tstartbutton" onClick={this.takepicture}>
-                <img src="/camera.png" alt="logo" width="60px" height="60px"></img>
+              <button
+                className="navbtn"
+                id="tstartbutton"
+                onClick={this.takepicture}
+              >
+                <img
+                  src="/camera.png"
+                  alt="logo"
+                  width="60px"
+                  height="60px"
+                ></img>
               </button>
               <button className="navbtn">
-                <img src="/music.png" alt="logo" width="60px" height="60px"></img>
+                <img
+                  src="/music.png"
+                  alt="logo"
+                  width="60px"
+                  height="60px"
+                ></img>
               </button>
             </div>
             <div id="session" className="main-session">
               <div id="main-container" className={Main}>
                 {this.state.mainStreamManager !== undefined ? (
                   <div id="main-video" className="main-video">
-                    <UserVideoComponent streamManager={this.state.mainStreamManager} />
+                    <UserVideoComponent
+                      streamManager={this.state.mainStreamManager}
+                    />
                     {/* <input
                       className="btn btn-large btn-success"
                       type="button"
@@ -581,8 +691,18 @@ class OpenVideo extends Component {
                   </div>
                 ))}
 
-                <img id="cake1" className={Cakeshow} src="/cake1.png" alt="cake1"></img>
-                <img id="heart" className={Candleshow} src="/heart.png" alt="heart" />
+                <img
+                  id="cake1"
+                  className={Cakeshow}
+                  src="/cake1.png"
+                  alt="cake1"
+                ></img>
+                <img
+                  id="heart"
+                  className={Candleshow}
+                  src="/heart.png"
+                  alt="heart"
+                />
               </div>
 
               <div>
@@ -654,15 +774,27 @@ class OpenVideo extends Component {
         ) : null}
         {/* <div class="canvas-wrapper"></div> */}
 
-        <Modal show={this.state.show} className="chatmodal" onHide={this.toggleShow}>
+        <Modal
+          show={this.state.show}
+          className="chatmodal"
+          onHide={this.toggleShow}
+        >
           <div>
             <div className="chatbox__support chatbox--active">
               <div style={{ "text-align": "center" }}>
-                <img src="/pazamafont.png" alt="logo" width="80px" height="40px"></img>
+                <img
+                  src="/pazamafont.png"
+                  alt="logo"
+                  width="80px"
+                  height="40px"
+                ></img>
               </div>
 
               <div className="chatbox__messages" ref="chatoutput">
-                <Messages messages={messages} />
+                <Messages
+                  messages={messages}
+                  myUserName={this.state.myUserName}
+                />
               </div>
 
               <div className="chatbox__footer">
@@ -675,9 +807,18 @@ class OpenVideo extends Component {
                   onKeyPress={this.sendmessageByEnter}
                   value={this.state.message}
                 />
-                <button className="chatbox__send--footer" onClick={this.sendmessageByClick}>
-                  전송
-                </button>
+                {this.state.message !== "" ? (
+                  <button
+                    className="chatbox__send--footer"
+                    onClick={this.sendmessageByClick}
+                  >
+                    전송
+                  </button>
+                ) : (
+                  <button className="chatbox__send--footer" disabled>
+                    전송
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -715,7 +856,8 @@ class OpenVideo extends Component {
       axios
         .post(OPENVIDU_SERVER_URL + "/openvidu/api/sessions", data, {
           headers: {
-            Authorization: "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
+            Authorization:
+              "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
             "Content-Type": "application/json",
           },
         })
@@ -743,7 +885,9 @@ class OpenVideo extends Component {
                   '"'
               )
             ) {
-              window.location.assign(OPENVIDU_SERVER_URL + "/accept-certificate");
+              window.location.assign(
+                OPENVIDU_SERVER_URL + "/accept-certificate"
+              );
             }
           }
         });
@@ -759,12 +903,20 @@ class OpenVideo extends Component {
         },
       });
       axios
-        .post(OPENVIDU_SERVER_URL + "/openvidu/api/sessions/" + sessionId + "/connection", data, {
-          headers: {
-            Authorization: "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
-            "Content-Type": "application/json",
-          },
-        })
+        .post(
+          OPENVIDU_SERVER_URL +
+            "/openvidu/api/sessions/" +
+            sessionId +
+            "/connection",
+          data,
+          {
+            headers: {
+              Authorization:
+                "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
+              "Content-Type": "application/json",
+            },
+          }
+        )
         .then((response) => {
           console.log("TOKEN", response);
           resolve(response.data.token);
