@@ -109,8 +109,8 @@ public class RoomController {
                 RoomShowDto roomShowDto = roomService.showRoom(decodeEmail,roomIdx);
                 roomShowDto.setPartyHost(decodeEmail);
                 roomShowDto.setRoomId(roomIdx);
+                result.put("result", roomShowDto);
             }
-            result.put("result", "success");
             status = HttpStatus.OK;
         } catch (Exception e) {
             result.put("result", "서버에러");
