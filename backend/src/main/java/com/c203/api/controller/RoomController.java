@@ -107,7 +107,6 @@ public class RoomController {
             // 모두 보여지게 수정하기
             if (!decodeEmail.equals("timeout")) {
                 RoomShowDto roomShowDto = roomService.showRoom(decodeEmail,roomIdx);
-                roomShowDto.setPartyHost(decodeEmail);
                 roomShowDto.setRoomId(roomIdx);
                 result.put("result", roomShowDto);
             }
