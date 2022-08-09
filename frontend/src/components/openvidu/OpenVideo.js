@@ -15,6 +15,7 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
+import Camera from "./Camera";
 
 import html2canvas from "html2canvas";
 import * as tf from "@tensorflow/tfjs";
@@ -303,9 +304,7 @@ class OpenVideo extends Component {
             .connect(token, { clientData: this.state.myUserName })
             .then(async () => {
               var devices = await this.OV.getDevices();
-              var videoDevices = devices.filter(
-                (device) => device.kind === "videoinput"
-              );
+              var videoDevices = devices.filter((device) => device.kind === "videoinput");
 
               // --- 5) Get your own camera stream ---
 
@@ -370,9 +369,7 @@ class OpenVideo extends Component {
   async switchCamera() {
     try {
       const devices = await this.OV.getDevices();
-      var videoDevices = devices.filter(
-        (device) => device.kind === "videoinput"
-      );
+      var videoDevices = devices.filter((device) => device.kind === "videoinput");
 
       if (videoDevices && videoDevices.length > 1) {
         var newVideoDevice = videoDevices.filter(
@@ -429,8 +426,7 @@ class OpenVideo extends Component {
     function textOverlay() {
       publisher.stream
         .applyFilter("GStreamerFilter", {
-          command:
-            "timeoverlay valignment=bottom halignment=right font-desc='Sans, 20'",
+          command: "timeoverlay valignment=bottom halignment=right font-desc='Sans, 20'",
         })
         .then(() => {
           console.log("time added!");
@@ -538,12 +534,7 @@ class OpenVideo extends Component {
                   />
                 </p>
                 <p className="text-center">
-                  <input
-                    className="joinbtn"
-                    name="commit"
-                    type="submit"
-                    value="참여하기"
-                  />
+                  <input className="joinbtn" name="commit" type="submit" value="참여하기" />
                 </p>
               </form>
             </div>
@@ -553,48 +544,22 @@ class OpenVideo extends Component {
         {this.state.session !== undefined ? (
           <div className="partyroom">
             <div className="header">
-              <img
-                src="/pazamafont.png"
-                alt="logo"
-                width="150px"
-                height="75px"
-              ></img>
+              <img src="/pazamafont.png" alt="logo" width="150px" height="75px"></img>
               <button className="navbtn" onClick={this.sendcakeByClick}>
-                <img
-                  src="/birthday-cake.png"
-                  alt="logo"
-                  width="60px"
-                  height="60px"
-                ></img>
+                <img src="/birthday-cake.png" alt="logo" width="60px" height="60px"></img>
               </button>
-              <button
-                className="navbtn"
-                id="tstartbutton"
-                onClick={this.takepicture}
-              >
-                <img
-                  src="/camera.png"
-                  alt="logo"
-                  width="60px"
-                  height="60px"
-                ></img>
+              <button className="navbtn" id="tstartbutton" onClick={this.takepicture}>
+                <img src="/camera.png" alt="logo" width="60px" height="60px"></img>
               </button>
               <button className="navbtn">
-                <img
-                  src="/music.png"
-                  alt="logo"
-                  width="60px"
-                  height="60px"
-                ></img>
+                <img src="/music.png" alt="logo" width="60px" height="60px"></img>
               </button>
             </div>
             <div id="session" className="main-session">
               <div id="main-container" className={Main}>
                 {this.state.mainStreamManager !== undefined ? (
                   <div id="main-video" className="main-video">
-                    <UserVideoComponent
-                      streamManager={this.state.mainStreamManager}
-                    />
+                    <UserVideoComponent streamManager={this.state.mainStreamManager} />
                     {/* <input
                       className="btn btn-large btn-success"
                       type="button"
@@ -616,18 +581,8 @@ class OpenVideo extends Component {
                   </div>
                 ))}
 
-                <img
-                  id="cake1"
-                  className={Cakeshow}
-                  src="/cake1.png"
-                  alt="cake1"
-                ></img>
-                <img
-                  id="heart"
-                  className={Candleshow}
-                  src="/heart.png"
-                  alt="heart"
-                />
+                <img id="cake1" className={Cakeshow} src="/cake1.png" alt="cake1"></img>
+                <img id="heart" className={Candleshow} src="/heart.png" alt="heart" />
               </div>
 
               <div>
@@ -689,29 +644,21 @@ class OpenVideo extends Component {
                 <button className="chatbtn" onClick={this.toggleShow}>
                   <img className="chat" src="chat.png" />
                 </button>
-                <buton id="buttonLeaveSession" onClick={this.leaveSession}>
+                <button id="buttonLeaveSession" onClick={this.leaveSession}>
                   <img className="leave" src="/shutdown.png" />
-                </buton>
+                </button>
               </div>
             </div>
+            <Camera style="display: none" />
           </div>
         ) : null}
         {/* <div class="canvas-wrapper"></div> */}
 
-        <Modal
-          show={this.state.show}
-          className="chatmodal"
-          onHide={this.toggleShow}
-        >
+        <Modal show={this.state.show} className="chatmodal" onHide={this.toggleShow}>
           <div>
             <div className="chatbox__support chatbox--active">
               <div style={{ "text-align": "center" }}>
-                <img
-                  src="/pazamafont.png"
-                  alt="logo"
-                  width="80px"
-                  height="40px"
-                ></img>
+                <img src="/pazamafont.png" alt="logo" width="80px" height="40px"></img>
               </div>
 
               <div className="chatbox__messages" ref="chatoutput">
@@ -728,10 +675,7 @@ class OpenVideo extends Component {
                   onKeyPress={this.sendmessageByEnter}
                   value={this.state.message}
                 />
-                <button
-                  className="chatbox__send--footer"
-                  onClick={this.sendmessageByClick}
-                >
+                <button className="chatbox__send--footer" onClick={this.sendmessageByClick}>
                   전송
                 </button>
               </div>
@@ -771,8 +715,7 @@ class OpenVideo extends Component {
       axios
         .post(OPENVIDU_SERVER_URL + "/openvidu/api/sessions", data, {
           headers: {
-            Authorization:
-              "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
+            Authorization: "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
             "Content-Type": "application/json",
           },
         })
@@ -800,9 +743,7 @@ class OpenVideo extends Component {
                   '"'
               )
             ) {
-              window.location.assign(
-                OPENVIDU_SERVER_URL + "/accept-certificate"
-              );
+              window.location.assign(OPENVIDU_SERVER_URL + "/accept-certificate");
             }
           }
         });
@@ -818,31 +759,18 @@ class OpenVideo extends Component {
         },
       });
       axios
-        .post(
-          OPENVIDU_SERVER_URL +
-            "/openvidu/api/sessions/" +
-            sessionId +
-            "/connection",
-          data,
-          {
-            headers: {
-              Authorization:
-                "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
-              "Content-Type": "application/json",
-            },
-          }
-        )
+        .post(OPENVIDU_SERVER_URL + "/openvidu/api/sessions/" + sessionId + "/connection", data, {
+          headers: {
+            Authorization: "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
+            "Content-Type": "application/json",
+          },
+        })
         .then((response) => {
           console.log("TOKEN", response);
           resolve(response.data.token);
         })
         .catch((error) => reject(error));
     });
-  }
-
-  componentDidUpdate() {
-    if (this.state.session === undefined);
-    else apps();
   }
 
   //캡처기능
@@ -858,445 +786,6 @@ class OpenVideo extends Component {
       document.body.appendChild(photo);
     });
   }
-}
-
-//카메라 클래스
-//class camera
-class Camera {
-  constructor() {
-    // const luser = document.querySelector("#localUser");
-    //   this.video = luser.querySelector("video");
-    this.video = document.querySelector("video");
-
-    // this.video = document.getElementById("video"); //video id를 가진 HTML code의 element 가져옴
-    this.canvas = document.getElementById("output");
-    this.ctx = this.canvas.getContext("2d");
-  }
-
-  /**
-   * Initiate a Camera instance and wait for the camera stream to be ready.
-   */
-  static async setupCamera() {
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      throw new Error(
-        "Browser API navigator.mediaDevices.getUserMedia not available"
-      );
-    }
-
-    const $size = { width: 640, height: 480 }; //desktop용 사이즈
-    const $m_size = { width: 360, height: 270 }; //mobile용 사이즈
-    const videoConfig = {
-      audio: false,
-      video: {
-        facingMode: "user",
-        // Only setting the video to a specified size for large screen, on
-        // mobile devices accept the default size.
-        width: isMobile() ? $m_size.width : $size.width,
-        height: isMobile() ? $m_size.height : $size.height,
-      },
-    };
-
-    const stream = await navigator.mediaDevices.getUserMedia(videoConfig);
-
-    const camera = new Camera();
-    camera.video.srcObject = stream; //Webcam의 live stream을 video id 가진 HTML 코드의 video element에 할당
-
-    await new Promise((resolve) => {
-      camera.video.onloadedmetadata = () => {
-        resolve(video);
-      };
-    });
-
-    camera.video.play();
-
-    const videoWidth = camera.video.videoWidth;
-    const videoHeight = camera.video.videoHeight;
-    // Must set below two lines, otherwise video element doesn't show.
-    camera.video.width = videoWidth;
-    camera.video.height = videoHeight;
-    //canvas는 나중에 detection result를 그리는데 사용 됨
-    camera.canvas.width = videoWidth; //videoWidth와 일치시켜 detection result가 video cam 위에 맵핑되도록 함
-    camera.canvas.height = videoHeight;
-    const canvasContainer = document.querySelector(".canvas-wrapper");
-    canvasContainer.style = `width: ${videoWidth}px; height: ${videoHeight}px`; //css 부분도 video cam과 같은 크기로 할당
-
-    // Because the image from camera is mirrored, need to flip horizontally.
-    //기본적으로 camera가 mirroring 되어있으므로 horizontal flipping 함
-    camera.ctx.translate(camera.video.videoWidth, 0);
-    camera.ctx.scale(-1, 1);
-
-    return camera;
-  }
-
-  //웹알티씨  비디오가 있으므로 비디오 그릴필요 없음!
-  drawCtx() {
-    // this.ctx.drawImage(this.video, 0, 0, this.video.videoWidth, this.video.videoHeight);
-  }
-
-  clearCtx() {
-    this.ctx.clearRect(0, 0, this.video.videoWidth, this.video.videoHeight);
-  }
-
-  /**
-   * Draw the keypoints on the video.
-   * @param hands A list of hands to render.
-   */
-  drawResults(hands) {
-    // Sort by right to left hands.
-    hands.sort((hand1, hand2) => {
-      if (hand1.handedness < hand2.handedness) return 1;
-      if (hand1.handedness > hand2.handedness) return -1;
-      return 0;
-    });
-
-    // Pad hands to clear empty scatter GL plots.
-    while (hands.length < 2) hands.push({});
-
-    //내 비디오를 캔버스에 안 그리므로 잔상이 자꾸남아서 클리어
-    this.clearCtx();
-
-    for (let i = 0; i < hands.length; ++i) {
-      this.drawResult(hands[i]); //detection된 모든 hand 모두에 대해
-    }
-  }
-
-  /**
-   * Draw the keypoints on the video.
-   * @param hand A hand with keypoints to render.
-   * @param ctxt Scatter GL context to render 3D keypoints to.
-   */
-  drawResult(hand) {
-    if (hand.keypoints != null) {
-      this.drawKeypoints(hand.keypoints, hand.handedness);
-      const emo_type = this.drawEmoticon(hand.keypoints); //keypoints를 parsing해서 emo_type을 반환한다.
-
-      if (emo_type == "v") {
-        //v포즈 취할 경우
-        emo.innerHTML = '<img src="/v.jpg" width="300" height="300">';
-      } else if (emo_type == "heart") {
-        //손꾸락하트
-        emo.innerHTML = '<img src="/heart.gif" width="300" height="300">';
-      } else if (emo_type == "test") {
-        emo.innerHTML = '<img src="/test.gif" width="300" height="300">';
-        // console.log("emo test" + firework_timer);
-      } else if (firework_timer > 0) {
-        // console.log("emo ft" + firework_timer);
-        emo.innerHTML = '<img src="/test.gif" width="300" height="300">';
-      } else {
-        //이외일 경우 아무것도 보여주지 않음
-      }
-    }
-  }
-  drawEmoticon(keypoints) {
-    //손 모양 코드 y축, 위에서 아래로 값 커짐
-    const keypointsArray = keypoints;
-
-    const thumb_tip = keypointsArray[4].y;
-    const thumb_ip = keypointsArray[3].y;
-    const thumb_mcp = keypointsArray[2].y;
-    const index_finger_tip = keypointsArray[8].y;
-    const index_finger_pip = keypointsArray[6].y;
-    const index_finger_mcp = keypointsArray[5].y;
-    const middle_finger_tip = keypointsArray[12].y;
-    const middle_finger_pip = keypointsArray[10].y;
-    const ring_finger_tip = keypointsArray[16].y;
-    const ring_finger_pip = keypointsArray[14].y;
-    const pinky_finger_tip = keypointsArray[20].y;
-    const pinky_finger_pip = keypointsArray[18].y;
-
-    if (
-      index_finger_tip < index_finger_pip &&
-      middle_finger_tip < middle_finger_pip &&
-      ring_finger_tip > middle_finger_pip &&
-      pinky_finger_tip > middle_finger_pip &&
-      thumb_tip < ring_finger_tip
-    ) {
-      return this.hand_motion(keypoints, "1"); //v
-    } else if (
-      thumb_tip < thumb_mcp &&
-      index_finger_tip < index_finger_pip &&
-      index_finger_pip < index_finger_mcp &&
-      middle_finger_tip > middle_finger_pip &&
-      ring_finger_tip > ring_finger_pip &&
-      pinky_finger_tip > pinky_finger_pip
-    ) {
-      return this.hand_motion(keypoints, "2"); //손꾸락 하트
-    } else if (
-      thumb_tip < thumb_ip &&
-      index_finger_tip < index_finger_pip &&
-      middle_finger_tip < middle_finger_pip &&
-      ring_finger_tip < ring_finger_pip &&
-      pinky_finger_tip < pinky_finger_pip
-    ) {
-      return this.hand_motion(keypoints, "3"); //손 펴진거
-    } else {
-      return "none";
-    }
-  }
-
-  hand_motion(keypoints, type) {
-    //손 모양 코드 x축
-    const keypointsArray = keypoints;
-    // for x axis
-    const thumb_ip = keypointsArray[3].x;
-    const thumb_tip = keypointsArray[4].x;
-    const index_finger_mcp = keypointsArray[5].x;
-    const index_finger_pip = keypointsArray[6].x;
-    const index_finger_tip = keypointsArray[8].x;
-    const middle_finger_tip = keypointsArray[12].x;
-    const pinky_finger_pip = keypointsArray[18].x;
-    const pinky_finger_tip = keypointsArray[20].x;
-
-    // if (hand_flip_cnt != 0 || hand_timer != 0) console.log(hand_flip_cnt + " " + hand_timer);
-    if (hand_flip_cnt >= 10) {
-      hand_timer = 0;
-      test_hand = 0;
-      hand_flip_cnt = 0;
-      firework_timer = 100; //이거 양수이면 불꽃놀이 계속 보입니다
-      console.log("flip cnt" + firework_timer);
-      return "test";
-    }
-
-    if (
-      //type 1 start
-      (thumb_tip > index_finger_tip && thumb_tip < pinky_finger_pip) ||
-      (thumb_tip < index_finger_tip && thumb_tip > pinky_finger_pip)
-    ) {
-      if (type == "1") {
-        return "v";
-      }
-    } //type 1 end
-    else if (
-      //type 2 start
-      (thumb_tip > index_finger_tip &&
-        thumb_tip < index_finger_mcp &&
-        thumb_ip - index_finger_pip < 20) ||
-      (thumb_tip < index_finger_tip &&
-        thumb_tip > index_finger_mcp &&
-        index_finger_pip - thumb_ip < 20)
-    ) {
-      if (type == "2") {
-        return "heart";
-      }
-    } //type 2 end
-    else if (
-      //손바닥 펴져있을때
-      //type 3 start
-      (thumb_tip < middle_finger_tip && middle_finger_tip < pinky_finger_tip) ||
-      (thumb_tip > middle_finger_tip && middle_finger_tip > pinky_finger_tip)
-    ) {
-      return this.hand_turn(keypoints, "palm");
-    } //type 3 end
-    else {
-      //이더저도아닐때
-      // if (firework_timer > 0) return "test";
-      return "none";
-    }
-  }
-  hand_turn(keypoints, check) {
-    const keypointsArray = keypoints;
-    const timer_limit = 30;
-
-    const thumb_ip = keypointsArray[3].x;
-    const middle_finger_pip = keypointsArray[10].x;
-    const pinky_finger_pip = keypointsArray[18].x;
-
-    //손바닥
-    if (
-      check == "palm" &&
-      thumb_ip < middle_finger_pip &&
-      middle_finger_pip < pinky_finger_pip
-    ) {
-      if (test_hand == 0) {
-        hand_timer = timer_limit;
-        test_hand = 1;
-      } else if (test_hand == 2 && hand_timer > 0) {
-        hand_timer = timer_limit;
-        hand_flip_cnt++;
-        test_hand = 1;
-      }
-    }
-
-    //손등
-    if (
-      check == "palm" &&
-      thumb_ip > middle_finger_pip &&
-      middle_finger_pip > pinky_finger_pip
-    ) {
-      if (test_hand == 0) {
-        hand_timer = timer_limit;
-        test_hand = 2;
-      } else if (test_hand == 1 && hand_timer > 0) {
-        hand_timer = timer_limit;
-        hand_flip_cnt++;
-        test_hand = 2;
-      }
-    }
-    return "none";
-  }
-
-  //이거 쓰는거 맞음???????????
-  is_up_or_down(keypoints, is_up) {
-    //손 모양 코드 x축
-    const keypointsArray = keypoints;
-    // for x axis
-    const wrist = keypointsArray[0].x;
-    const index_finger_pip = keypointsArray[6].x;
-    const index_finger_tip = keypointsArray[8].x;
-    const ring_finger_pip = keypointsArray[14].x;
-    const ring_finger_tip = keypointsArray[16].x;
-
-    if (
-      (wrist > index_finger_pip &&
-        index_finger_tip > index_finger_pip &&
-        ring_finger_tip > ring_finger_pip) ||
-      (wrist < index_finger_pip &&
-        index_finger_tip < index_finger_pip &&
-        ring_finger_tip < ring_finger_pip)
-    ) {
-      if (is_up == true) {
-        console.log("x축, true");
-        console.log("index_finger_tip : " + index_finger_tip);
-        console.log("index_finger_pip : " + index_finger_pip);
-        return "up";
-      } else {
-        console.log("x축, false");
-        console.log("index_finger_tip : " + index_finger_tip);
-        console.log("index_finger_pip : " + index_finger_pip);
-        return "down";
-      }
-    } else {
-      return "none";
-    }
-  }
-
-  /**
-   * Draw the keypoints on the video.
-   * @param keypoints A list of keypoints.
-   * @param handedness Label of hand (either Left or Right).
-   */
-  drawKeypoints(keypoints, handedness) {
-    const keypointsArray = keypoints;
-    this.ctx.fillStyle = handedness === "Left" ? "Red" : "Blue"; //왼손, 오른손에 따라 색 구분
-    this.ctx.strokeStyle = "White"; //keypoints를 이어주는 색을 흰색으로
-    this.ctx.lineWidth = 2;
-
-    for (let i = 0; i < keypointsArray.length; i++) {
-      const y = keypointsArray[i].x;
-      const x = keypointsArray[i].y;
-      this.drawPoint(x - 2, y - 2, 3);
-    }
-
-    const fingers = Object.keys(fingerLookupIndices);
-    for (let i = 0; i < fingers.length; i++) {
-      const finger = fingers[i];
-      const points = fingerLookupIndices[finger].map((idx) => keypoints[idx]); //기준 keypoint와 연결된 keypoint들을 맵핑
-      this.drawPath(points, false);
-    }
-  }
-
-  drawPath(points, closePath) {
-    //hand keypoints끼리 연결된 경우 연결(path)을 시각화
-    const region = new Path2D();
-    region.moveTo(points[0].x, points[0].y);
-    for (let i = 1; i < points.length; i++) {
-      const point = points[i];
-      region.lineTo(point.x, point.y); //points[0]과 연결된 points[1:]의 path를 그림
-    }
-    if (closePath) {
-      region.closePath();
-    }
-    this.ctx.stroke(region);
-  }
-
-  drawPoint(y, x, r) {
-    // hand keypoint(Point)을 시각화
-    this.ctx.beginPath();
-    this.ctx.arc(x, y, r, 0, 2 * Math.PI);
-    this.ctx.fill();
-  }
-}
-
-async function createDetector() {
-  const hands = handdetection.SupportedModels.MediaPipeHands; //MediaPipe에서 제공하는 hand pose detection model 사용
-  return handdetection.createDetector(hands, {
-    runtime: "tfjs", //runtime을 tfjs로 설정함에 따라 webGL을 default로 사용함
-    modelType: "full", //full(큰 모델) or lite(작은 모델)
-    maxHands: 1, // or 2~10 : detect 할 손의 개수
-  });
-}
-
-async function renderResult() {
-  if (camera.video.readyState < 2) {
-    await new Promise((resolve) => {
-      camera.video.onloadeddata = () => {
-        resolve(video);
-      };
-    });
-  }
-
-  let hands = null;
-
-  if (detector != null) {
-    try {
-      hands = await detector.estimateHands(camera.video, {
-        flipHorizontal: false, //hand pose detection 결과를 hands에 반환
-      });
-    } catch (error) {
-      detector.dispose(); //detector에 대한 tensor memory를 없앰
-      detector = null;
-      alert(error);
-    }
-  }
-
-  //손바닥 뒤집기 타이머
-  if (hand_timer > 0) {
-    hand_timer--;
-  } else if (hand_timer <= 0) {
-    test_hand = 0;
-    hand_flip_cnt = 0;
-    hand_timer = 0;
-  }
-  if (firework_timer > 0) {
-    firework_timer--;
-    console.log("ft>0" + firework_timer);
-    if (firework_timer == 0) {
-      emo.innerHTML = "<p></p>";
-    }
-  }
-
-  // camera.drawCtx();
-
-  if (hands && hands.length > 0 && tracking) {
-    camera.drawResults(hands); //detection 결과인 hands를 인자로 결과를 visualize 하는 drawResults 실행
-  } else {
-    camera.clearCtx();
-  }
-}
-
-async function renderPrediction() {
-  await renderResult();
-
-  let rafId = requestAnimationFrame(renderPrediction); //실시간으로 renderPrediction을 계속 실행
-}
-
-async function apps() {
-  const tfcanvas = document.createElement("canvas");
-  tfcanvas.setAttribute("id", "output");
-  // tfcanvas.style.cssText = "display:none;";
-  // document.body.appendChild(tfcanvas);
-
-  //   const canvwrapper = document.createElement("div");
-  //   canvwrapper.setAttribute("class", "canvas-wrapper");
-  //   document.body.appendChild(canvwrapper);
-  document.querySelector(".canvas-wrapper").appendChild(tfcanvas);
-  // document.querySelector("#layout").appendChild(tfcanvas);
-
-  camera = await Camera.setupCamera(); //webcam 셋팅
-  console.log(tf.getBackend());
-  detector = await createDetector(); //hand pose detection model 셋팅
-  console.log(tf.getBackend()); //사용되는 TensorFlow.js backend 확인
-  renderPrediction(); //detection을 통한 result를 draw
 }
 
 export default OpenVideo;
