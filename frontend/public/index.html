@@ -2,17 +2,32 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel='icon' href='./pazamafont.png'/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="./pazamafont.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
+    <meta name="description" content="Web site created using create-react-app" />
     <title>Pajama</title>
   </head>
   <body>
     <div id="root"></div>
-    <!-- <div id="emo"></div> -->
+    <!-- 안보이게 해야함 style="display: none"-->
+    <div class="container" style="display: none">
+      <div class="canvas-wrapper">
+        <canvas id="output"></canvas>
+        <video
+          id="video"
+          playsinline=""
+          style="
+            -webkit-transform: scaleX(-1);
+            transform: scaleX(-1);
+            visibility: hidden;
+            width: auto;
+            height: auto;
+          "
+        ></video>
+      </div>
+      <div id="emo">&nbsp;</div>
+    </div>
+    <!--^^ 안보이게 해야함 ^^-->
   </body>
 </html>
