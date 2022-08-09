@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import NavBar from '../components/nav/NavBar';
 import styled from 'styled-components';
 import DatePicker from "react-datepicker";
@@ -8,7 +8,8 @@ import { ko } from "date-fns/esm/locale";
 import './CreatePartyPage.css';
 import axios from "axios";
 import { FiCheckCircle } from "react-icons/fi";
-
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
 
 const CreateBtn = styled.div`
     display: flex;
@@ -124,6 +125,20 @@ const Pinkbox = styled.div`
 
 
 const CreatePartyPage = () => {
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+    const [copySuccess, setCopySuccess] = useState('');
+    const textAreaRef = useRef(null);
+    
+    function copyToClipboard(e) {
+        textAreaRef.current.select();
+        document.execCommand('copy');
+        e.target.focus();
+        setCopySuccess('성공적으로 복사되었습니다!');
+      };
+
     const [partyName, setPartyName] = useState('')
     const [partyContent, setPartyContent] = useState('')
     const [startDate, setStartDate] = useState(new Date());
@@ -281,6 +296,7 @@ const CreatePartyPage = () => {
         <CreateBtn>
             {/* <a href='/room'> */}
                 <StyledBtn onClick={()=>{
+                    handleShow();
                 setInfo(info.partyName=partyName);
                 setInfo(info.partyContent=partyContent);
                 setInfo(info.backImg=backImg);
@@ -302,6 +318,35 @@ const CreatePartyPage = () => {
             }}>CREATE PARTY</StyledBtn>
             {/* </a> */}
         </CreateBtn>
+
+        <Modal centered show={show} onHide={handleClose} backdrop="static" keyboard={false}>
+            <Modal.Header closeButton>
+            <Modal.Title style={{'font-family':'star', 'color':'#FD7A99'}}>PAZAMA</Modal.Title>
+            </Modal.Header>
+            <Modal.Body style={{'font-family':'oldpicture', 'font-size':'20px'}}>
+                초대장이 생성되었습니다.
+                <div>
+                    <form>
+                        <textarea
+                        ref={textAreaRef}
+                        value={'https://i7c203.p.ssafy.io/invite/'}
+                        style={{"width":"100%", height:"100%"}}
+                        />
+                    </form>
+                </div>
+            </Modal.Body>
+            <Modal.Footer>
+                {
+                    document.queryCommandSupported('copy') &&
+                        <>
+                        <div>
+                        <Button style={{"backgroundColor":"#FD7A99", 'border':'none','font-family':'oldpicture', 'box-shadow':'none' }} onClick={copyToClipboard}>복사</Button> 
+                        </div>
+                        </>
+                }
+                <Button style={{'color':'white', 'backgroundColor':'#9D9D9D ', 'border':'none','font-family':'oldpicture', 'box-shadow':'none' }} onClick={()=>{document.location.href='/'}}>닫기</Button>
+            </Modal.Footer>
+        </Modal>
         </>
     )
 };
