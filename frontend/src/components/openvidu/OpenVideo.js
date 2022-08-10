@@ -19,6 +19,7 @@ import html2canvas from "html2canvas";
 import * as tf from "@tensorflow/tfjs";
 import * as tfjsWasm from "@tensorflow/tfjs-backend-wasm";
 import * as handdetection from "@tensorflow-models/hand-pose-detection";
+import { setThreadsCount } from "@tensorflow/tfjs-backend-wasm";
 tfjsWasm.setWasmPaths(
   `https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm@${tfjsWasm.version_wasm}/dist/`
 );
@@ -87,11 +88,13 @@ class OpenVideo extends Component {
       show2: false,
       cakeshow: false,
 
+      loding: false,
+      isHost: false,
       myEmail: "",
       roomId: "",
       partyHost: "",
       partyName: "",
-      partyDesc: "",
+      partyDesc: "2022-09-30 12:22:22",
       partyDate: "",
     };
 
@@ -132,6 +135,11 @@ class OpenVideo extends Component {
           partyDesc: res.data.result.partyDesc,
           partyDate: res.data.result.partyDate,
         });
+
+        this.setState((state) => ({ loding: true }));
+        if (this.state.partyHost == this.state.myEmail) {
+          this.setState((state) => ({ isHost: true }));
+        }
       })
       .then((res) => {})
       .catch(() => {
@@ -151,27 +159,8 @@ class OpenVideo extends Component {
     this.handleChatMessageChange = this.handleChatMessageChange.bind(this);
     this.toggleShow = this.toggleShow.bind(this);
     this.sendcakeByClick = this.sendcakeByClick.bind(this);
-    this.tick = this.tick.bind(this);
   }
-  tick() {
-    let token = sessionStorage.getItem("accessToken");
-    axios({
-      url: "http://i7c203.p.ssafy.io:8082/users/me",
-      method: "get",
-      headers: { accessToken: token },
-    })
-      .then((res) => {
-        this.state.myUserName = res.data.result.nickname;
-        this.state.myEmail = res.data.result.email;
-        console.log("회원정보 불러오기 성공");
-        console.log(res);
-        console.log(this.state.myUserName);
-      })
-      .catch(() => {
-        alert("회원정보 불러오기 실패");
-      });
-    ReactDOM.render(this.state.myUserName, document.getElementById("root"));
-  }
+
   componentDidMount() {
     window.addEventListener("beforeunload", this.onbeforeunload);
   }
@@ -262,7 +251,7 @@ class OpenVideo extends Component {
   }
 
   sendmessageByEnter(e) {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && this.state.message) {
       this.setState({
         messages: [
           ...this.state.messages,
@@ -475,8 +464,8 @@ class OpenVideo extends Component {
 
   render() {
     const mySessionId = this.state.mySessionId;
-    const myUserName = this.state.myUserName;
     const messages = this.state.messages;
+    const isHost = this.state.isHost;
     let cakeshow = this.state.cakeshow;
 
     let Main = "";
@@ -572,7 +561,7 @@ class OpenVideo extends Component {
 
     return (
       <div>
-        {this.state.session === undefined ? (
+        {this.state.session === undefined && this.state.loding ? (
           <div id="join">
             <div id="img-div">
               <img
@@ -583,7 +572,11 @@ class OpenVideo extends Component {
             </div>
             <div id="join-dialog" className="jumbotron vertical-center">
               <form className="form-group" onSubmit={this.joinSession}>
-                <span>
+                <div className="nameDiv">{this.state.partyName}</div>
+                <div className="descDiv">{this.state.partyDesc}</div>
+                <div id="counter" className="counter" />
+
+                {/* <span>
                   유저 & 방정보
                   <br />
                   ------------------------------
@@ -600,7 +593,6 @@ class OpenVideo extends Component {
                   <br />
                   파티호스트 : {this.state.partyHost}
                 </span>
-
                 <p>
                   <label> Session: </label>
                   <input
@@ -611,7 +603,7 @@ class OpenVideo extends Component {
                     onChange={this.handleChangeSessionId}
                     required
                   />
-                </p>
+                </p> */}
                 <p className="text-center">
                   <input
                     className="joinbtn"
@@ -620,10 +612,25 @@ class OpenVideo extends Component {
                     value="참여하기"
                   />
                 </p>
+                {this.state.partyHost === this.state.myEmail &&
+                this.state.partyHost != "" ? (
+                  <p className="text-center">
+                    <input
+                      className="joinbtn"
+                      name="commit"
+                      type="submit"
+                      value="파티수정"
+                    />
+                  </p>
+                ) : (
+                  <p>게스트입니다.</p>
+                )}
               </form>
             </div>
           </div>
-        ) : null}
+        ) : (
+          <div></div>
+        )}
 
         {this.state.session !== undefined ? (
           <div className="partyroom">
@@ -634,34 +641,68 @@ class OpenVideo extends Component {
                 width="150px"
                 height="75px"
               ></img>
-              <button className="navbtn" onClick={this.sendcakeByClick}>
-                <img
-                  src="/birthday-cake.png"
-                  alt="logo"
-                  width="60px"
-                  height="60px"
-                ></img>
-              </button>
-              <button
-                className="navbtn"
-                id="tstartbutton"
-                onClick={this.takepicture}
-              >
-                <img
-                  src="/camera.png"
-                  alt="logo"
-                  width="60px"
-                  height="60px"
-                ></img>
-              </button>
-              <button className="navbtn">
-                <img
-                  src="/music.png"
-                  alt="logo"
-                  width="60px"
-                  height="60px"
-                ></img>
-              </button>
+              {/* 호스트인지 게스트인지 버튼 구분 */}
+              {this.state.partyHost === this.state.myEmail &&
+              this.state.partyHost != "" ? (
+                <>
+                  <button className="navbtn" onClick={this.sendcakeByClick}>
+                    <img
+                      src="/birthday-cake.png"
+                      alt="logo"
+                      width="60px"
+                      height="60px"
+                    ></img>
+                  </button>
+                  <button
+                    className="navbtn"
+                    State
+                    id="tstartbutton"
+                    onClick={this.takepicture}
+                  >
+                    <img
+                      src="/camera.png"
+                      alt="logo"
+                      width="60px"
+                      height="60px"
+                    ></img>
+                  </button>
+                  <button className="navbtn">
+                    <img
+                      src="/music.png"
+                      alt="logo"
+                      width="60px"
+                      height="60px"
+                    ></img>
+                  </button>{" "}
+                </>
+              ) : (
+                <>
+                  <button className="navbtn">
+                    <img
+                      src="/birthday-cake.png"
+                      alt="logo"
+                      width="60px"
+                      height="60px"
+                    ></img>
+                  </button>
+                  <button className="navbtn" id="tstartbutton">
+                    <img
+                      src="/camera.png"
+                      alt="logo"
+                      width="60px"
+                      height="60px"
+                    ></img>
+                  </button>
+                  <button className="navbtn">
+                    <img
+                      src="/music.png"
+                      alt="logo"
+                      width="60px"
+                      height="60px"
+                    ></img>
+                  </button>
+                </>
+              )}
             </div>
             <div id="session" className="main-session">
               <div id="main-container" className={Main}>

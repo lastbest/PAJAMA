@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import styles from "./RoomPage.module.css";
 import OpenVideo from "../components/openvidu/OpenVideo";
+import axios from "axios";
 
 const Header = styled.div`
   display: grid;
@@ -33,43 +34,66 @@ const StyledBtn = styled.button`
 `;
 
 const RoomPage = () => {
-  const [token, setToken] = useState("");
-  const navigate = useNavigate();
-  var dday = new Date("August 30, 2022, 0:00:00").getTime();
+  const [token, setToken] = useState(sessionStorage.getItem("accessToken"));
+  const [partyDate, setPartyDate] = useState(new Date());
   useEffect(() => {
-    setToken(sessionStorage.getItem("accessToken"));
     console.log(token);
+
+    axios({
+      url: "http://localhost:8082/rooms",
+      method: "get",
+      headers: { accessToken: token },
+      params: {
+        roomIdx: "MJktgPP9VHR5cwtdJ5IVtQ%3D%3D", // params
+      },
+    })
+      .then((res) => {
+        setPartyDate(res.data.result.partyDate);
+      })
+      .catch(() => {
+        alert("방정보 불러오기 실패??");
+      });
   }, []);
+
+  var dday = new Date(partyDate).getTime();
+  const interval = setInterval(function () {
+    var today = new Date().getTime();
+    var gap = dday - today;
+    var day = Math.ceil(gap / (1000 * 60 * 60 * 24) - 1);
+    var hour = Math.ceil((gap % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60) - 1);
+    var min = Math.ceil((gap % (1000 * 60 * 60)) / (1000 * 60) - 1);
+    var sec = Math.ceil((gap % (1000 * 60)) / 1000 - 1);
+
+    console.log(day + " " + hour + " " + min + " " + sec);
+
+    if (!isNaN(day) && !(!day == null) && day != -1) {
+      document.getElementById("counter").innerHTML =
+        "D-" +
+        day.toString().padStart(2, "0") +
+        " : " +
+        hour.toString().padStart(2, "0") +
+        " : " +
+        min.toString().padStart(2, "0") +
+        " : " +
+        sec.toString().padStart(2, "0");
+    }
+    if (day == 0 && hour == 0 && min == 0 && sec == 0) {
+      console.log("timeout");
+      document.getElementById("counter").innerHTML = "D-00 : 00 : 00 : 00";
+
+      clearInterval(interval);
+    } else if (day == -1) {
+      clearInterval(interval);
+      document.getElementById("counter").innerHTML = "D-00 : 00 : 00 : 00";
+    }
+  }, 1000);
+
   if (token === null) {
-    // alert("로그인이 필요한 서비스입니다.");
-    // navigate("/login");
   } else {
-    // setInterval(function () {
-    //   var today = new Date().getTime();
-    //   var gap = dday - today;
-    //   var day = Math.ceil(gap / (1000 * 60 * 60 * 24));
-    //   var hour = Math.ceil((gap % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    //   var min = Math.ceil((gap % (1000 * 60 * 60)) / (1000 * 60));
-    //   var sec = Math.ceil((gap % (1000 * 60)) / 1000);
-    //   document.getElementById("counter").innerHTML =
-    //     "D-" +
-    //     day.toString().padStart(2, "0") +
-    //     " : " +
-    //     hour.toString().padStart(2, "0") +
-    //     " : " +
-    //     min.toString().padStart(2, "0") +
-    //     " : " +
-    //     sec.toString().padStart(2, "0");
-    // }, 1000);
   }
 
   return (
     <>
-      <div className={styles.container}>
-        <div>
-          {/* <div id="counter" className={styles.counter} /> */}
-        </div>
-      </div>
       <div>
         <OpenVideo />
       </div>
