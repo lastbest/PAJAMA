@@ -463,6 +463,27 @@ class OpenVideo extends Component {
   }
 
   render() {
+    const popover = (
+      <Popover className="popover">
+        <button onClick={this.takepicture}>사진찍기</button>
+      <div id="frame"></div>
+      <div className="bar">
+          <p className='text5'>최대 5장까지 저장할 수 있습니다.</p>
+          <button className="downloadbtn"><img className='download' src="/download.png" alt="download"/></button>
+          <button className="trashbtn" onClick={this.removediv}><img className='trash' src="/trash.png" alt="trash"/></button>
+      </div>
+      </Popover>
+    );
+
+    const popover2 = (
+      <Popover className="popover2">
+          <button className="voicebtn" onClick={this.higherPitch}><img className='voice1' src="/arrow-up.png" alt="voice1"/></button>
+          <button className="voicebtn" onClick={this.lowerPitch}><img className='voice2' src="/down-arrow.png" alt="voice2"/></button>
+          <button className="voicebtn"><img className='voice3' src="/mic2.png" alt="voice3"/></button>
+          <button className="voicebtn" onClick={this.removeFilters}><img className='voice4' src="/voiceoff.png" alt="voice4"/></button>
+      </Popover>
+   );
+
     const mySessionId = this.state.mySessionId;
     const messages = this.state.messages;
     const isHost = this.state.isHost;
@@ -653,19 +674,9 @@ class OpenVideo extends Component {
                       height="60px"
                     ></img>
                   </button>
-                  <button
-                    className="navbtn"
-                    State
-                    id="tstartbutton"
-                    onClick={this.takepicture}
-                  >
-                    <img
-                      src="/camera.png"
-                      alt="logo"
-                      width="60px"
-                      height="60px"
-                    ></img>
-                  </button>
+                  <OverlayTrigger trigger="click" placement="bottom" overlay={popover}>
+                    <Image className="capture" src="/camera.png" alt="capture" style={{width:'60px', height:"60px"}}/>
+                  </OverlayTrigger>
                   <button className="navbtn">
                     <img
                       src="/music.png"
@@ -802,6 +813,9 @@ class OpenVideo extends Component {
                     <img className="micon" src="/micon.png" />
                   )}
                 </button>
+                <OverlayTrigger trigger="click" placement="top" overlay={popover2}>
+                  <Image className="voice" src="/voice.png" alt="voice" style={{width:'50px',height:"50px"}}/>
+                </OverlayTrigger>
                 <button className="chatbtn" onClick={this.toggleShow}>
                   <img className="chat" src="chat.png" />
                 </button>
@@ -976,9 +990,14 @@ class OpenVideo extends Component {
       photo.setAttribute("src", canvdata);
       photo.setAttribute("width", 200);
       photo.setAttribute("height", 100);
-      document.body.appendChild(photo);
+      document.getElementById("frame").appendChild(photo);
     });
   }
+
+  removediv() {
+    const framediv = document.getElementById("frame");
+    framediv.innerHTML = "";
+  };
 }
 
 export default OpenVideo;
