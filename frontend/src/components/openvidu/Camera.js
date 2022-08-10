@@ -9,6 +9,8 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
+import { connect, useSelector } from "react-redux";
+import { increment, decrement, incrementByAmount, testReducer } from "../../counterSlice";
 
 import html2canvas from "html2canvas";
 import * as tf from "@tensorflow/tfjs";
@@ -17,6 +19,13 @@ import * as handdetection from "@tensorflow-models/hand-pose-detection";
 tfjsWasm.setWasmPaths(
   `https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm@${tfjsWasm.version_wasm}/dist/`
 );
+
+//rtk 관련코드
+const mapStateToProps = (state) => ({
+  count: state.counter.value,
+});
+const mapDispatchToProps = { increment, decrement, incrementByAmount, testReducer };
+var tsession;
 
 var publisher;
 //모션캡처 온오프
@@ -65,6 +74,7 @@ function isMobile() {
 //카메라 클래스
 //class camera
 class Camera extends Component {
+  // mySession = undefined;
   constructor(props) {
     super(props);
     // const luser = document.querySelector("#localUser");
@@ -75,10 +85,35 @@ class Camera extends Component {
     // this.video = document.getElementById("video"); //video id를 가진 HTML code의 element 가져옴
     this.canvas = document.getElementById("output");
     this.ctx = this.canvas.getContext("2d");
+    // this.mySession = this.props.count;
+    // this.mySession = this.props.count;
+    // this.drawResults = this.drawResults.bind(this);
+    // this.drawResult = this.drawResult.bind(this);
+    // renderResult = renderResult.bind(this);
+    // renderPrediction = renderPrediction(this);
   }
 
   componentDidMount() {
     apps();
+    console.log("mount========================");
+    console.log(this.props.count);
+    this.mySession = this.props.count;
+    // this.mySession = 10;
+    tsession = this.props.count;
+    this.state = {
+      ts: 10,
+    };
+    console.log(this.state);
+  }
+  componentDidUpdate() {
+    console.log("update========================");
+    console.log(this.props.count);
+    this.mySession = this.props.count;
+    // this.state
+    this.setState({
+      stest: "123",
+    });
+    console.log(this.state);
   }
 
   /**
@@ -147,7 +182,7 @@ class Camera extends Component {
    * Draw the keypoints on the video.
    * @param hands A list of hands to render.
    */
-  drawResults(hands) {
+  drawResults = (hands) => {
     // Sort by right to left hands.
     hands.sort((hand1, hand2) => {
       if (hand1.handedness < hand2.handedness) return 1;
@@ -164,21 +199,28 @@ class Camera extends Component {
     for (let i = 0; i < hands.length; ++i) {
       this.drawResult(hands[i]); //detection된 모든 hand 모두에 대해
     }
-  }
+  };
 
   /**
    * Draw the keypoints on the video.
    * @param hand A hand with keypoints to render.
    * @param ctxt Scatter GL context to render 3D keypoints to.
    */
-  drawResult(hand) {
+  drawResult = (hand) => {
     if (hand.keypoints != null) {
       this.drawKeypoints(hand.keypoints, hand.handedness);
       const emo_type = this.drawEmoticon(hand.keypoints); //keypoints를 parsing해서 emo_type을 반환한다.
 
       if (emo_type == "v") {
         //v포즈 취할 경우
-        console.log("쁘이");
+        // const counts = useSelector((state) => state.counter);
+        // const { count } = this.props;
+        // let testser = this.props.count;
+        // const mySession = this.props.count;
+        // console.log(this.mySession);
+        // console.log(this.props.count);
+        // console.log(session_render);
+        console.log(this.state);
         emo.innerHTML = '<img src="/v.jpg" width="300" height="300">';
       } else if (emo_type == "heart") {
         //손꾸락하트
@@ -194,7 +236,7 @@ class Camera extends Component {
         //이외일 경우 아무것도 보여주지 않음
       }
     }
-  }
+  };
   drawEmoticon(keypoints) {
     //손 모양 코드 y축, 위에서 아래로 값 커짐
     const keypointsArray = keypoints;
@@ -382,7 +424,7 @@ class Camera extends Component {
   }
 
   render() {
-    return <div></div>;
+    return <div>{/* <h1>Count is {this.props.count}</h1> */}</div>;
   }
 }
 
@@ -456,7 +498,6 @@ async function apps() {
   // document.querySelector(".canvas-wrapper").appendChild(tfcanvas);
 
   console.log("apps실행");
-
   camera = await Camera.setupCamera(); //webcam 셋팅
   console.log(tf.getBackend());
   detector = await createDetector(); //hand pose detection model 셋팅
@@ -466,4 +507,5 @@ async function apps() {
 
 // apps();
 
-export default Camera;
+// export default Camera;
+export default connect(mapStateToProps, mapDispatchToProps)(Camera);

@@ -16,7 +16,9 @@ import Button from "react-bootstrap/Button";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
 import Camera from "./Camera";
-
+import { connect, useDispatch } from "react-redux";
+import { increment, decrement, incrementByAmount, testReducer } from "../../counterSlice";
+// import { apps } from "./Camera";
 import html2canvas from "html2canvas";
 import * as tf from "@tensorflow/tfjs";
 import * as tfjsWasm from "@tensorflow/tfjs-backend-wasm";
@@ -25,13 +27,21 @@ tfjsWasm.setWasmPaths(
   `https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm@${tfjsWasm.version_wasm}/dist/`
 );
 
+//rtk 관련코드
+const mapStateToProps = (state) => ({
+  count: state.counter.value,
+});
+const mapDispatchToProps = () => ({
+  increment,
+  decrement,
+  incrementByAmount,
+  testReducer,
+});
+// const mapDispatchToProps = { increment, decrement, incrementByAmount, testReducer };
+
 var publisher;
 //모션캡처 온오프
 let tracking = true;
-// function toggleTraking() {
-//   if (tracking) tracking = false;
-//   else tracking = true;
-// }
 
 let emo = document.querySelector("#emo");
 let video = document.querySelector("#video");
@@ -166,7 +176,12 @@ class OpenVideo extends Component {
         },
       ],
     });
-    const mySession = this.state.session;
+
+    //rtk테스트
+    const mySession = this.props.count;
+
+    alert("df");
+    // const mySession = this.state.session;
 
     mySession.signal({
       data: `${this.state.myUserName},${this.state.message}`,
@@ -183,7 +198,6 @@ class OpenVideo extends Component {
     this.setState({
       cakeshow: !this.state.cakeshow,
     });
-
     const mySession = this.state.session;
     console.log(this.state.cakeshow, this.state.myUserName);
 
@@ -241,6 +255,10 @@ class OpenVideo extends Component {
       },
       () => {
         var mySession = this.state.session;
+
+        this.props.testReducer(this.state.session);
+        // const cam = new Camera();
+        // cam.apps();
 
         // --- 3) Specify the actions when events take place in the session ---
 
@@ -647,9 +665,16 @@ class OpenVideo extends Component {
                 <button id="buttonLeaveSession" onClick={this.leaveSession}>
                   <img className="leave" src="/shutdown.png" />
                 </button>
+                {/* rtk테스트버튼 */}
+                {/* <h1>Count is {this.props.count}</h1> */}
+                <button onClick={() => this.props.increment()}>Increment</button>
+                <button onClick={() => this.props.decrement()}>Decrement</button>
+                <button onClick={() => this.props.testReducer(3)}>te3st</button>
+                <button onClick={() => this.props.testReducer(this.state.session)}>test</button>
+                <button onClick={() => console.log(this.state.session)}>test2</button>
               </div>
             </div>
-            <Camera style="display: none" />
+            <Camera />
           </div>
         ) : null}
         {/* <div class="canvas-wrapper"></div> */}
@@ -788,4 +813,5 @@ class OpenVideo extends Component {
   }
 }
 
-export default OpenVideo;
+// export default OpenVideo;
+export default connect(mapStateToProps, mapDispatchToProps())(OpenVideo);
