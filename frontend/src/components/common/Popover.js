@@ -1,6 +1,6 @@
 import React from 'react';
 import { Popover, OverlayTrigger, Image } from 'react-bootstrap';
-import "./InvitePage.css"
+import "./Popover.css"
 
 
 
@@ -17,22 +17,26 @@ const popover = (
 
  const popover2 = (
     <Popover className="popover2">
-        <button className="voicebtn"><img className='voice1' src="/sound-wave.png" alt="voice1"/></button>
-        <button className="voicebtn"><img className='voice2' src="/echo.png" alt="voice2"/></button>
+        <button className="voicebtn"><img className='voice1' src="/arrow-up.png" alt="voice1"/></button>
+        <button className="voicebtn"><img className='voice2' src="/down-arrow.png" alt="voice2"/></button>
+        <button className="voicebtn"><img className='voice3' src="/mic2.png" alt="voice3"/></button>
+        <button className="voicebtn"><img className='voice4' src="/voiceoff.png" alt="voice4"/></button>
     </Popover>
  );
 
-const InvitePage = () => {
+const PopoverPage = () => {
      return (
         <>
-        <OverlayTrigger trigger="click" placement="bottom" overlay={popover}>
-            <Image className="capture" src="/pazamalogo.png" alt="capture" style={{width:'150px',height:"75px"}}/>
-        </OverlayTrigger>
-        <OverlayTrigger trigger="click" placement="bottom" overlay={popover2}>
-            <Image className="voice" src="/voice.png" alt="voice" style={{width:'75px',height:"75px"}}/>
-        </OverlayTrigger>
+        <div className='mainpage'>
+            <OverlayTrigger trigger="click" placement="bottom" overlay={popover}>
+                <Image className="capture" src="/pazamalogo.png" alt="capture" style={{width:'150px',height:"75px"}}/>
+            </OverlayTrigger>
+            <OverlayTrigger trigger="click" placement="top" overlay={popover2}>
+                <Image className="voice" src="/voice.png" alt="voice" style={{width:'75px',height:"75px"}}/>
+            </OverlayTrigger>
+        </div>
         </>
      );
     }
 
-export default InvitePage;
+export default PopoverPage;
