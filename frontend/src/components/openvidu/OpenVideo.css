@@ -240,19 +240,13 @@
 
 .chatmodal {
 	overflow-y: initial !important;
+	width:300px;
+	position: fixed;
+	top: 15%;
+	left:70%;
   }
 
-  .modal-backdrop {
+.modal-backdrop {
 	--bs-backdrop-bg: none;
 	background-color: var(--bs-backdrop-bg);
-  }
-
-  .modal {
-	--bs-modal-width: 300px;
-	position: fixed;
-	top:20%;
-	left:unset;
-	right:50px;
-	width: unset;
-
-  }
+}
