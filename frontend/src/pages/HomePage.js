@@ -14,7 +14,7 @@ const CreateBtn = styled.div`
 const StyledBtn = styled.button`
     text-align:center;
     width: 200px;
-    height: 70px;
+    height: 60px;
     border: none;
     border-radius: 15px;
     font-size: 25px;
@@ -23,23 +23,29 @@ const StyledBtn = styled.button`
     outline: none;
     cursor: pointer;
     background: #FD7A99;
+    margin: 2rem;
     &:hover {
         background: #FFA4BD;
     }
-    margin: 2rem;
+
+    @media only screen and (max-width: 1165px) {
+        font-size: 20px;
+        width: 150px;
+        height: 40px;
+        }
+
+    @media only screen and (max-width: 940px) {
+        font-size: 18px;
+        width: 150px;
+        height: 40px;
+        }
+    
 `
 
 const Img = styled.div`
     display: flex;
     justify-content: center;
     margin-bottom: 30px;
-`
-
-const Text = styled.div`
-    display: flex;
-    justify-content: center;
-    font-family: "star";
-    font-size: x-large;
 `
 
 const HomePage = () => {
@@ -66,12 +72,17 @@ const HomePage = () => {
                     CREATE PARTY
                 </StyledBtn>
             </CreateBtn>
-            <Text>파자마만의 서비스</Text>
             <Img>
-                <img src="/maintext2.png" style={{width:'80%'}}/>
+                <img src="/maintext3.png" style={{width:'80%', marginTop:"20px"}}/>
             </Img>
             <Img>
                 <img src="/설명1.png" style={{width:'50%'}}/>
+            </Img>
+            <Img>
+                <img src="/설명4.png" style={{width:'70%'}}/>
+            </Img>
+            <Img>
+                <img src="/설명5.png" style={{width:'70%'}}/>
             </Img>
             <Img>
                 <img src="/설명2.png" style={{width:'50%'}}/>
