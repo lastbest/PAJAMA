@@ -29,6 +29,19 @@ const StyledBtn = styled.button`
     margin: 2rem;
 `
 
+const Img = styled.div`
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+`
+
+const Text = styled.div`
+    display: flex;
+    justify-content: center;
+    font-family: "star";
+    font-size: x-large;
+`
+
 const HomePage = () => {
     const [show, setShow] = useState(false);
 
@@ -53,6 +66,19 @@ const HomePage = () => {
                     CREATE PARTY
                 </StyledBtn>
             </CreateBtn>
+            <Text>파자마만의 서비스</Text>
+            <Img>
+                <img src="/maintext2.png" style={{width:'80%'}}/>
+            </Img>
+            <Img>
+                <img src="/설명1.png" style={{width:'50%'}}/>
+            </Img>
+            <Img>
+                <img src="/설명2.png" style={{width:'50%'}}/>
+            </Img>
+            <Img>
+                <img src="/설명3.png" style={{width:'50%'}}/>
+            </Img>
 
             <Modal
                 centered
