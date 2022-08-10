@@ -3,7 +3,7 @@ import Carousel from 'react-bootstrap/Carousel';
 
 const HomeCarousel = () => {
     return (
-        <div className='container mt-4'>
+        <div className='container mt-4' style={{width:"60%"}}>
             <Carousel variant='dark'>
                 <Carousel.Item>
                 <img
@@ -15,14 +15,14 @@ const HomeCarousel = () => {
                 <Carousel.Item>
                 <img
                     className="d-block w-100"
-                    src="/backimg2.png"
+                    src="/backimg3.png"
                     alt="Second slide"
                 />
                 </Carousel.Item>
                 <Carousel.Item>
                 <img
                     className="d-block w-100"
-                    src="/backimg3.png"
+                    src="/backimg2.png"
                     alt="Third slide"
                 />
                 </Carousel.Item>
