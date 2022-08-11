@@ -177,11 +177,7 @@ class OpenVideo extends Component {
       ],
     });
 
-    //rtk테스트
-    const mySession = this.props.count;
-
-    alert("df");
-    // const mySession = this.state.session;
+    const mySession = this.state.session;
 
     mySession.signal({
       data: `${this.state.myUserName},${this.state.message}`,
@@ -667,11 +663,6 @@ class OpenVideo extends Component {
                 </button>
                 {/* rtk테스트버튼 */}
                 {/* <h1>Count is {this.props.count}</h1> */}
-                <button onClick={() => this.props.increment()}>Increment</button>
-                <button onClick={() => this.props.decrement()}>Decrement</button>
-                <button onClick={() => this.props.testReducer(3)}>te3st</button>
-                <button onClick={() => this.props.testReducer(this.state.session)}>test</button>
-                <button onClick={() => console.log(this.state.session)}>test2</button>
               </div>
             </div>
             <Camera />

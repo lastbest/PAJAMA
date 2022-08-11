@@ -25,20 +25,17 @@ const mapStateToProps = (state) => ({
   count: state.counter.value,
 });
 const mapDispatchToProps = { increment, decrement, incrementByAmount, testReducer };
-var tsession;
+// var tsession;
 
 var publisher;
 //모션캡처 온오프
 let tracking = true;
-// function toggleTraking() {
-//   if (tracking) tracking = false;
-//   else tracking = true;
-// }
 
 let emo = document.querySelector("#emo");
 let video = document.querySelector("#video");
 
-let detector, camera, stats;
+let detector;
+// let detector, camera, stats;
 let startInferenceTime,
   numInferences = 0;
 let inferenceTimeSum = 0,
@@ -85,41 +82,39 @@ class Camera extends Component {
     // this.video = document.getElementById("video"); //video id를 가진 HTML code의 element 가져옴
     this.canvas = document.getElementById("output");
     this.ctx = this.canvas.getContext("2d");
-    // this.mySession = this.props.count;
-    // this.mySession = this.props.count;
-    // this.drawResults = this.drawResults.bind(this);
-    // this.drawResult = this.drawResult.bind(this);
-    // renderResult = renderResult.bind(this);
-    // renderPrediction = renderPrediction(this);
+
+    this.drawResult = this.drawResult.bind(this);
+    this.drawResults = this.drawResults.bind(this);
+    this.drawCtx = this.drawCtx.bind(this);
+    this.clearCtx = this.clearCtx.bind(this);
+    this.drawEmoticon = this.drawEmoticon.bind(this);
+    this.hand_motion = this.hand_motion.bind(this);
+    this.hand_turn = this.hand_turn.bind(this);
+    this.drawKeypoints = this.drawKeypoints.bind(this);
+    this.drawPath = this.drawPath.bind(this);
+    this.drawPoint = this.drawPoint.bind(this);
+    this.createDetector = this.createDetector.bind(this);
+    this.renderResult = this.renderResult.bind(this);
+    this.renderPrediction = this.renderPrediction.bind(this);
+    this.apps = this.apps.bind(this);
   }
 
   componentDidMount() {
-    apps();
+    // apps();
     console.log("mount========================");
     console.log(this.props.count);
     this.mySession = this.props.count;
-    // this.mySession = 10;
-    tsession = this.props.count;
-    this.state = {
-      ts: 10,
-    };
-    console.log(this.state);
   }
   componentDidUpdate() {
     console.log("update========================");
     console.log(this.props.count);
     this.mySession = this.props.count;
-    // this.state
-    this.setState({
-      stest: "123",
-    });
-    console.log(this.state);
+    this.apps();
   }
-
   /**
    * Initiate a Camera instance and wait for the camera stream to be ready.
    */
-  static async setupCamera() {
+  async setupCamera() {
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       throw new Error("Browser API navigator.mediaDevices.getUserMedia not available");
     }
@@ -139,34 +134,34 @@ class Camera extends Component {
 
     const stream = await navigator.mediaDevices.getUserMedia(videoConfig);
 
-    const camera = new Camera();
-    camera.video.srcObject = stream; //Webcam의 live stream을 video id 가진 HTML 코드의 video element에 할당
+    // const camera = new Camera();
+    this.video.srcObject = stream; //Webcam의 live stream을 video id 가진 HTML 코드의 video element에 할당
 
     await new Promise((resolve) => {
-      camera.video.onloadedmetadata = () => {
+      this.video.onloadedmetadata = () => {
         resolve(video);
       };
     });
 
-    camera.video.play();
+    this.video.play();
 
-    const videoWidth = camera.video.videoWidth;
-    const videoHeight = camera.video.videoHeight;
+    const videoWidth = this.video.videoWidth;
+    const videoHeight = this.video.videoHeight;
     // Must set below two lines, otherwise video element doesn't show.
-    camera.video.width = videoWidth;
-    camera.video.height = videoHeight;
+    this.video.width = videoWidth;
+    this.video.height = videoHeight;
     //canvas는 나중에 detection result를 그리는데 사용 됨
-    camera.canvas.width = videoWidth; //videoWidth와 일치시켜 detection result가 video cam 위에 맵핑되도록 함
-    camera.canvas.height = videoHeight;
+    this.canvas.width = videoWidth; //videoWidth와 일치시켜 detection result가 video cam 위에 맵핑되도록 함
+    this.canvas.height = videoHeight;
     const canvasContainer = document.querySelector(".canvas-wrapper");
     canvasContainer.style = `width: ${videoWidth}px; height: ${videoHeight}px`; //css 부분도 video cam과 같은 크기로 할당
 
     // Because the image from camera is mirrored, need to flip horizontally.
     //기본적으로 camera가 mirroring 되어있으므로 horizontal flipping 함
-    camera.ctx.translate(camera.video.videoWidth, 0);
-    camera.ctx.scale(-1, 1);
+    this.ctx.translate(this.video.videoWidth, 0);
+    this.ctx.scale(-1, 1);
 
-    return camera;
+    return 1;
   }
 
   //웹알티씨  비디오가 있으므로 비디오 그릴필요 없음!
@@ -182,7 +177,7 @@ class Camera extends Component {
    * Draw the keypoints on the video.
    * @param hands A list of hands to render.
    */
-  drawResults = (hands) => {
+  drawResults(hands) {
     // Sort by right to left hands.
     hands.sort((hand1, hand2) => {
       if (hand1.handedness < hand2.handedness) return 1;
@@ -199,28 +194,31 @@ class Camera extends Component {
     for (let i = 0; i < hands.length; ++i) {
       this.drawResult(hands[i]); //detection된 모든 hand 모두에 대해
     }
-  };
+  }
 
   /**
    * Draw the keypoints on the video.
    * @param hand A hand with keypoints to render.
    * @param ctxt Scatter GL context to render 3D keypoints to.
    */
-  drawResult = (hand) => {
+
+  drawResult(hand) {
     if (hand.keypoints != null) {
       this.drawKeypoints(hand.keypoints, hand.handedness);
       const emo_type = this.drawEmoticon(hand.keypoints); //keypoints를 parsing해서 emo_type을 반환한다.
 
       if (emo_type == "v") {
         //v포즈 취할 경우
-        // const counts = useSelector((state) => state.counter);
-        // const { count } = this.props;
-        // let testser = this.props.count;
-        // const mySession = this.props.count;
-        // console.log(this.mySession);
-        // console.log(this.props.count);
-        // console.log(session_render);
-        console.log(this.state);
+        //rtk테스트
+        const mySession = this.props.count;
+
+        mySession.signal({
+          data: `준우 손가락,브이브이`,
+          to: [],
+          type: "chat",
+        });
+        console.log(mySession);
+
         emo.innerHTML = '<img src="/v.jpg" width="300" height="300">';
       } else if (emo_type == "heart") {
         //손꾸락하트
@@ -236,7 +234,7 @@ class Camera extends Component {
         //이외일 경우 아무것도 보여주지 않음
       }
     }
-  };
+  }
   drawEmoticon(keypoints) {
     //손 모양 코드 y축, 위에서 아래로 값 커짐
     const keypointsArray = keypoints;
@@ -423,89 +421,85 @@ class Camera extends Component {
     this.ctx.fill();
   }
 
+  //여기 아래로 이식
+  async createDetector() {
+    const hands = handdetection.SupportedModels.MediaPipeHands; //MediaPipe에서 제공하는 hand pose detection model 사용
+    return handdetection.createDetector(hands, {
+      runtime: "tfjs", //runtime을 tfjs로 설정함에 따라 webGL을 default로 사용함
+      modelType: "full", //full(큰 모델) or lite(작은 모델)
+      maxHands: 1, // or 2~10 : detect 할 손의 개수
+    });
+  }
+
+  async renderResult() {
+    if (this.video.readyState < 2) {
+      await new Promise((resolve) => {
+        this.video.onloadeddata = () => {
+          resolve(video);
+        };
+      });
+    }
+
+    let hands = null;
+
+    if (detector != null) {
+      try {
+        hands = await detector.estimateHands(this.video, {
+          flipHorizontal: false, //hand pose detection 결과를 hands에 반환
+        });
+      } catch (error) {
+        detector.dispose(); //detector에 대한 tensor memory를 없앰
+        detector = null;
+        alert(error);
+      }
+    }
+
+    //손바닥 뒤집기 타이머
+    if (hand_timer > 0) {
+      hand_timer--;
+    } else if (hand_timer <= 0) {
+      test_hand = 0;
+      hand_flip_cnt = 0;
+      hand_timer = 0;
+    }
+    if (firework_timer > 0) {
+      firework_timer--;
+      console.log("ft>0" + firework_timer);
+      if (firework_timer == 0) {
+        emo.innerHTML = "<p></p>";
+      }
+    }
+
+    // camera.drawCtx();
+
+    if (hands && hands.length > 0 && tracking) {
+      this.drawResults(hands); //detection 결과인 hands를 인자로 결과를 visualize 하는 drawResults 실행
+    } else {
+      this.clearCtx();
+    }
+  }
+
+  async renderPrediction() {
+    await this.renderResult();
+    let rafId = requestAnimationFrame(this.renderPrediction); //실시간으로 renderPrediction을 계속 실행
+  }
+
+  async apps() {
+    console.log("apps실행");
+    console.log(this.props.count);
+    await this.setupCamera(); //webcam 셋팅
+    console.log(tf.getBackend());
+    detector = await this.createDetector(); //hand pose detection model 셋팅
+    console.log(tf.getBackend()); //사용되는 TensorFlow.js backend 확인
+    this.renderPrediction(); //detection을 통한 result를 draw
+  }
+
   render() {
     return <div>{/* <h1>Count is {this.props.count}</h1> */}</div>;
   }
 }
 
-async function createDetector() {
-  const hands = handdetection.SupportedModels.MediaPipeHands; //MediaPipe에서 제공하는 hand pose detection model 사용
-  return handdetection.createDetector(hands, {
-    runtime: "tfjs", //runtime을 tfjs로 설정함에 따라 webGL을 default로 사용함
-    modelType: "full", //full(큰 모델) or lite(작은 모델)
-    maxHands: 1, // or 2~10 : detect 할 손의 개수
-  });
-}
-
-async function renderResult() {
-  if (camera.video.readyState < 2) {
-    await new Promise((resolve) => {
-      camera.video.onloadeddata = () => {
-        resolve(video);
-      };
-    });
-  }
-
-  let hands = null;
-
-  if (detector != null) {
-    try {
-      hands = await detector.estimateHands(camera.video, {
-        flipHorizontal: false, //hand pose detection 결과를 hands에 반환
-      });
-    } catch (error) {
-      detector.dispose(); //detector에 대한 tensor memory를 없앰
-      detector = null;
-      alert(error);
-    }
-  }
-
-  //손바닥 뒤집기 타이머
-  if (hand_timer > 0) {
-    hand_timer--;
-  } else if (hand_timer <= 0) {
-    test_hand = 0;
-    hand_flip_cnt = 0;
-    hand_timer = 0;
-  }
-  if (firework_timer > 0) {
-    firework_timer--;
-    console.log("ft>0" + firework_timer);
-    if (firework_timer == 0) {
-      emo.innerHTML = "<p></p>";
-    }
-  }
-
-  // camera.drawCtx();
-
-  if (hands && hands.length > 0 && tracking) {
-    camera.drawResults(hands); //detection 결과인 hands를 인자로 결과를 visualize 하는 drawResults 실행
-  } else {
-    camera.clearCtx();
-  }
-}
-
-async function renderPrediction() {
-  await renderResult();
-
-  let rafId = requestAnimationFrame(renderPrediction); //실시간으로 renderPrediction을 계속 실행
-}
-
-async function apps() {
-  //굳이 이렇게 안하고 index.html에 만들어놓고 display: none할래요
-  // const tfcanvas = document.createElement("canvas");
-  // tfcanvas.setAttribute("id", "output");
-  // document.querySelector(".canvas-wrapper").appendChild(tfcanvas);
-
-  console.log("apps실행");
-  camera = await Camera.setupCamera(); //webcam 셋팅
-  console.log(tf.getBackend());
-  detector = await createDetector(); //hand pose detection model 셋팅
-  console.log(tf.getBackend()); //사용되는 TensorFlow.js backend 확인
-  renderPrediction(); //detection을 통한 result를 draw
-}
-
-// apps();
+// Camera.apps();
 
 // export default Camera;
 export default connect(mapStateToProps, mapDispatchToProps)(Camera);
