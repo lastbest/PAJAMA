@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import styles from "./RoomPage.module.css";
 import OpenVideo from "../components/openvidu/OpenVideo";
@@ -36,15 +36,17 @@ const StyledBtn = styled.button`
 const RoomPage = () => {
   const [token, setToken] = useState(sessionStorage.getItem("accessToken"));
   const [partyDate, setPartyDate] = useState(new Date());
+  let { roomIdx } = useParams();
+  console.log(roomIdx);
   useEffect(() => {
     console.log(token);
 
     axios({
-      url: "http://localhost:8082/rooms",
+      url: "http://i7c203.p.ssafy.io:8082/rooms",
       method: "get",
       headers: { accessToken: token },
       params: {
-        roomIdx: "MJktgPP9VHR5cwtdJ5IVtQ%3D%3D", // params
+        roomIdx: roomIdx, // params
       },
     })
       .then((res) => {
@@ -95,7 +97,7 @@ const RoomPage = () => {
   return (
     <>
       <div>
-        <OpenVideo />
+        <OpenVideo roomIdx={roomIdx} />
       </div>
     </>
   );
