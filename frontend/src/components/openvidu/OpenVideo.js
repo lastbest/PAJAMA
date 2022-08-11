@@ -6,7 +6,7 @@ app.js에 이미지 경로 수정해야합니다(drawResult(hand))
  */
 import axios from "axios";
 import { OpenVidu } from "openvidu-browser";
-import React, { Component, useEffect, useState } from "react";
+import React, { Component, useEffect, useState, useRef } from "react";
 import "./OpenVideo.css";
 import UserVideoComponent from "./UserVideoComponent";
 import Messages from "./Messages";
@@ -21,6 +21,7 @@ import * as tf from "@tensorflow/tfjs";
 import * as tfjsWasm from "@tensorflow/tfjs-backend-wasm";
 import * as handdetection from "@tensorflow-models/hand-pose-detection";
 import { setThreadsCount } from "@tensorflow/tfjs-backend-wasm";
+import { CountdownCircleTimer } from "react-countdown-circle-timer";
 tfjsWasm.setWasmPaths(
   `https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm@${tfjsWasm.version_wasm}/dist/`
 );
@@ -96,6 +97,7 @@ class OpenVideo extends Component {
       partyName: "",
       partyDesc: "2022-09-30 12:22:22",
       partyDate: "",
+      shot: false,
     };
 
     // 자신의 회원정보 불러오기
@@ -460,11 +462,33 @@ class OpenVideo extends Component {
       console.error(e);
     }
   }
+  
 
   render() {
     const popover = (
       <Popover className="popover">
-        <button onClick={this.takepicture}>사진찍기</button>
+        <button onClick={()=>{this.setState({shot:true})}}>사진찍기</button>
+        {
+          this.state.shot ? 
+        <div className="timer-wrapper">
+        <CountdownCircleTimer
+          isPlaying
+          duration={3}
+          colors={["#004777"]}
+          trailStrokeWidth={0}
+          strokeWidth={0}
+          onComplete={()=>{
+            // 사진찍는 함수 삽입
+            this.takepicture()
+            this.setState({shot:false})
+            console.log('종료')
+          }}
+        >
+          {({ remainingTime }) => remainingTime}
+        </CountdownCircleTimer>
+      </div> : null
+        }
+      
         <div id="frame"></div>
         <div className="bar">
           <p className="text5">최대 5장까지 저장할 수 있습니다.</p>

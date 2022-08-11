@@ -22,6 +22,7 @@
     "openvidu-react": "2.22.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.4.0",
+    "react-countdown-circle-timer": "^3.0.9",
     "react-datepicker": "^4.8.0",
     "react-dom": "^18.2.0",
     "react-fade": "^1.1.1",
