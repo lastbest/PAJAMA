@@ -37,7 +37,6 @@ public class UserController
     public ResponseEntity<?> loginUser(@RequestBody UserLoginDto userLoginDto){
         Map<String,Object> result = new HashMap<>();
         HttpStatus status;
-
         try{
             boolean is = userService.loginUser(userLoginDto);
             result.put("result",is);
@@ -60,7 +59,6 @@ public class UserController
     public ResponseEntity<?> infoUser(HttpServletRequest request){
         Map<String,Object> result = new HashMap<>();
         HttpStatus status;
-
         try{
             // postman에서header에 accessToken을 담았죠
             // request - front에서 받은 거 다 들어와있죠

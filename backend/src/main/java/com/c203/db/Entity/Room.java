@@ -13,12 +13,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class Room  {
 
-//    @OneToOne(cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
-//    private RoomDeco roomDeco;
-
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private User user1;
-
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     @Column(name = "room_idx")

@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.sql.Blob;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -13,15 +13,22 @@ import java.sql.Blob;
 @NoArgsConstructor
 public class Feed {
 //
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private User user3;
+//    @ManyToOne
+//    @JoinColumn(name = "user_idx")
+//    private User user;
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private int feed_idx;
 
-    private int feed_user;
+    @Column(name = "feed_user")
+    private String feedUser;
     private String feed_description;
-    @Lob
-    private Byte[] feed_picture;
+    @Column(name = "feed_roomIdx")
+    private int feedRoomIdx;
+    @Column(name = "feed_represent")
+    private Boolean feedRepresent; // 대표하는 사진인지 체크
+    private LocalDateTime feed_time;
+    @Column(name = "feed_picture")
+    private Byte[] feedPicture;
 }
