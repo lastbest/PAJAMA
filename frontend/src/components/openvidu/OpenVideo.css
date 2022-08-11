@@ -371,3 +371,17 @@
   width:40px;
   height:40px;
 }
+
+.timer-wrapper {
+  position: absolute;
+  top: 130%;
+  right: 120%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 60px;
+  background-color: #fd7a99;
+  border-radius: 50%;
+  width: 40%;
+  height: 50%;
+}
