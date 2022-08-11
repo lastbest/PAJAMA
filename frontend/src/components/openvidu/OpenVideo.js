@@ -77,7 +77,7 @@ class OpenVideo extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mySessionId: "SessionA",
+      mySessionId: "",
       myUserName: "temp",
       session: undefined,
       mainStreamManager: undefined,
@@ -98,6 +98,7 @@ class OpenVideo extends Component {
       partyDesc: "2022-09-30 12:22:22",
       partyDate: "",
       shot: false,
+      imgUrl: undefined,
     };
 
     // 자신의 회원정보 불러오기
@@ -418,7 +419,7 @@ class OpenVideo extends Component {
     this.setState({
       session: undefined,
       subscribers: [],
-      mySessionId: "SessionA",
+      mySessionId: this.state.roomId,
       myUserName: this.state.myUserName,
       mainStreamManager: undefined,
       publisher: undefined,
@@ -467,7 +468,10 @@ class OpenVideo extends Component {
   render() {
     const popover = (
       <Popover className="popover">
-        <button onClick={()=>{this.setState({shot:true})}}>사진찍기</button>
+        <button onClick={()=>{
+          this.removediv()
+          this.setState({shot:true})
+          }}>사진찍기</button>
         {
           this.state.shot ? 
         <div className="timer-wrapper">
@@ -489,10 +493,18 @@ class OpenVideo extends Component {
       </div> : null
         }
       
-        <div id="frame"></div>
+        <div id="frame" className="frame"></div>
         <div className="bar">
           <p className="text5">최대 5장까지 저장할 수 있습니다.</p>
-          <button className="downloadbtn">
+          <button className="downloadbtn" onClick={()=>{
+            console.log(this.state.imgUrl)
+            this.removediv()
+            axios({
+              url: 'http://i7.c203.p.ssafy.io:8082/picture',
+              method:'post',
+              data: this.state.imgUrl
+            })
+          }}>
             <img className="download" src="/download.png" alt="download" />
           </button>
           <button className="trashbtn" onClick={this.removediv}>
@@ -1034,6 +1046,7 @@ class OpenVideo extends Component {
     // const targetvideo = document.querySelector("#localUser").querySelector("video");
     html2canvas(targetvideo).then((xcanvas) => {
       const canvdata = xcanvas.toDataURL("image/png");
+      this.setState({imgUrl:canvdata})
       var photo = document.createElement("img");
       photo.setAttribute("src", canvdata);
       photo.setAttribute("width", 200);
