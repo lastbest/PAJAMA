@@ -16,15 +16,16 @@ function App() {
     <>
       <Routes>
         <Route element={<HomePage />} path="/" />
+        <Route element={<LoginPage />} path="/login/:roomIdx" />
         <Route element={<LoginPage />} path="/login" />
         <Route element={<FindIdPage />} path="/findId" />
         <Route element={<FindpwdPage />} path="/findPwd" />
         <Route element={<RegisterPage />} path="/register" />
-        <Route element={<RoomPage />} path="/room" />
+        <Route element={<RoomPage />} path="/room/:roomIdx" />
         <Route element={<MyPage />} path="/mypage" />
         <Route element={<UpdateUserPage />} path="/mypage/update" />
         <Route element={<CreatePartyPage />} path="/createparty" />
-        <Route element={<InvitePage />} path="/invite" />
+        <Route element={<InvitePage />} path="/invite/:roomIdx" />
       </Routes>
     </>
   );
