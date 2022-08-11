@@ -14,6 +14,7 @@ import FadeInOut from "../common/FadeInOut";
 import Modal from "react-bootstrap/Modal";
 import Camera from "./Camera";
 import ReactDOM from "react-dom";
+import { Popover, OverlayTrigger, Image } from 'react-bootstrap';
 
 import html2canvas from "html2canvas";
 import * as tf from "@tensorflow/tfjs";
@@ -696,14 +697,9 @@ class OpenVideo extends Component {
                       height="60px"
                     ></img>
                   </button>
-                  <button className="navbtn" id="tstartbutton">
-                    <img
-                      src="/camera.png"
-                      alt="logo"
-                      width="60px"
-                      height="60px"
-                    ></img>
-                  </button>
+                  <OverlayTrigger trigger="click" placement="bottom" overlay={popover}>
+                    <Image className="capture" src="/camera.png" alt="capture" style={{width:'60px', height:"60px"}}/>
+                  </OverlayTrigger>
                   <button className="navbtn">
                     <img
                       src="/music.png"
