@@ -22,6 +22,9 @@ import * as tfjsWasm from "@tensorflow/tfjs-backend-wasm";
 import * as handdetection from "@tensorflow-models/hand-pose-detection";
 import { setThreadsCount } from "@tensorflow/tfjs-backend-wasm";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
+import Music from './../common/Music'
+import b64toBlob from 'b64-to-blob'
+
 tfjsWasm.setWasmPaths(
   `https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm@${tfjsWasm.version_wasm}/dist/`
 );
@@ -498,11 +501,18 @@ class OpenVideo extends Component {
           <p className="text5">최대 5장까지 저장할 수 있습니다.</p>
           <button className="downloadbtn" onClick={()=>{
             console.log(this.state.imgUrl)
+            let token = sessionStorage.getItem("accessToken");
             this.removediv()
             axios({
-              url: 'http://i7.c203.p.ssafy.io:8082/picture',
+              url: 'https://i7c203.p.ssafy.io/api/picture',
               method:'post',
-              data: this.state.imgUrl
+              headers:{
+                accessToken: token,
+              },
+              data: {
+                roomIdx: this.state.roomId,
+                picture:this.state.imgUrl
+              }
             })
           }}>
             <img className="download" src="/download.png" alt="download" />
@@ -528,6 +538,12 @@ class OpenVideo extends Component {
         <button className="voicebtn" onClick={this.removeFilters}>
           <img className="voice4" src="/voiceoff.png" alt="voice4" />
         </button>
+      </Popover>
+    );
+
+    const popover3 = (
+      <Popover className="popover3">
+        <Music />
       </Popover>
     );
 
@@ -733,14 +749,18 @@ class OpenVideo extends Component {
                       style={{ width: "60px", height: "60px" }}
                     />
                   </OverlayTrigger>
-                  <button className="navbtn">
-                    <img
+                  <OverlayTrigger
+                    trigger="click"
+                    placement="bottom"
+                    overlay={popover3}
+                  >
+                    <Image
+                      className="navbtn"
                       src="/music.png"
                       alt="logo"
-                      width="60px"
-                      height="60px"
-                    ></img>
-                  </button>{" "}
+                      style={{ width: "60px", height: "60px" }}
+                    />
+                  </OverlayTrigger>
                 </>
               ) : (
                 <>
@@ -755,14 +775,18 @@ class OpenVideo extends Component {
                   <OverlayTrigger trigger="click" placement="bottom" overlay={popover}>
                     <Image className="capture" src="/camera.png" alt="capture" style={{width:'60px', height:"60px"}}/>
                   </OverlayTrigger>
-                  <button className="navbtn">
-                    <img
+                  <OverlayTrigger
+                    trigger="click"
+                    placement="bottom"
+                    overlay={popover3}
+                  >
+                    <Image
+                      className="navbtn"
                       src="/music.png"
                       alt="logo"
-                      width="60px"
-                      height="60px"
-                    ></img>
-                  </button>
+                      style={{ width: "60px", height: "60px" }}
+                    />
+                  </OverlayTrigger>
                 </>
               )}
             </div>
@@ -1046,7 +1070,13 @@ class OpenVideo extends Component {
     // const targetvideo = document.querySelector("#localUser").querySelector("video");
     html2canvas(targetvideo).then((xcanvas) => {
       const canvdata = xcanvas.toDataURL("image/png");
-      this.setState({imgUrl:canvdata})
+      
+      const mimeType = 'image/png'   // image/jpeg
+      const realData = canvdata.split(',')[1]   // 이 경우에선 /9j/4AAQSkZJRgABAQAAAQABAAD...
+      const blob = b64toBlob(realData, mimeType)
+      // document.getElementById('myimage').src = window.URL.createObjectURL(blob)
+     
+      this.setState({imgUrl:window.URL.createObjectURL(blob)})
       var photo = document.createElement("img");
       photo.setAttribute("src", canvdata);
       photo.setAttribute("width", 200);
