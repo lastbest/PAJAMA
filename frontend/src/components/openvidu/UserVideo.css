@@ -1,8 +1,9 @@
 video {
     width:90%;
-    /* height:300px; */
+    height:auto;
     float: left;
     cursor: pointer;
+    border-radius: 30px;
 }
 
 .Nickname {
@@ -10,10 +11,17 @@ video {
     font-family: "oldpicture";
     color: black;
     background: none;
-    background-color: #FD7A99;
+    background-color: none;
     border-radius: 20px;
     position: absolute;
     padding: 5px;
     font-weight: bold;
+    top: 95%;
 }
 
+.streamcomponent {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
