@@ -1,18 +1,9 @@
-import axios from "axios";
-import { OpenVidu } from "openvidu-browser";
-import React, { Component, useEffect, useState } from "react";
+import React, { Component } from "react";
 import "./OpenVideo.css";
-import UserVideoComponent from "./UserVideoComponent";
-import Messages from "./Messages";
-import FadeInOut from "../common/FadeInOut";
-import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Popover from "react-bootstrap/Popover";
-import { connect, useSelector } from "react-redux";
-import { increment, decrement, incrementByAmount, testReducer } from "../../counterSlice";
+import { connect } from "react-redux";
+import { setOvSession, setUserId } from "../../ovsessionSlice";
+import "react-circular-progressbar/dist/styles.css";
 
-import html2canvas from "html2canvas";
 import * as tf from "@tensorflow/tfjs";
 import * as tfjsWasm from "@tensorflow/tfjs-backend-wasm";
 import * as handdetection from "@tensorflow-models/hand-pose-detection";
@@ -22,10 +13,10 @@ tfjsWasm.setWasmPaths(
 
 //rtk 관련코드
 const mapStateToProps = (state) => ({
-  count: state.counter.value,
+  ovsession: state.ovsession.value,
+  uid: state.ovsession.userid,
 });
-const mapDispatchToProps = { increment, decrement, incrementByAmount, testReducer };
-// var tsession;
+const mapDispatchToProps = { setOvSession, setUserId };
 
 var publisher;
 //모션캡처 온오프
@@ -35,17 +26,18 @@ let emo = document.querySelector("#emo");
 let video = document.querySelector("#video");
 
 let detector;
-// let detector, camera, stats;
-let startInferenceTime,
-  numInferences = 0;
-let inferenceTimeSum = 0,
-  lastPanelUpdate = 0;
 
-//손가락 뒤집기 코드
+//모션관련 코드
 let test_hand = 0; //손등 : 1, 손바닥 : 2, 손 안펴져있으면 : 0
 let hand_timer = 0; //손 뒤집을때가지 시간
 let hand_flip_cnt = 0; //손뒤집은횟수
-let firework_timer = 0;
+let static_motion = 0; //현재 유지중인 동작, 0동작없음, 1브이, 2하트
+let motion_hold_timer = 0; //모션인식 유지 타이머
+let post_static_timer = 0; //정적모션 인식 후 딜레이 타이머
+
+//모션 타이머 길이
+let hold_duration = 60;
+let hand_flip_duration = 30;
 
 const fingerLookupIndices = {
   thumb: [0, 1, 2, 3, 4],
@@ -71,13 +63,9 @@ function isMobile() {
 //카메라 클래스
 //class camera
 class Camera extends Component {
-  // mySession = undefined;
   constructor(props) {
     super(props);
-    // const luser = document.querySelector("#localUser");
-    //   this.video = luser.querySelector("video");
     this.video = document.querySelector("video");
-    console.log("컨스트럭터실행");
 
     // this.video = document.getElementById("video"); //video id를 가진 HTML code의 element 가져옴
     this.canvas = document.getElementById("output");
@@ -99,18 +87,8 @@ class Camera extends Component {
     this.apps = this.apps.bind(this);
   }
 
-  componentDidMount() {
-    // apps();
-    console.log("mount========================");
-    console.log(this.props.count);
-    this.mySession = this.props.count;
-  }
-  componentDidUpdate() {
-    console.log("update========================");
-    console.log(this.props.count);
-    this.mySession = this.props.count;
-    this.apps();
-  }
+  componentDidMount() {}
+  componentDidUpdate() {}
   /**
    * Initiate a Camera instance and wait for the camera stream to be ready.
    */
@@ -134,7 +112,6 @@ class Camera extends Component {
 
     const stream = await navigator.mediaDevices.getUserMedia(videoConfig);
 
-    // const camera = new Camera();
     this.video.srcObject = stream; //Webcam의 live stream을 video id 가진 HTML 코드의 video element에 할당
 
     await new Promise((resolve) => {
@@ -161,7 +138,7 @@ class Camera extends Component {
     this.ctx.translate(this.video.videoWidth, 0);
     this.ctx.scale(-1, 1);
 
-    return 1;
+    return 1; //의미없음
   }
 
   //웹알티씨  비디오가 있으므로 비디오 그릴필요 없음!
@@ -206,32 +183,75 @@ class Camera extends Component {
     if (hand.keypoints != null) {
       this.drawKeypoints(hand.keypoints, hand.handedness);
       const emo_type = this.drawEmoticon(hand.keypoints); //keypoints를 parsing해서 emo_type을 반환한다.
+      if (motion_hold_timer <= 0) {
+        static_motion = 0;
+        motion_hold_timer = 0;
+      }
 
       if (emo_type == "v") {
         //v포즈 취할 경우
-        //rtk테스트
-        const mySession = this.props.count;
-
-        mySession.signal({
-          data: `준우 손가락,브이브이`,
-          to: [],
-          type: "chat",
-        });
-        console.log(mySession);
-
-        emo.innerHTML = '<img src="/v.jpg" width="300" height="300">';
+        if (post_static_timer <= 0) {
+          if (static_motion == 0) {
+            //동작 중이 아니면
+            static_motion = 1;
+            motion_hold_timer = 1;
+          } else if (static_motion != 1) {
+            static_motion = 0;
+            motion_hold_timer = 0;
+          } else if (motion_hold_timer >= hold_duration) {
+            const mySession = this.props.ovsession;
+            mySession.signal({
+              data: `${this.props.uid},hand-v`,
+              to: [],
+              type: "motion",
+            });
+            post_static_timer = 100;
+            static_motion = 0;
+            motion_hold_timer = 0;
+          } else {
+            motion_hold_timer++;
+          }
+        }
+        // emo.innerHTML = '<img src="/v.jpg" width="300" height="300">';
       } else if (emo_type == "heart") {
         //손꾸락하트
-        console.log("하또");
-        emo.innerHTML = '<img src="/heart.gif" width="300" height="300">';
+        if (post_static_timer <= 0) {
+          if (static_motion == 0) {
+            //동작 중이 아니면
+            static_motion = 2;
+            motion_hold_timer = 1;
+          } else if (static_motion != 2) {
+            static_motion = 0;
+            motion_hold_timer = 0;
+          } else if (motion_hold_timer >= hold_duration) {
+            const mySession = this.props.ovsession;
+            mySession.signal({
+              data: `${this.props.uid},hand-heart`,
+              to: [],
+              type: "motion",
+            });
+            post_static_timer = 100;
+            static_motion = 0;
+            motion_hold_timer = 0;
+          } else {
+            motion_hold_timer++;
+          }
+        }
+        // console.log("하또");
+        // emo.innerHTML = '<img src="/heart.gif" width="300" height="300">';
       } else if (emo_type == "test") {
-        emo.innerHTML = '<img src="/test.gif" width="300" height="300">';
-        // console.log("emo test" + firework_timer);
-      } else if (firework_timer > 0) {
-        // console.log("emo ft" + firework_timer);
-        emo.innerHTML = '<img src="/test.gif" width="300" height="300">';
+        const mySession = this.props.ovsession;
+        mySession.signal({
+          data: `${this.props.uid},hand-flip`,
+          to: [],
+          type: "motion",
+        });
+        static_motion = 0;
+        motion_hold_timer = 0;
+        // emo.innerHTML = '<img src="/test.gif" width="300" height="300">';
       } else {
         //이외일 경우 아무것도 보여주지 않음
+        motion_hold_timer -= 10;
       }
     }
   }
@@ -295,13 +315,11 @@ class Camera extends Component {
     const pinky_finger_pip = keypointsArray[18].x;
     const pinky_finger_tip = keypointsArray[20].x;
 
-    // if (hand_flip_cnt != 0 || hand_timer != 0) console.log(hand_flip_cnt + " " + hand_timer);
     if (hand_flip_cnt >= 10) {
       hand_timer = 0;
       test_hand = 0;
       hand_flip_cnt = 0;
-      firework_timer = 100; //이거 양수이면 불꽃놀이 계속 보입니다
-      console.log("flip cnt" + firework_timer);
+      // spost_tatic_timer = 100; //이거 양수이면 불꽃놀이 계속 보입니다
       return "test";
     }
 
@@ -337,13 +355,12 @@ class Camera extends Component {
     } //type 3 end
     else {
       //이더저도아닐때
-      // if (firework_timer > 0) return "test";
+      // ipost_f (static_timer > 0) return "test";
       return "none";
     }
   }
   hand_turn(keypoints, check) {
     const keypointsArray = keypoints;
-    const timer_limit = 30;
 
     const thumb_ip = keypointsArray[3].x;
     const middle_finger_pip = keypointsArray[10].x;
@@ -352,10 +369,10 @@ class Camera extends Component {
     //손바닥
     if (check == "palm" && thumb_ip < middle_finger_pip && middle_finger_pip < pinky_finger_pip) {
       if (test_hand == 0) {
-        hand_timer = timer_limit;
+        hand_timer = hand_flip_duration;
         test_hand = 1;
       } else if (test_hand == 2 && hand_timer > 0) {
-        hand_timer = timer_limit;
+        hand_timer = hand_flip_duration;
         hand_flip_cnt++;
         test_hand = 1;
       }
@@ -364,10 +381,10 @@ class Camera extends Component {
     //손등
     if (check == "palm" && thumb_ip > middle_finger_pip && middle_finger_pip > pinky_finger_pip) {
       if (test_hand == 0) {
-        hand_timer = timer_limit;
+        hand_timer = hand_flip_duration;
         test_hand = 2;
       } else if (test_hand == 1 && hand_timer > 0) {
-        hand_timer = timer_limit;
+        hand_timer = hand_flip_duration;
         hand_flip_cnt++;
         test_hand = 2;
       }
@@ -421,7 +438,7 @@ class Camera extends Component {
     this.ctx.fill();
   }
 
-  //여기 아래로 이식
+  //여기 아래로 클래스 밖에서 안으로 이식된 코드
   async createDetector() {
     const hands = handdetection.SupportedModels.MediaPipeHands; //MediaPipe에서 제공하는 hand pose detection model 사용
     return handdetection.createDetector(hands, {
@@ -462,11 +479,11 @@ class Camera extends Component {
       hand_flip_cnt = 0;
       hand_timer = 0;
     }
-    if (firework_timer > 0) {
-      firework_timer--;
-      console.log("ft>0" + firework_timer);
-      if (firework_timer == 0) {
-        emo.innerHTML = "<p></p>";
+    //정적 모션 출력 후 인식 일시중지
+    if (post_static_timer > 0) {
+      post_static_timer--;
+      if (post_static_timer == 0) {
+        // emo.innerHTML = "<p></p>";
       }
     }
 
@@ -475,6 +492,11 @@ class Camera extends Component {
     if (hands && hands.length > 0 && tracking) {
       this.drawResults(hands); //detection 결과인 hands를 인자로 결과를 visualize 하는 drawResults 실행
     } else {
+      motion_hold_timer -= 10;
+      if (motion_hold_timer <= 0) {
+        static_motion = 0;
+        motion_hold_timer = 0;
+      }
       this.clearCtx();
     }
   }
@@ -485,8 +507,6 @@ class Camera extends Component {
   }
 
   async apps() {
-    console.log("apps실행");
-    console.log(this.props.count);
     await this.setupCamera(); //webcam 셋팅
     console.log(tf.getBackend());
     detector = await this.createDetector(); //hand pose detection model 셋팅
@@ -495,11 +515,9 @@ class Camera extends Component {
   }
 
   render() {
-    return <div>{/* <h1>Count is {this.props.count}</h1> */}</div>;
+    this.apps();
+    return <div></div>;
   }
 }
 
-// Camera.apps();
-
-// export default Camera;
 export default connect(mapStateToProps, mapDispatchToProps)(Camera);

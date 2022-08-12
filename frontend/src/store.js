@@ -1,8 +1,11 @@
-import { configureStore } from "@reduxjs/toolkit";
-import counterSlice from "./counterSlice";
+import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
+import ovsessionSlice from "./ovsessionSlice";
 
 let store = configureStore({
-  reducer: { counter: counterSlice },
+  reducer: { ovsession: ovsessionSlice },
+  middleware: getDefaultMiddleware({
+    serializableCheck: false,
+  }),
 });
 
 export default store;

@@ -16,68 +16,33 @@ import Button from "react-bootstrap/Button";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
 import Camera from "./Camera";
-import { connect, useDispatch } from "react-redux";
-import { increment, decrement, incrementByAmount, testReducer } from "../../counterSlice";
-// import { apps } from "./Camera";
+import { connect } from "react-redux";
+import { setOvSession, setUserId } from "../../ovsessionSlice";
+
 import html2canvas from "html2canvas";
-import * as tf from "@tensorflow/tfjs";
-import * as tfjsWasm from "@tensorflow/tfjs-backend-wasm";
-import * as handdetection from "@tensorflow-models/hand-pose-detection";
-tfjsWasm.setWasmPaths(
-  `https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm@${tfjsWasm.version_wasm}/dist/`
-);
+import ReactCanvasConfetti from "react-canvas-confetti";
 
 //rtk 관련코드
 const mapStateToProps = (state) => ({
-  count: state.counter.value,
+  ovsession: state.ovsession.value,
+  uid: state.ovsession.userid,
 });
 const mapDispatchToProps = () => ({
-  increment,
-  decrement,
-  incrementByAmount,
-  testReducer,
+  setOvSession,
+  setUserId,
 });
-// const mapDispatchToProps = { increment, decrement, incrementByAmount, testReducer };
+// const mapDispatchToProps = { increment, decrement, incrementByAmount, setOvSession };
+
+const canvasStyles = {
+  position: "fixed",
+  pointerEvents: "none",
+  width: "100%",
+  height: "100%",
+  top: 0,
+  left: 0,
+};
 
 var publisher;
-//모션캡처 온오프
-let tracking = true;
-
-let emo = document.querySelector("#emo");
-let video = document.querySelector("#video");
-
-let detector, camera, stats;
-let startInferenceTime,
-  numInferences = 0;
-let inferenceTimeSum = 0,
-  lastPanelUpdate = 0;
-
-//손가락 뒤집기 코드
-let test_hand = 0; //손등 : 1, 손바닥 : 2, 손 안펴져있으면 : 0
-let hand_timer = 0; //손 뒤집을때가지 시간
-let hand_flip_cnt = 0; //손뒤집은횟수
-let firework_timer = 0;
-
-const fingerLookupIndices = {
-  thumb: [0, 1, 2, 3, 4],
-  indexFinger: [0, 5, 6, 7, 8],
-  middleFinger: [0, 9, 10, 11, 12],
-  ringFinger: [0, 13, 14, 15, 16],
-  pinky: [0, 17, 18, 19, 20],
-}; // 각 keypoint(손가락)을 이어주는 연결을 표현하기 위함
-
-function isiOS() {
-  return /iPhone|iPad|iPod/i.test(navigator.userAgent);
-}
-
-function isAndroid() {
-  return /Android/i.test(navigator.userAgent);
-}
-
-function isMobile() {
-  //mobile인지 확인
-  return isAndroid() || isiOS();
-}
 
 const OPENVIDU_SERVER_URL = "https://i7c203.p.ssafy.io:8447";
 const OPENVIDU_SERVER_SECRET = "PAZAMA";
@@ -85,6 +50,7 @@ const OPENVIDU_SERVER_SECRET = "PAZAMA";
 class OpenVideo extends Component {
   constructor(props) {
     super(props);
+    this.animationInstance = null;
 
     this.state = {
       mySessionId: "SessionA",
@@ -252,7 +218,8 @@ class OpenVideo extends Component {
       () => {
         var mySession = this.state.session;
 
-        this.props.testReducer(this.state.session);
+        this.props.setOvSession(this.state.session);
+        this.props.setUserId(this.state.myUserName);
         // const cam = new Camera();
         // cam.apps();
 
@@ -293,6 +260,25 @@ class OpenVideo extends Component {
             this.setState({
               cakeshow: cakeShow[1] === "true" ? false : true,
             });
+          }
+        });
+
+        //모션인식 받는 부분
+        mySession.on("signal:motion", (event) => {
+          let chatdata = event.data.split(",");
+          if (chatdata[0] !== this.state.myUserName) {
+            switch (chatdata[1]) {
+              case "hand-v":
+                break;
+              case "hand-heart":
+                break;
+              case "hand-flip":
+                this.fire();
+                break;
+              default:
+                break;
+            }
+            console.log(chatdata[1]);
           }
         });
 
@@ -661,11 +647,10 @@ class OpenVideo extends Component {
                 <button id="buttonLeaveSession" onClick={this.leaveSession}>
                   <img className="leave" src="/shutdown.png" />
                 </button>
-                {/* rtk테스트버튼 */}
-                {/* <h1>Count is {this.props.count}</h1> */}
               </div>
             </div>
             <Camera />
+            <ReactCanvasConfetti refConfetti={this.getInstance} style={canvasStyles} />
           </div>
         ) : null}
         {/* <div class="canvas-wrapper"></div> */}
@@ -802,6 +787,47 @@ class OpenVideo extends Component {
       document.body.appendChild(photo);
     });
   }
+
+  //종이꽃효과
+  makeShot = (particleRatio, opts) => {
+    this.animationInstance &&
+      this.animationInstance({
+        ...opts,
+        origin: { y: 0.7 },
+        particleCount: Math.floor(200 * particleRatio),
+      });
+  };
+  fire = () => {
+    this.makeShot(0.25, {
+      spread: 26,
+      startVelocity: 55,
+    });
+
+    this.makeShot(0.2, {
+      spread: 60,
+    });
+
+    this.makeShot(0.35, {
+      spread: 100,
+      decay: 0.91,
+      scalar: 0.8,
+    });
+
+    this.makeShot(0.1, {
+      spread: 120,
+      startVelocity: 25,
+      decay: 0.92,
+      scalar: 1.2,
+    });
+
+    this.makeShot(0.1, {
+      spread: 120,
+      startVelocity: 45,
+    });
+  };
+  getInstance = (instance) => {
+    this.animationInstance = instance;
+  };
 }
 
 // export default OpenVideo;

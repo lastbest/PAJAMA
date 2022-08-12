@@ -1,32 +1,27 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 // const counterSlice = createSlice( same as before /);
-const counterSlice = createSlice({
-  name: "counter",
+const ovsessionSlice = createSlice({
+  name: "ovsession",
   initialState: {
     value: 0,
+    userid: 17,
   },
   reducers: {
-    increment: (state) => {
-      state.value += 1;
-    },
-    decrement: (state) => {
-      state.value -= 1;
-    },
-    incrementByAmount: (state, action) => {
-      state.value += action.payload;
-    },
-    testReducer: (state, action) => {
+    setOvSession: (state, action) => {
       state.value = action.payload;
+    },
+    setUserId: (state, action) => {
+      state.userid = action.payload;
     },
   },
 });
 
 // destructure actions and reducer from the slice (or you can access as counterSlice.actions)
-const { actions, reducer } = counterSlice;
+const { actions, reducer } = ovsessionSlice;
 
 // export individual action creator functions
-export const { increment, decrement, incrementByAmount, testReducer } = actions;
+export const { setOvSession, setUserId } = actions;
 
 // often the reducer is a default export, but that doesn't matter
 export default reducer;
