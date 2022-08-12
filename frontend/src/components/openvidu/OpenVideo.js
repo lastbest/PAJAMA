@@ -471,7 +471,7 @@ class OpenVideo extends Component {
   render() {
     const popover = (
       <Popover className="popover">
-        <button onClick={()=>{
+        <button className="takebtn" onClick={()=>{
           this.removediv()
           this.setState({shot:true})
           }}>사진찍기</button>
@@ -720,6 +720,7 @@ class OpenVideo extends Component {
           <div className="partyroom">
             <div className="header">
               <img
+                className="pazama"
                 src="/pazamafont.png"
                 alt="logo"
                 width="150px"
@@ -755,7 +756,7 @@ class OpenVideo extends Component {
                     overlay={popover3}
                   >
                     <Image
-                      className="navbtn"
+                      className="music"
                       src="/music.png"
                       alt="logo"
                       style={{ width: "60px", height: "60px" }}
@@ -781,7 +782,7 @@ class OpenVideo extends Component {
                     overlay={popover3}
                   >
                     <Image
-                      className="navbtn"
+                      className="music"
                       src="/music.png"
                       alt="logo"
                       style={{ width: "60px", height: "60px" }}
@@ -865,9 +866,9 @@ class OpenVideo extends Component {
                   }}
                 >
                   {this.state.videostate ? (
-                    <img className="camoff" src="/videocamoff.png" />
-                  ) : (
                     <img className="camon" src="/videocamon.png" />
+                  ) : (
+                    <img className="camoff" src="/videocamoff.png" />
                   )}
                 </button>
 
@@ -883,9 +884,9 @@ class OpenVideo extends Component {
                   }}
                 >
                   {this.state.audiostate ? (
-                    <img className="micoff" src="/micoff.png" />
-                  ) : (
                     <img className="micon" src="/micon.png" />
+                  ) : (
+                    <img className="micoff" src="/micoff.png" />
                   )}
                 </button>
                 <OverlayTrigger
@@ -901,9 +902,9 @@ class OpenVideo extends Component {
                   />
                 </OverlayTrigger>
                 <button className="chatbtn" onClick={this.toggleShow}>
-                  <img className="chat" src="chat.png" />
+                  <img className="chat" src="/chat.png" />
                 </button>
-                <button id="buttonLeaveSession" onClick={this.leaveSession}>
+                <button className="leavebtn" id="buttonLeaveSession" onClick={this.leaveSession}>
                   <img className="leave" src="/shutdown.png" />
                 </button>
               </div>

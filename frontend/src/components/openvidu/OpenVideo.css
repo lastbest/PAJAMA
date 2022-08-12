@@ -1,6 +1,7 @@
 .stream-video {
   padding: 0;
   margin: auto;
+  height:auto;
 }
 
 .header {
@@ -91,6 +92,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  height:auto;
 }
 
 .cake {
@@ -174,6 +176,11 @@
 .leave {
   height: 50px;
   width: 50px;
+  background: none;
+  border: none;
+}
+
+.leavebtn {
   background: none;
   border: none;
 }
@@ -384,4 +391,62 @@
   border-radius: 50%;
   width: 40%;
   height: 50%;
+}
+
+.voice {
+  margin: 0px;
+}
+
+.capture {
+  margin: 0px;
+}
+
+.music {
+  margin: 0px;
+}
+
+.pazama {
+  margin:0px;
+  width:150px;
+}
+
+.text5 {
+  font-size: 10px;
+  color: white;
+  margin: auto;
+  margin-right: 5px;
+  font-family: "oldpicture";
+}
+
+.bs-popover-top>.popover-arrow::after {
+  bottom: none;
+}
+
+.frame {
+  height: 100px;
+  margin: auto;
+  width:100%;
+}
+
+.camerabtn {
+  border: none;
+  border-radius: 20px;
+  background-color: white;
+  padding: 5px;
+  font-family: "oldpicture";
+  margin: 10px;
+}
+
+.bar {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 15px;
+}
+
+.takebtn {
+  margin:10px;
+  border-radius: 10px;
+  background-color: #d9d9d9;
+  font-family: "oldpicture";
 }
