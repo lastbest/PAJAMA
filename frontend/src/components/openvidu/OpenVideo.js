@@ -76,6 +76,8 @@ function isMobile() {
 const OPENVIDU_SERVER_URL = "https://i7c203.p.ssafy.io:8447";
 const OPENVIDU_SERVER_SECRET = "PAZAMA";
 
+
+
 class OpenVideo extends Component {
   constructor(props) {
     super(props);
@@ -99,7 +101,7 @@ class OpenVideo extends Component {
       partyHost: "",
       partyName: "",
       partyDesc: "2022-09-30 12:22:22",
-      partyDate: "",
+      partyDate: props.partyDate,
       shot: false,
       imgUrl: undefined,
     };
@@ -565,6 +567,36 @@ class OpenVideo extends Component {
       Main = "main-container";
       Candleshow = "candle1";
     }
+    const minuteSeconds = 60;
+    const hourSeconds = 3600;
+    const daySeconds = 86400;
+
+    const timerProps = {
+      isPlaying: true,
+      size: 120,
+      strokeWidth: 6
+    };
+
+    const renderTime = (dimension, time) => {
+      return (
+        <div className="time-wrapper">
+          <div className="time">{time}</div>
+          <div>{dimension}</div>
+        </div>
+      );
+    };
+
+    const getTimeSeconds = (time) => (minuteSeconds - time) | 0;
+    const getTimeMinutes = (time) => ((time % hourSeconds) / minuteSeconds) | 0;
+    const getTimeHours = (time) => ((time % daySeconds) / hourSeconds) | 0;
+    const getTimeDays = (time) => (time / daySeconds) | 0;
+    
+
+    const stratTime = Date.now() / 1000; 
+    const endTime = new Date(this.state.partyDate) / 1000; 
+    const remainingTime = endTime - stratTime;
+    const days = Math.ceil(remainingTime / daySeconds);
+    const daysDuration = days * daySeconds;
 
     //오픈비두 필터
     function textOverlay() {
@@ -658,7 +690,81 @@ class OpenVideo extends Component {
               <form className="form-group" onSubmit={this.joinSession}>
                 <div className="nameDiv">{this.state.partyName}</div>
                 <div className="descDiv">{this.state.partyDesc}</div>
-                <div id="counter" className="counter" />
+                <div className="ddaycounter">
+                  <CountdownCircleTimer
+                    {...timerProps}
+                    colors="#7E2E84"
+                    strokeWidth={10}
+                    duration={daysDuration}
+                    initialRemainingTime={remainingTime}
+                  >
+                    {({ elapsedTime, color }) => (
+                      <span style={{ color }}>
+                        {renderTime("days", getTimeDays(daysDuration - elapsedTime))}
+                      </span>
+                    )}
+                  </CountdownCircleTimer>
+                  <CountdownCircleTimer
+                    {...timerProps}
+                    colors="#D14081"
+                    strokeWidth={10}
+                    duration={daySeconds}
+                    initialRemainingTime={remainingTime % daySeconds}
+                    onComplete={(totalElapsedTime) => ({
+                      shouldRepeat: remainingTime - totalElapsedTime > hourSeconds
+                    })}
+                  >
+                    {({ elapsedTime, color }) => (
+                      <span style={{ color }}>
+                        {renderTime("hours", getTimeHours(daySeconds - elapsedTime))}
+                      </span>
+                    )}
+                  </CountdownCircleTimer>
+                  <CountdownCircleTimer
+                    {...timerProps}
+                    colors="#EF798A"
+                    duration={hourSeconds}
+                    strokeWidth={10}
+                    initialRemainingTime={remainingTime % hourSeconds}
+                    onComplete={(totalElapsedTime) => ({
+                      shouldRepeat: remainingTime - totalElapsedTime > minuteSeconds
+                    })}
+                  >
+                    {({ elapsedTime, color }) => (
+                      <span style={{ color }}>
+                        {renderTime("minutes", getTimeMinutes(hourSeconds - elapsedTime))}
+                      </span>
+                    )}
+                  </CountdownCircleTimer>
+                  <CountdownCircleTimer
+                    {...timerProps}
+                    colors="#218380"
+                    strokeWidth={10}
+                    duration={minuteSeconds}
+                    initialRemainingTime={remainingTime % minuteSeconds}
+                    onComplete={(totalElapsedTime) => ({
+                      shouldRepeat: remainingTime - totalElapsedTime > 0
+                    })}
+                  >
+                    {({ elapsedTime, color }) => (
+                      <span style={{ color }}>
+                        {renderTime("seconds", getTimeSeconds(elapsedTime))}
+                      </span>
+                    )}
+                  </CountdownCircleTimer>
+                </div>
+
+                {/* <CountdownCircleTimer
+                  isPlaying
+                  duration={(new Date(this.state.partyDate).getTime()-new Date().getTime())/1000}
+                  colors={['#004777']}
+                  trailStrokeWidth={10}
+                  strokeWidth={10}
+                >
+                  {({ remainingTime }) => `${remainingTime/3600/24}`}
+                </CountdownCircleTimer> */}
+
+                {/* <div id="counter" className="counter" /> */}
 
                 {/* <span>
                   유저 & 방정보
