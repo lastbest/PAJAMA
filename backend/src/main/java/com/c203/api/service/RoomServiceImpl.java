@@ -6,8 +6,11 @@ import com.c203.api.dto.Room.RoomModifyDto;
 import com.c203.api.dto.Room.RoomShowDto;
 import com.c203.db.Entity.Room;
 import com.c203.db.Entity.RoomDeco;
+import com.c203.db.Entity.User;
+import com.c203.db.Repository.ParticipantRepository;
 import com.c203.db.Repository.RoomDecoRepository;
 import com.c203.db.Repository.RoomRepository;
+import com.c203.db.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +25,8 @@ public class RoomServiceImpl implements RoomService {
     private RoomRepository roomRepository;
     @Autowired
     private RoomDecoRepository roomDecoRepository;
-
+    @Autowired
+    private UserRepository userRepository;
     @Autowired
     private EncryptionService encryptionService;
 
@@ -102,6 +106,9 @@ public class RoomServiceImpl implements RoomService {
             roomShowDto.setPartyCandle(roomDeco.getRoomdeco_candle());
             // 호스트 설정
             roomShowDto.setPartyHost(room.get().getRoomHost());
+            // 닉네임 설정
+            Optional<User> user = userRepository.findByUserEmail(email);
+            roomShowDto.setPartyNickname(user.get().getUserNickname());
             roomShowDto.setPartyDate(room.get().getRoom_date());
             roomShowDto.setPartyDesc(room.get().getRoomDesc());
             roomShowDto.setPartyName(room.get().getRoomName());
