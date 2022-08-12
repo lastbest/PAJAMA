@@ -13,6 +13,7 @@ public class RoomShowDto {
     private String partyHost;
     private String roomId;
     private String partyName;
+    private String partyNickname;
     private String partyDesc;
     private LocalDateTime partyDate;
     private int partyBg;
