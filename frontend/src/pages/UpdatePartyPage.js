@@ -5,11 +5,12 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Form from "react-bootstrap/Form";
 import { ko } from "date-fns/esm/locale";
-import "./CreatePartyPage.css";
+import "./UpdatePartyPage.css";
 import axios from "axios";
 import { FiCheckCircle } from "react-icons/fi";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
+import { useParams } from "react-router-dom";
 
 const CreateBtn = styled.div`
   display: flex;
@@ -123,7 +124,8 @@ const Pinkbox = styled.div`
   border-radius: 10px;
 `;
 
-const CreatePartyPage = () => {
+const UpdatePartyPage = () => {
+  let { roomIdx } = useParams();
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -146,21 +148,41 @@ const CreatePartyPage = () => {
   const [partyBg, setPartyBg] = useState(null);
   const [partyCake, setPartyCake] = useState(null);
   const [partyCandle, setPartyCandle] = useState(null);
-
+  const [validURL, setValidURL] = useState("");
+  useEffect(() => {
+    console.log("배경은 -> " + partyBg);
+  }, [setPartyBg]);
   let token = sessionStorage.getItem("accessToken");
   useEffect(() => {
     axios({
-      url: "http://i7c203.p.ssafy.io:8082/users/me",
+      url: "http://i7c203.p.ssafy.io:8082/rooms",
       method: "get",
       headers: { accessToken: token },
+      params: {
+        roomIdx: roomIdx,
+      },
     })
       .then((res) => {
-        setMyEmail(res.data.result.email);
-        console.log("회원정보 불러오기 성공");
+        console.log(roomIdx);
+        setValidURL(encodeURIComponent(roomIdx));
+        console.log("방정보 불러오기 성공");
         console.log(res);
-        console.log(this.state.myUserName);
+        console.log(res.data.result.partyName);
+        setMyEmail(res.data.result.partyHost);
+        setPartyName(res.data.result.partyName);
+        setPartyDesc(res.data.result.partyDesc);
+        setRoomId(res.data.result.validURL);
+        // setPartyDate(res.data.result.partyDate);
+
+        setPartyBg(res.data.result.partyBg);
+        setPartyCake(res.data.result.partyCake);
+        setPartyCandle(res.data.result.partyCandle);
+
+        console.log(partyName);
       })
-      .catch(() => {});
+      .catch(() => {
+        alert("오류");
+      });
   }, []);
   return (
     <>
@@ -170,11 +192,12 @@ const CreatePartyPage = () => {
           <div class="item1">
             <h5>파티 이름</h5>
             <StyledInput
+              name="partyName"
+              value={partyName}
               onInput={(e) => {
                 setPartyName(e.target.value);
               }}
               autoComplete="partyname"
-              name="partyname"
               placeholder=" PARTY NAME"
             />
           </div>
@@ -184,6 +207,7 @@ const CreatePartyPage = () => {
               className="pointer"
               selected={partyDate}
               onChange={(date) => setPartyDate(date)}
+              value={partyDate}
               showTimeSelect
               timeFormat="HH:mm"
               timeIntervals={5}
@@ -206,6 +230,7 @@ const CreatePartyPage = () => {
               onInput={(e) => {
                 setPartyDesc(e.target.value);
               }}
+              value={partyDesc}
               autoComplete="partydetail"
               name="partydetail"
               placeholder=" PARTY DETAIL"
@@ -213,13 +238,25 @@ const CreatePartyPage = () => {
           </div>
           <div class="item4">
             <h5>배경 선택</h5>
+
             <Pinkbox className="d-flex justify-content-around">
-              <input
-                type="radio"
-                name="back"
-                id="back0"
-                className="input-hidden"
-              />
+              {partyBg === 0 ? (
+                <input
+                  checked
+                  type="radio"
+                  name="back"
+                  id="back0"
+                  className="input-hidden"
+                />
+              ) : (
+                <input
+                  type="radio"
+                  name="back"
+                  id="back0"
+                  className="input-hidden"
+                />
+              )}
+
               <label className="itemBox" for="back0">
                 <img
                   className="pointer"
@@ -232,12 +269,23 @@ const CreatePartyPage = () => {
                 <FiCheckCircle id="itemImg" className="backCheckIcon" />
               </label>
 
-              <input
-                type="radio"
-                name="back"
-                id="back1"
-                className="input-hidden"
-              />
+              {partyBg === 1 ? (
+                <input
+                  checked
+                  type="radio"
+                  name="back"
+                  id="back1"
+                  className="input-hidden"
+                />
+              ) : (
+                <input
+                  type="radio"
+                  name="back"
+                  id="back1"
+                  className="input-hidden"
+                />
+              )}
+
               <label className="itemBox" for="back1">
                 <img
                   className="pointer"
@@ -250,12 +298,23 @@ const CreatePartyPage = () => {
                 <FiCheckCircle id="itemImg" className="backCheckIcon" />
               </label>
 
-              <input
-                type="radio"
-                name="back"
-                id="back2"
-                className="input-hidden"
-              />
+              {partyBg === 2 ? (
+                <input
+                  checked
+                  type="radio"
+                  name="back"
+                  id="back2"
+                  className="input-hidden"
+                />
+              ) : (
+                <input
+                  type="radio"
+                  name="back"
+                  id="back2"
+                  className="input-hidden"
+                />
+              )}
+
               <label className="itemBox" for="back2">
                 <img
                   className="pointer"
@@ -272,12 +331,23 @@ const CreatePartyPage = () => {
           <div class="item5">
             <h5>케이크 선택</h5>
             <Pinkbox className="d-flex justify-content-between">
-              <input
-                type="radio"
-                name="cake"
-                id="cake0"
-                className="input-hidden"
-              />
+              {partyCake === 0 ? (
+                <input
+                  checked
+                  type="radio"
+                  name="cake"
+                  id="cake0"
+                  className="input-hidden"
+                />
+              ) : (
+                <input
+                  type="radio"
+                  name="cake"
+                  id="cake0"
+                  className="input-hidden"
+                />
+              )}
+
               <label className="itemBox" for="cake0">
                 <img
                   className="pointer"
@@ -290,12 +360,22 @@ const CreatePartyPage = () => {
                 <FiCheckCircle id="itemImg" className="cake0CheckIcon" />
               </label>
 
-              <input
-                type="radio"
-                name="cake"
-                id="cake1"
-                className="input-hidden"
-              />
+              {partyCake === 1 ? (
+                <input
+                  checked
+                  type="radio"
+                  name="cake"
+                  id="cake1"
+                  className="input-hidden"
+                />
+              ) : (
+                <input
+                  type="radio"
+                  name="cake"
+                  id="cake1"
+                  className="input-hidden"
+                />
+              )}
               <label className="itemBox" for="cake1">
                 <img
                   className="pointer"
@@ -312,12 +392,22 @@ const CreatePartyPage = () => {
           <div class="item6">
             <h5>초 선택</h5>
             <Pinkbox className="d-flex justify-content-around align-items-center">
-              <input
-                type="radio"
-                name="candle"
-                id="candle0"
-                className="input-hidden"
-              />
+              {partyCandle === 0 ? (
+                <input
+                  checked
+                  type="radio"
+                  name="candle"
+                  id="candle0"
+                  className="input-hidden"
+                />
+              ) : (
+                <input
+                  type="radio"
+                  name="candle"
+                  id="candle0"
+                  className="input-hidden"
+                />
+              )}
               <label className="itemBox" for="candle0">
                 <img
                   className="pointer"
@@ -330,12 +420,22 @@ const CreatePartyPage = () => {
                 <FiCheckCircle id="itemImg" className="candle0CheckIcon" />
               </label>
 
-              <input
-                type="radio"
-                name="candle"
-                id="candle1"
-                className="input-hidden"
-              />
+              {partyCandle === 1 ? (
+                <input
+                  checked
+                  type="radio"
+                  name="candle"
+                  id="candle1"
+                  className="input-hidden"
+                />
+              ) : (
+                <input
+                  type="radio"
+                  name="candle"
+                  id="candle1"
+                  className="input-hidden"
+                />
+              )}
               <label className="itemBox" for="candle1">
                 <img
                   className="pointer"
@@ -347,13 +447,22 @@ const CreatePartyPage = () => {
                 ></img>
                 <FiCheckCircle id="itemImg" className="candle1CheckIcon" />
               </label>
-
-              <input
-                type="radio"
-                name="candle"
-                id="candle2"
-                className="input-hidden"
-              />
+              {partyCandle === 2 ? (
+                <input
+                  checked
+                  type="radio"
+                  name="candle"
+                  id="candle2"
+                  className="input-hidden"
+                />
+              ) : (
+                <input
+                  type="radio"
+                  name="candle"
+                  id="candle2"
+                  className="input-hidden"
+                />
+              )}
               <label className="itemBox" for="candle2">
                 <img
                   className="pointer"
@@ -379,8 +488,11 @@ const CreatePartyPage = () => {
               setPartyDate(partyDate.setHours(partyDate.getHours() + 9));
               axios({
                 url: "http://i7c203.p.ssafy.io:8082/rooms",
-                method: "post",
+                method: "put",
                 headers: { accessToken: token },
+                params: {
+                  roomIdx: validURL,
+                },
                 data: {
                   partyHost: myEmail,
                   partyName: partyName,
@@ -392,8 +504,7 @@ const CreatePartyPage = () => {
                 },
               })
                 .then((res) => {
-                  console.log(res.data.result.roomId);
-                  setRoomId(res.data.result.roomId);
+                  console.log(res);
                 })
                 .catch((err) => {
                   console.log(err);
@@ -403,7 +514,7 @@ const CreatePartyPage = () => {
             }
           }}
         >
-          CREATE PARTY
+          UPDATE PARTY
         </StyledBtn>
         {/* </a> */}
       </CreateBtn>
@@ -423,35 +534,9 @@ const CreatePartyPage = () => {
         <Modal.Body
           style={{ "font-family": "oldpicture", "font-size": "20px" }}
         >
-          초대장이 생성되었습니다.
-          <div>
-            <form>
-              <textarea
-                ref={textAreaRef}
-                value={`https://i7c203.p.ssafy.io/invite/${roomId}`}
-                style={{ width: "100%", height: "100%" }}
-              />
-            </form>
-          </div>
+          수정이 완료되었습니다.
         </Modal.Body>
         <Modal.Footer>
-          {document.queryCommandSupported("copy") && (
-            <>
-              <div>
-                <Button
-                  style={{
-                    backgroundColor: "#FD7A99",
-                    border: "none",
-                    "font-family": "oldpicture",
-                    "box-shadow": "none",
-                  }}
-                  onClick={copyToClipboard}
-                >
-                  복사
-                </Button>
-              </div>
-            </>
-          )}
           <Button
             style={{
               color: "white",
@@ -461,7 +546,7 @@ const CreatePartyPage = () => {
               "box-shadow": "none",
             }}
             onClick={() => {
-              document.location.href = "/";
+              document.location.href = `/room/${validURL}`;
             }}
           >
             닫기
@@ -472,4 +557,4 @@ const CreatePartyPage = () => {
   );
 };
 
-export default CreatePartyPage;
+export default UpdatePartyPage;
