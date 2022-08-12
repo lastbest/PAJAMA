@@ -4,6 +4,8 @@ import HomeCarousel from '../components/homecarousel/HomeCarousel';
 import styled from 'styled-components';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import { BrowserView, MobileView } from 'react-device-detect';
+import HomeCarouselMobile from '../components/homecarousel/HomeCarouselMobile';
 
 
 const CreateBtn = styled.div`
@@ -24,6 +26,7 @@ const StyledBtn = styled.button`
     cursor: pointer;
     background: #FD7A99;
     margin: 2rem;
+    color:black;
     &:hover {
         background: #FFA4BD;
     }
@@ -39,6 +42,25 @@ const StyledBtn = styled.button`
         width: 150px;
         height: 40px;
         }
+    
+`
+const StyledBtn2 = styled.button`
+    text-align:center;
+    width: 200px;
+    height: 60px;
+    border: none;
+    border-radius: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    font-family:'BRITANIC';
+    outline: none;
+    cursor: pointer;
+    background: #FD7A99;
+    margin: 2rem;
+    color:black;
+    &:hover {
+        background: #FFA4BD;
+    }
     
 `
 
@@ -58,19 +80,39 @@ const HomePage = () => {
     return (
         <div>
             <NavBar></NavBar>
-            <HomeCarousel></HomeCarousel>
+            <BrowserView>
+                <HomeCarousel></HomeCarousel>
+            </BrowserView>
+            <MobileView>
+                <HomeCarouselMobile></HomeCarouselMobile>
+            </MobileView>
             <CreateBtn>
-                <StyledBtn variant="primary" onClick={
-                    ()=>{
-                        if(!token){
-                            handleShow()
-                        } else {
-                            document.location.href="/createparty"
+                <BrowserView>
+                    <StyledBtn onClick={
+                        ()=>{
+                            if(!token){
+                                handleShow()
+                            } else {
+                                document.location.href="/createparty"
+                            }
                         }
-                    }
-                    }>
-                    CREATE PARTY
-                </StyledBtn>
+                        }>
+                        CREATE PARTY
+                    </StyledBtn>
+                </BrowserView>
+                <MobileView>
+                <StyledBtn2 onClick={
+                        ()=>{
+                            if(!token){
+                                handleShow()
+                            } else {
+                                document.location.href="/createparty"
+                            }
+                        }
+                        }>
+                        CREATE PARTY
+                    </StyledBtn2>
+                </MobileView>
             </CreateBtn>
             <Img>
                 <img src="/maintext3.png" style={{width:'80%', marginTop:"20px"}}/>
