@@ -27,10 +27,34 @@
     font-size: large;
 }
 
+.Main2 {
+    font-family: "star";
+    text-align: center;
+    margin-top: 5%;
+    font-size: x-large;
+}
+
+.partyinfo2 {
+    font-family: "oldpicture";
+    margin-left: 30%;
+
+}
+
+.lettercontainer2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2%;
+}
+
 .clicklink {
     color: #9D9D9D;
     text-decoration: none;
     font-family: "star";
     display: flex;
     justify-content: center;
+}
+
+.clicklink:hover {
+    color: #FD7A99;
 }
