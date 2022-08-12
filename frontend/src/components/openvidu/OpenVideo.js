@@ -104,6 +104,7 @@ class OpenVideo extends Component {
       partyDate: props.partyDate,
       shot: false,
       imgUrl: undefined,
+      countCompleted: false,
     };
 
     // 자신의 회원정보 불러오기
@@ -593,7 +594,7 @@ class OpenVideo extends Component {
     
 
     const stratTime = Date.now() / 1000; 
-    const endTime = new Date(this.state.partyDate) / 1000; 
+    const endTime = new Date(this.state.partyDate) / 1000;
     const remainingTime = endTime - stratTime;
     const days = Math.ceil(remainingTime / daySeconds);
     const daysDuration = days * daySeconds;
@@ -697,6 +698,11 @@ class OpenVideo extends Component {
                     strokeWidth={10}
                     duration={daysDuration}
                     initialRemainingTime={remainingTime}
+                    onComplete={()=>{
+                      // countCompleted state가 true가 되면 참여하기 버튼이 보이게 구현
+                      this.setState({countCompleted:true})
+                      console.log('타이머 종료')
+                    }}
                   >
                     {({ elapsedTime, color }) => (
                       <span style={{ color }}>
@@ -794,6 +800,8 @@ class OpenVideo extends Component {
                     required
                   />
                 </p> */}
+                {
+                  this.state.countCompleted ?
                 <p className="text-center">
                   <input
                     className="joinbtn"
@@ -801,7 +809,9 @@ class OpenVideo extends Component {
                     type="submit"
                     value="참여하기"
                   />
-                </p>
+                </p> :
+                null
+                }
                 {this.state.partyHost === this.state.myEmail &&
                 this.state.partyHost != "" ? (
                   <p className="text-center">
