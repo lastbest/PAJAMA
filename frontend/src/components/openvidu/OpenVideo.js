@@ -15,7 +15,7 @@ import Modal from "react-bootstrap/Modal";
 import Camera from "./Camera";
 import ReactDOM from "react-dom";
 import { Popover, OverlayTrigger, Image } from "react-bootstrap";
-
+import Speech from "./Speech";
 import html2canvas from "html2canvas";
 import * as tf from "@tensorflow/tfjs";
 import * as tfjsWasm from "@tensorflow/tfjs-backend-wasm";
@@ -1026,6 +1026,7 @@ class OpenVideo extends Component {
               </div>
             </div>
             <Camera style="display: none" />
+            <Speech />
           </div>
         ) : null}
         {/* <div class="canvas-wrapper"></div> */}
