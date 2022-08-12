@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "./InvitePage.css";
 import axios from "axios";
+import { BrowserView, MobileView } from 'react-device-detect';
 
 const InvitePage = () => {
   let token = sessionStorage.getItem("accessToken");
@@ -23,6 +24,7 @@ const InvitePage = () => {
 
   return (
     <>
+    <MobileView>
       <a href="/" className="letterheader">
         <img
           className="headerlogo"
@@ -39,7 +41,7 @@ const InvitePage = () => {
         <p>파티날짜</p>
       </div>
       <div className="lettercontainer">
-        <img src="/letter.png" style={{ width: "60%", height: "60%" }}></img>
+        <img src="/letter.png" style={{ width: "60%", height: "60%",maxWidth: '1024px' }}></img>
       </div>
       {token !== "undefined" && token ? (
         <>
@@ -54,6 +56,20 @@ const InvitePage = () => {
           </a>
         </>
       )}
+
+    </MobileView>
+
+    <BrowserView>
+      <a href="/" className="letterheader">
+        <img
+          className="headerlogo"
+          src="/pazamafont.png"
+          alt="logo"
+          width="120px"
+          height="60px"
+        ></img>
+      </a>
+    </BrowserView>
     </>
   );
 };

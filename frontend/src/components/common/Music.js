@@ -13,76 +13,55 @@ import Col from 'react-bootstrap/Col';
 
 function Music() {
   let [genre, setGenre] = useState(null)
- 
-        
-
-
+  
   return (
     <div className="App">
         <Container>
           <Row>
             <Col className='lb-wrap'>
-              <div className='lb-text'>
-              <p>Hiphop</p>
-              </div>
               <div className='lb-image'>
                 <img onClick={()=>{
                   setGenre('hiphop')
-                }} src='/18th.png'></img>
+                }} src='/hiphop.jpg'></img>
               </div>
             </Col>
             <Col className='lb-wrap'>
-            <div className='lb-text'>
-              <p>Cyworld</p>
-            </div>
             <div className='lb-image'>
               <img onClick={()=>{
           setGenre('cyworld')
-        }} src='/18th.jpg'></img>
+        }} src='/acorn.jpg'></img>
             </div>
             </Col>
           </Row>
           <Row>
             <Col className='lb-wrap'>
-            <div className='lb-text'>
-              <p>Birthday</p>
-            </div>
             <div className='lb-image'>
               <img onClick={()=>{
           setGenre('birthday')
-        }} src='/18th.jpg'></img>
+        }} src='/happybirthday.jpg'></img>
             </div>
             </Col>
             <Col className='lb-wrap'>
-            <div className='lb-text'>
-              <p>Indie</p>
-            </div>
             <div className='lb-image'>
               <img onClick={()=>{
           setGenre('independent')
-        }} src='/18th.jpg'></img>
+        }} src='/indie.jpg'></img>
             </div>
             </Col>
           </Row>
           <Row>
             <Col className='lb-wrap'>
-            <div className='lb-text'>
-              <p>Dance</p>
-            </div>
             <div className='lb-image'>
               <img onClick={()=>{
           setGenre('dance')
-        }} src='/18th.jpg'></img>
+        }} src='/dance.jpg'></img>
             </div>
             </Col>
             <Col className='lb-wrap'>
-            <div className='lb-text'>
-              <p>Jazz</p>
-            </div>
             <div className='lb-image'>
               <img onClick={()=>{
           setGenre('jazz')
-        }} src='/18th.jpg'></img>
+        }} src='/jazz.jpg'></img>
             </div>
             </Col>
           </Row>
