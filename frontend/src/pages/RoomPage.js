@@ -52,7 +52,7 @@ const RoomPage = () => {
     })
       .then((res) => {
         setPartyDate(res.data.result.partyDate);
-        console.log(res.data.result.partyDate)
+        console.log(res.data.result.partyDate);
       })
       .catch(() => {
         alert("방정보 불러오기 실패??");
