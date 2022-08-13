@@ -31,9 +31,10 @@ let detector;
 let test_hand = 0; //손등 : 1, 손바닥 : 2, 손 안펴져있으면 : 0
 let hand_timer = 0; //손 뒤집을때가지 시간
 let hand_flip_cnt = 0; //손뒤집은횟수
-let static_motion = 0; //현재 유지중인 동작, 0동작없음, 1브이, 2하트
-let motion_hold_timer = 0; //모션인식 유지 타이머
-let post_static_timer = 0; //정적모션 인식 후 딜레이 타이머
+let hand_cake_motion = 0; //케이크 모션 취할때의 카운트
+//카운트 테스트
+let motion_cnt = 0;
+let motion_timer = 0;
 
 //모션 타이머 길이
 let hold_duration = 60;
@@ -183,60 +184,24 @@ class Camera extends Component {
     if (hand.keypoints != null) {
       this.drawKeypoints(hand.keypoints, hand.handedness);
       const emo_type = this.drawEmoticon(hand.keypoints); //keypoints를 parsing해서 emo_type을 반환한다.
-      if (motion_hold_timer <= 0) {
-        static_motion = 0;
-        motion_hold_timer = 0;
-      }
 
       if (emo_type == "v") {
         //v포즈 취할 경우
-        if (post_static_timer <= 0) {
-          if (static_motion == 0) {
-            //동작 중이 아니면
-            static_motion = 1;
-            motion_hold_timer = 1;
-          } else if (static_motion != 1) {
-            static_motion = 0;
-            motion_hold_timer = 0;
-          } else if (motion_hold_timer >= hold_duration) {
-            const mySession = this.props.ovsession;
-            mySession.signal({
-              data: `${this.props.uid},hand-v`,
-              to: [],
-              type: "motion",
-            });
-            post_static_timer = 100;
-            static_motion = 0;
-            motion_hold_timer = 0;
-          } else {
-            motion_hold_timer++;
-          }
-        }
+        const mySession = this.props.ovsession;
+        mySession.signal({
+          data: `${this.props.uid},hand-v`,
+          to: [],
+          type: "motion",
+        });
         // emo.innerHTML = '<img src="/v.jpg" width="300" height="300">';
       } else if (emo_type == "heart") {
         //손꾸락하트
-        if (post_static_timer <= 0) {
-          if (static_motion == 0) {
-            //동작 중이 아니면
-            static_motion = 2;
-            motion_hold_timer = 1;
-          } else if (static_motion != 2) {
-            static_motion = 0;
-            motion_hold_timer = 0;
-          } else if (motion_hold_timer >= hold_duration) {
-            const mySession = this.props.ovsession;
-            mySession.signal({
-              data: `${this.props.uid},hand-heart`,
-              to: [],
-              type: "motion",
-            });
-            post_static_timer = 100;
-            static_motion = 0;
-            motion_hold_timer = 0;
-          } else {
-            motion_hold_timer++;
-          }
-        }
+        const mySession = this.props.ovsession;
+        mySession.signal({
+          data: `${this.props.uid},hand-heart`,
+          to: [],
+          type: "motion",
+        });
         // console.log("하또");
         // emo.innerHTML = '<img src="/heart.gif" width="300" height="300">';
       } else if (emo_type == "test") {
@@ -246,12 +211,15 @@ class Camera extends Component {
           to: [],
           type: "motion",
         });
-        static_motion = 0;
-        motion_hold_timer = 0;
         // emo.innerHTML = '<img src="/test.gif" width="300" height="300">';
+      } else if (emo_type == "1") {
+        console.log("11111111111111111");
+        // emo.innerHTML = "1";
+      } else if (emo_type == "cake_hand") {
+        console.log("케이크꺼짐");
+        // emo.innerHTML = "케이크 꺼짐";
       } else {
         //이외일 경우 아무것도 보여주지 않음
-        motion_hold_timer -= 10;
       }
     }
   }
@@ -267,37 +235,63 @@ class Camera extends Component {
     const index_finger_mcp = keypointsArray[5].y;
     const middle_finger_tip = keypointsArray[12].y;
     const middle_finger_pip = keypointsArray[10].y;
+    const middle_finger_mcp = keypointsArray[9].y;
     const ring_finger_tip = keypointsArray[16].y;
     const ring_finger_pip = keypointsArray[14].y;
+    const ring_finger_mcp = keypointsArray[13].y;
     const pinky_finger_tip = keypointsArray[20].y;
     const pinky_finger_pip = keypointsArray[18].y;
+    const pinky_finger_mcp = keypointsArray[17].y;
+
+    const middle_finger_pip_x = keypointsArray[10].x;
+    const index_finger_tip_x = keypointsArray[8].x;
 
     if (
+      // v start
+      thumb_tip > index_finger_mcp &&
       index_finger_tip < index_finger_pip &&
       middle_finger_tip < middle_finger_pip &&
       ring_finger_tip > middle_finger_pip &&
+      ring_finger_pip < ring_finger_tip &&
       pinky_finger_tip > middle_finger_pip &&
+      pinky_finger_pip < pinky_finger_tip &&
       thumb_tip < ring_finger_tip
     ) {
-      return this.hand_motion(keypoints, "1"); //v
+      return this.hand_motion(keypoints, "1"); //v end
     } else if (
+      // 손꾸락 하트, 1 start
       thumb_tip < thumb_mcp &&
       index_finger_tip < index_finger_pip &&
       index_finger_pip < index_finger_mcp &&
       middle_finger_tip > middle_finger_pip &&
+      // middle_finger_mcp < middle_finger_tip &&
       ring_finger_tip > ring_finger_pip &&
-      pinky_finger_tip > pinky_finger_pip
+      // ring_finger_mcp < ring_finger_tip &&
+      pinky_finger_tip > pinky_finger_pip &&
+      // pinky_finger_mcp < pinky_finger_tip &&
+      (middle_finger_pip_x < index_finger_tip_x || middle_finger_pip_x > index_finger_tip_x)
     ) {
-      return this.hand_motion(keypoints, "2"); //손꾸락 하트
+      return this.hand_motion(keypoints, "2"); //손꾸락 하트, 1 end
     } else if (
+      //손 세로로 펴진거 start
       thumb_tip < thumb_ip &&
       index_finger_tip < index_finger_pip &&
       middle_finger_tip < middle_finger_pip &&
       ring_finger_tip < ring_finger_pip &&
-      pinky_finger_tip < pinky_finger_pip
+      pinky_finger_tip < pinky_finger_pip &&
+      thumb_mcp > pinky_finger_tip
     ) {
-      return this.hand_motion(keypoints, "3"); //손 펴진거
+      return this.hand_motion(keypoints, "3"); //손 세로로 펴진거 end
+    } else if (
+      //손 가로로 펴진거 start
+      thumb_tip < thumb_ip &&
+      index_finger_tip < middle_finger_tip &&
+      middle_finger_tip < ring_finger_tip &&
+      ring_finger_tip < pinky_finger_tip
+    ) {
+      return this.hand_motion(keypoints, "4"); //손 가로로 펴진거 end
     } else {
+      //그외
       return "none";
     }
   }
@@ -311,16 +305,28 @@ class Camera extends Component {
     const index_finger_mcp = keypointsArray[5].x;
     const index_finger_pip = keypointsArray[6].x;
     const index_finger_tip = keypointsArray[8].x;
+    const middle_finger_pip = keypointsArray[10].x;
     const middle_finger_tip = keypointsArray[12].x;
+    const ring_finger_pip = keypointsArray[14].x;
+    const ring_finger_tip = keypointsArray[16].x;
     const pinky_finger_pip = keypointsArray[18].x;
     const pinky_finger_tip = keypointsArray[20].x;
+    const timer_limit = 30;
 
     if (hand_flip_cnt >= 10) {
       hand_timer = 0;
       test_hand = 0;
       hand_flip_cnt = 0;
-      // spost_tatic_timer = 100; //이거 양수이면 불꽃놀이 계속 보입니다
+      // firework_timer = 100; //이거 양수이면 불꽃놀이 계속 보입니다
       return "test";
+    }
+
+    if (hand_cake_motion >= 4) {
+      hand_timer = 0;
+      test_hand = 0;
+      hand_cake_motion = 0; // hand_flip_cnt = 0;
+      motion_timer = 100;
+      return "cake_hand";
     }
 
     if (
@@ -328,8 +334,18 @@ class Camera extends Component {
       (thumb_tip > index_finger_tip && thumb_tip < pinky_finger_pip) ||
       (thumb_tip < index_finger_tip && thumb_tip > pinky_finger_pip)
     ) {
-      if (type == "1") {
+      motion_cnt++;
+      hand_timer = timer_limit;
+      if (type == "1" && motion_cnt >= 30) {
+        //브이 인식 너무 안되서 30으로 바꿨슴다
+        motion_timer = 100;
+        motion_cnt = 0;
         return "v";
+      }
+      if (type == "2" && motion_cnt >= 40) {
+        motion_timer = 100;
+        motion_cnt = 0;
+        return "1";
       }
     } //type 1 end
     else if (
@@ -341,54 +357,128 @@ class Camera extends Component {
         thumb_tip > index_finger_mcp &&
         index_finger_pip - thumb_ip < 20)
     ) {
-      if (type == "2") {
+      motion_cnt++;
+      hand_timer = timer_limit;
+      if (type == "2" && motion_cnt >= 40) {
+        motion_timer = 100;
+        motion_cnt = 0;
         return "heart";
       }
     } //type 2 end
     else if (
-      //손바닥 펴져있을때
+      //손바닥 세로로 펴져있을때
       //type 3 start
-      (thumb_tip < middle_finger_tip && middle_finger_tip < pinky_finger_tip) ||
-      (thumb_tip > middle_finger_tip && middle_finger_tip > pinky_finger_tip)
+      ((thumb_tip < middle_finger_tip && middle_finger_tip < pinky_finger_tip) ||
+        (thumb_tip > middle_finger_tip && middle_finger_tip > pinky_finger_tip)) &&
+      type == "3"
     ) {
       return this.hand_turn(keypoints, "palm");
     } //type 3 end
+    else if (
+      //손바닥 가로로 펴져있을때
+      //type 4 start
+      // thumb_ip < thumb_tip &&
+      ((index_finger_pip < index_finger_tip &&
+        middle_finger_pip < middle_finger_tip &&
+        ring_finger_pip < ring_finger_tip &&
+        pinky_finger_pip < pinky_finger_tip) ||
+        (index_finger_pip > index_finger_tip &&
+          middle_finger_pip > middle_finger_tip &&
+          ring_finger_pip > ring_finger_tip &&
+          pinky_finger_pip > pinky_finger_tip)) &&
+      type == "4"
+    ) {
+      return this.hand_turn(keypoints, "palm2");
+    } //type 4 end
     else {
       //이더저도아닐때
-      // ipost_f (static_timer > 0) return "test";
+      // if (firework_timer > 0) return "test";
+      motion_cnt = 0;
       return "none";
     }
   }
   hand_turn(keypoints, check) {
     const keypointsArray = keypoints;
+    const timer_limit = 30;
 
     const thumb_ip = keypointsArray[3].x;
+    const thumb_tip = keypointsArray[4].x;
+    const index_finger_pip = keypointsArray[6].x;
+    const index_finger_tip = keypointsArray[8].x;
     const middle_finger_pip = keypointsArray[10].x;
+    const middle_finger_tip = keypointsArray[12].x;
+    const ring_finger_pip = keypointsArray[14].x;
+    const ring_finger_tip = keypointsArray[16].x;
+    const pinky_finger_mcp = keypointsArray[17].x;
     const pinky_finger_pip = keypointsArray[18].x;
+    const pinky_finger_tip = keypointsArray[20].x;
 
-    //손바닥
-    if (check == "palm" && thumb_ip < middle_finger_pip && middle_finger_pip < pinky_finger_pip) {
+    //손 흔들기 손바닥
+    if (check == "palm" && thumb_ip < middle_finger_pip && middle_finger_pip < pinky_finger_mcp) {
       if (test_hand == 0) {
-        hand_timer = hand_flip_duration;
+        hand_timer = timer_limit;
         test_hand = 1;
       } else if (test_hand == 2 && hand_timer > 0) {
-        hand_timer = hand_flip_duration;
+        hand_timer = timer_limit;
         hand_flip_cnt++;
         test_hand = 1;
       }
     }
 
-    //손등
-    if (check == "palm" && thumb_ip > middle_finger_pip && middle_finger_pip > pinky_finger_pip) {
+    //손 흔들기 손등
+    if (check == "palm" && thumb_ip > middle_finger_pip && middle_finger_pip > pinky_finger_mcp) {
       if (test_hand == 0) {
-        hand_timer = hand_flip_duration;
+        hand_timer = timer_limit;
         test_hand = 2;
       } else if (test_hand == 1 && hand_timer > 0) {
-        hand_timer = hand_flip_duration;
+        hand_timer = timer_limit;
         hand_flip_cnt++;
         test_hand = 2;
       }
     }
+
+    //cake끌때 손 흔들기 손바닥
+    if (
+      check == "palm2" &&
+      // thumb_ip < thumb_tip &&
+      index_finger_pip < index_finger_tip &&
+      middle_finger_pip < middle_finger_tip &&
+      ring_finger_pip < ring_finger_tip &&
+      pinky_finger_pip < pinky_finger_tip &&
+      middle_finger_tip > 320
+    ) {
+      if (test_hand == 0) {
+        hand_timer = timer_limit;
+        test_hand = 1;
+      } else if (test_hand == 2 && hand_timer > 0) {
+        hand_timer = timer_limit;
+        hand_flip_cnt = 0;
+        hand_cake_motion++;
+        test_hand = 1;
+      }
+    }
+
+    //cake끌때 손 흔들기 손등
+    if (
+      check == "palm2" &&
+      // thumb_ip > thumb_tip &&
+      index_finger_pip > index_finger_tip &&
+      middle_finger_pip > middle_finger_tip &&
+      ring_finger_pip > ring_finger_tip &&
+      pinky_finger_pip > pinky_finger_tip &&
+      middle_finger_tip < 320
+    ) {
+      if (test_hand == 0) {
+        hand_timer = timer_limit;
+        test_hand = 2;
+      } else if (test_hand == 1 && hand_timer > 0) {
+        hand_timer = timer_limit;
+        hand_flip_cnt = 0;
+        hand_cake_motion++;
+        test_hand = 2;
+      }
+    }
+
     return "none";
   }
 
@@ -477,13 +567,15 @@ class Camera extends Component {
     } else if (hand_timer <= 0) {
       test_hand = 0;
       hand_flip_cnt = 0;
+      hand_cake_motion = 0;
       hand_timer = 0;
+      motion_cnt = 0;
     }
-    //정적 모션 출력 후 인식 일시중지
-    if (post_static_timer > 0) {
-      post_static_timer--;
-      if (post_static_timer == 0) {
-        // emo.innerHTML = "<p></p>";
+    // 모션 나오면 cnt 줄여서 없애기
+    if (motion_timer > 0) {
+      motion_timer--;
+      if (motion_timer == 0) {
+        emo.innerHTML = "<p></p>";
       }
     }
 
@@ -492,11 +584,6 @@ class Camera extends Component {
     if (hands && hands.length > 0 && tracking) {
       this.drawResults(hands); //detection 결과인 hands를 인자로 결과를 visualize 하는 drawResults 실행
     } else {
-      motion_hold_timer -= 10;
-      if (motion_hold_timer <= 0) {
-        static_motion = 0;
-        motion_hold_timer = 0;
-      }
       this.clearCtx();
     }
   }
