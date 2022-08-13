@@ -45,10 +45,6 @@
   font-family: "oldpicture";
 }
 
-.react-datepicker__day--disabled {
-  color: #cccccc;
-}
-
 .react-datepicker__day--selected {
   font-weight: bold;
   background: #fd7a99;
@@ -102,6 +98,12 @@
   color: navy;
 }
 
+.react-datepicker__day--disabled {
+  color: #cccccc !important;
+}
+
+
+
 .itemBox {
   position: relative;
 }
@@ -137,50 +139,56 @@ input[type="radio"] + label > img {
   transition: 100ms all;
 }
 
-.backCheckIcon {
+#itemImg.backCheckIcon {
   position: absolute;
-  top: 50px;
-  left: 100px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 50px;
   height: 50px;
 }
 
-.cake0CheckIcon {
+#itemImg.cake0CheckIcon {
   position: absolute;
-  top: 50px;
-  left: 65px;
-  width: 50px;
-  height: 50px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width:40px;
+  height: 40px;
 }
 
-.cake1CheckIcon {
+#itemImg.cake1CheckIcon {
   position: absolute;
-  top: 50px;
-  left: 55px;
-  width: 50px;
-  height: 50px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width:40px;
+  height: 40px;
 }
 
-.candle0CheckIcon {
+#itemImg.candle0CheckIcon {
   position: absolute;
-  top: 40px;
-  left: 30px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 40px;
   height: 40px;
 }
 
-.candle1CheckIcon {
+#itemImg.candle1CheckIcon {
   position: absolute;
-  top: 40px;
-  left: 35px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 40px;
   height: 40px;
 }
 
-.candle2CheckIcon {
+#itemImg.candle2CheckIcon {
   position: absolute;
-  top: 40px;
-  left: 30px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 40px;
   height: 40px;
 }

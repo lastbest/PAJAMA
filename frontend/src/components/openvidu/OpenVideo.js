@@ -472,8 +472,8 @@ class OpenVideo extends Component {
   
 
   render() {
-    const popover = (
-      <Popover className="popover">
+    const popover1 = (
+      <Popover className="popover1">
         <button className="takebtn" onClick={()=>{
           this.removediv()
           this.setState({shot:true})
@@ -857,7 +857,7 @@ class OpenVideo extends Component {
                   <OverlayTrigger
                     trigger="click"
                     placement="bottom"
-                    overlay={popover}
+                    overlay={popover1}
                   >
                     <Image
                       className="capture"
@@ -889,7 +889,7 @@ class OpenVideo extends Component {
                       height="60px"
                     ></img>
                   </button>
-                  <OverlayTrigger trigger="click" placement="bottom" overlay={popover}>
+                  <OverlayTrigger trigger="click" placement="bottom" overlay={popover1}>
                     <Image className="capture" src="/camera.png" alt="capture" style={{width:'60px', height:"60px"}}/>
                   </OverlayTrigger>
                   <OverlayTrigger

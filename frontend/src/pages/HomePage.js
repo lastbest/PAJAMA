@@ -118,19 +118,16 @@ const HomePage = () => {
                 <img src="/maintext3.png" style={{width:'80%', marginTop:"20px"}}/>
             </Img>
             <Img>
-                <img src="/설명1.png" style={{width:'50%'}}/>
+                <img src="/subtext1.png" style={{width:'70%'}}/>
             </Img>
             <Img>
-                <img src="/설명4.png" style={{width:'70%'}}/>
+                <img src="/subtext2.png" style={{width:'70%'}}/>
             </Img>
             <Img>
-                <img src="/설명5.png" style={{width:'70%'}}/>
+                <img src="/subtext3.png" style={{width:'70%'}}/>
             </Img>
             <Img>
-                <img src="/설명2.png" style={{width:'50%'}}/>
-            </Img>
-            <Img>
-                <img src="/설명3.png" style={{width:'50%'}}/>
+                <img src="/subtext4.png" style={{width:'70%'}}/>
             </Img>
 
             <Modal

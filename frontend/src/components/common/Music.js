@@ -111,21 +111,21 @@ function Player(props) {
           allowFullScreen
       ></iframe>
       <div>
-        <ImBackward2 className='Btn' size="24" style={{'margin':'10px'}} onClick={()=>{
+        <ImBackward2 className='Btn' size="24" style={{'margin':'10px', "color":"#FD7A99"}} onClick={()=>{
           setIdx((idx-1+videoList.length)%videoList.length)
           setIsPlay(true)
         }}></ImBackward2>
 
         {
-          isPlay ? <ImPause2 className='Btn' size="24" style={{'margin':'10px'}} onClick={()=>{
+          isPlay ? <ImPause2 className='Btn' size="24" style={{'margin':'10px', "color":"#FD7A99"}} onClick={()=>{
             isPlayVideo()
           }}></ImPause2> :
-          <ImPlay3 size="24" className='Btn' style={{'margin':'10px'}} onClick={()=>{
+          <ImPlay3 size="24" className='Btn' style={{'margin':'10px', "color":"#FD7A99"}} onClick={()=>{
             isPlayVideo()
           }}></ImPlay3>
         }
 
-        <ImForward3 className='Btn' size="24" style={{'margin':'10px'}} onClick={()=>{
+        <ImForward3 className='Btn' size="24" style={{'margin':'10px', "color":"#FD7A99"}} onClick={()=>{
           setIdx((idx+1)%videoList.length)
           setIsPlay(true)
         }}></ImForward3>
