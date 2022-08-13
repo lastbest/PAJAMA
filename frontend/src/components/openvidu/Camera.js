@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./OpenVideo.css";
 import { connect } from "react-redux";
-import { setOvSession, setUserId } from "../../ovsessionSlice";
+import { setOvSession, setUserId, setCake } from "../../modules/ovsessionSlice";
 import "react-circular-progressbar/dist/styles.css";
 
 import * as tf from "@tensorflow/tfjs";
@@ -15,8 +15,9 @@ tfjsWasm.setWasmPaths(
 const mapStateToProps = (state) => ({
   ovsession: state.ovsession.value,
   uid: state.ovsession.userid,
+  ovcake: state.ovsession.cake,
 });
-const mapDispatchToProps = { setOvSession, setUserId };
+const mapDispatchToProps = { setOvSession, setUserId, setCake };
 
 var publisher;
 //모션캡처 온오프
@@ -184,10 +185,10 @@ class Camera extends Component {
     if (hand.keypoints != null) {
       this.drawKeypoints(hand.keypoints, hand.handedness);
       const emo_type = this.drawEmoticon(hand.keypoints); //keypoints를 parsing해서 emo_type을 반환한다.
+      const mySession = this.props.ovsession;
 
       if (emo_type == "v") {
         //v포즈 취할 경우
-        const mySession = this.props.ovsession;
         mySession.signal({
           data: `${this.props.uid},hand-v`,
           to: [],
@@ -196,7 +197,6 @@ class Camera extends Component {
         // emo.innerHTML = '<img src="/v.jpg" width="300" height="300">';
       } else if (emo_type == "heart") {
         //손꾸락하트
-        const mySession = this.props.ovsession;
         mySession.signal({
           data: `${this.props.uid},hand-heart`,
           to: [],
@@ -205,7 +205,7 @@ class Camera extends Component {
         // console.log("하또");
         // emo.innerHTML = '<img src="/heart.gif" width="300" height="300">';
       } else if (emo_type == "test") {
-        const mySession = this.props.ovsession;
+        //confetti
         mySession.signal({
           data: `${this.props.uid},hand-flip`,
           to: [],
@@ -213,10 +213,21 @@ class Camera extends Component {
         });
         // emo.innerHTML = '<img src="/test.gif" width="300" height="300">';
       } else if (emo_type == "1") {
-        console.log("11111111111111111");
+        //손가락 1
+        mySession.signal({
+          data: `${this.props.uid},hand-one`,
+          to: [],
+          type: "motion",
+        });
         // emo.innerHTML = "1";
       } else if (emo_type == "cake_hand") {
-        console.log("케이크꺼짐");
+        //케이크 끄기
+        mySession.signal({
+          data: `${this.props.uid},${this.props.ovcake}`,
+          to: [],
+          type: "cakeshow",
+        });
+        // connect.log("케이크 보내고 현재상태는=========", this.props);
         // emo.innerHTML = "케이크 꺼짐";
       } else {
         //이외일 경우 아무것도 보여주지 않음

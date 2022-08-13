@@ -1,5 +1,5 @@
 import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
-import ovsessionSlice from "./ovsessionSlice";
+import ovsessionSlice from "./modules/ovsessionSlice";
 
 let store = configureStore({
   reducer: { ovsession: ovsessionSlice },

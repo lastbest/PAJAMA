@@ -12,12 +12,9 @@ import UserVideoComponent from "./UserVideoComponent";
 import Messages from "./Messages";
 import FadeInOut from "../common/FadeInOut";
 import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Popover from "react-bootstrap/Popover";
 import Camera from "./Camera";
 import { connect } from "react-redux";
-import { setOvSession, setUserId } from "../../ovsessionSlice";
+import { setOvSession, setUserId, setCake } from "../../modules/ovsessionSlice";
 
 import html2canvas from "html2canvas";
 import ReactCanvasConfetti from "react-canvas-confetti";
@@ -26,12 +23,9 @@ import ReactCanvasConfetti from "react-canvas-confetti";
 const mapStateToProps = (state) => ({
   ovsession: state.ovsession.value,
   uid: state.ovsession.userid,
+  ovcake: state.ovsession.value,
 });
-const mapDispatchToProps = () => ({
-  setOvSession,
-  setUserId,
-});
-// const mapDispatchToProps = { increment, decrement, incrementByAmount, setOvSession };
+const mapDispatchToProps = () => ({ setOvSession, setUserId, setCake });
 
 const canvasStyles = {
   position: "fixed",
@@ -65,6 +59,7 @@ class OpenVideo extends Component {
       show2: false,
       cakeshow: false,
     };
+    this.props.setCake("false");
 
     this.joinSession = this.joinSession.bind(this);
     this.leaveSession = this.leaveSession.bind(this);
@@ -157,11 +152,15 @@ class OpenVideo extends Component {
   }
 
   sendcakeByClick() {
-    this.setState({
-      cakeshow: !this.state.cakeshow,
-    });
+    // 모션인식이나 음성인식으로 케이크를 끌때는 로컬 스테이트를 바꾸기가 힘들어서 이렇게 변경
+    // 케이크 시그널을 보낼때 로컬 스테이트는 바꾸지 않는다.
+    // => 내가 나한테 보낸 시그널도 조건문 거치지않고 받아서 openvideo.js안에서 스테이트를 변경하도록
+    // this.setState({
+    //   cakeshow: !this.state.cakeshow,
+    // });
+    // this.props.setCake(this.state.cakeshow);
     const mySession = this.state.session;
-    console.log(this.state.cakeshow, this.state.myUserName);
+    // console.log(this.state.cakeshow, this.state.myUserName);
 
     mySession.signal({
       data: `${this.state.myUserName},${this.state.cakeshow}`,
@@ -256,11 +255,12 @@ class OpenVideo extends Component {
 
         mySession.on("signal:cakeshow", (event) => {
           let cakeShow = event.data.split(",");
-          if (cakeShow[0] !== this.state.myUserName) {
-            this.setState({
-              cakeshow: cakeShow[1] === "true" ? false : true,
-            });
-          }
+          // if (cakeShow[0] !== this.state.myUserName) { //sendcakeByclick 에서 스테이트 직접 변경하지 않고 내가보낸 시그널도 내가 직접받게 구현함
+          this.setState({
+            cakeshow: cakeShow[1] === "true" ? false : true,
+          });
+          this.props.setCake(cakeShow[1] === "true" ? "false" : "true");
+          // }
         });
 
         //모션인식 받는 부분
@@ -274,6 +274,8 @@ class OpenVideo extends Component {
                 break;
               case "hand-flip":
                 this.fire();
+                break;
+              case "hand-one":
                 break;
               default:
                 break;
