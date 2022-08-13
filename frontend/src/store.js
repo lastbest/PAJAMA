@@ -1,8 +1,11 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
+import ovsessionSlice from "./modules/ovsessionSlice";
 
-export const store = configureStore({
-  reducer: {},
+let store = configureStore({
+  reducer: { ovsession: ovsessionSlice },
+  middleware: getDefaultMiddleware({
+    serializableCheck: false,
+  }),
 });
 
-console.log("store");
 export default store;

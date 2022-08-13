@@ -13,74 +13,52 @@ import Messages from "./Messages";
 import FadeInOut from "../common/FadeInOut";
 import Modal from "react-bootstrap/Modal";
 import Camera from "./Camera";
+import { connect } from "react-redux";
+import { setOvSession, setUserId, setCake } from "../../modules/ovsessionSlice";
 import ReactDOM from "react-dom";
 import { Popover, OverlayTrigger, Image } from "react-bootstrap";
 import Speech from "./Speech";
 import html2canvas from "html2canvas";
+import ReactCanvasConfetti from "react-canvas-confetti";
 import * as tf from "@tensorflow/tfjs";
 import * as tfjsWasm from "@tensorflow/tfjs-backend-wasm";
 import * as handdetection from "@tensorflow-models/hand-pose-detection";
 import { setThreadsCount } from "@tensorflow/tfjs-backend-wasm";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
-import Music from './../common/Music'
-import b64toBlob from 'b64-to-blob'
+import Music from "./../common/Music";
+import b64toBlob from "b64-to-blob";
 
 tfjsWasm.setWasmPaths(
   `https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm@${tfjsWasm.version_wasm}/dist/`
 );
 
+//rtk 관련코드
+const mapStateToProps = (state) => ({
+  ovsession: state.ovsession.value,
+  uid: state.ovsession.userid,
+  ovcake: state.ovsession.value,
+});
+const mapDispatchToProps = () => ({ setOvSession, setUserId, setCake });
+
+const canvasStyles = {
+  position: "fixed",
+  pointerEvents: "none",
+  width: "100%",
+  height: "100%",
+  top: 0,
+  left: 0,
+};
+
 var publisher;
-//모션캡처 온오프
-let tracking = true;
-// function toggleTraking() {
-//   if (tracking) tracking = false;
-//   else tracking = true;
-// }
-
-let emo = document.querySelector("#emo");
-let video = document.querySelector("#video");
-
-let detector, camera, stats;
-let startInferenceTime,
-  numInferences = 0;
-let inferenceTimeSum = 0,
-  lastPanelUpdate = 0;
-
-//손가락 뒤집기 코드
-let test_hand = 0; //손등 : 1, 손바닥 : 2, 손 안펴져있으면 : 0
-let hand_timer = 0; //손 뒤집을때가지 시간
-let hand_flip_cnt = 0; //손뒤집은횟수
-let firework_timer = 0;
-
-const fingerLookupIndices = {
-  thumb: [0, 1, 2, 3, 4],
-  indexFinger: [0, 5, 6, 7, 8],
-  middleFinger: [0, 9, 10, 11, 12],
-  ringFinger: [0, 13, 14, 15, 16],
-  pinky: [0, 17, 18, 19, 20],
-}; // 각 keypoint(손가락)을 이어주는 연결을 표현하기 위함
-
-function isiOS() {
-  return /iPhone|iPad|iPod/i.test(navigator.userAgent);
-}
-
-function isAndroid() {
-  return /Android/i.test(navigator.userAgent);
-}
-
-function isMobile() {
-  //mobile인지 확인
-  return isAndroid() || isiOS();
-}
 
 const OPENVIDU_SERVER_URL = "https://i7c203.p.ssafy.io:8447";
 const OPENVIDU_SERVER_SECRET = "PAZAMA";
 
-
-
 class OpenVideo extends Component {
   constructor(props) {
     super(props);
+    this.animationInstance = null;
+
     this.state = {
       mySessionId: "",
       myUserName: "temp",
@@ -106,6 +84,7 @@ class OpenVideo extends Component {
       imgUrl: undefined,
       countCompleted: false,
     };
+    this.props.setCake("false");
 
     // 자신의 회원정보 불러오기
     let token = sessionStorage.getItem("accessToken");
@@ -230,6 +209,7 @@ class OpenVideo extends Component {
         },
       ],
     });
+
     const mySession = this.state.session;
 
     mySession.signal({
@@ -244,10 +224,13 @@ class OpenVideo extends Component {
   }
 
   sendcakeByClick() {
-    this.setState({
-      cakeshow: !this.state.cakeshow,
-    });
-
+    // 모션인식이나 음성인식으로 케이크를 끌때는 로컬 스테이트를 바꾸기가 힘들어서 이렇게 변경
+    // 케이크 시그널을 보낼때 로컬 스테이트는 바꾸지 않는다.
+    // => 내가 나한테 보낸 시그널도 조건문 거치지않고 받아서 openvideo.js안에서 스테이트를 변경하도록
+    // this.setState({
+    //   cakeshow: !this.state.cakeshow,
+    // });
+    // this.props.setCake(this.state.cakeshow);
     const mySession = this.state.session;
     console.log(this.state.cakeshow, this.state.myUserName);
 
@@ -306,6 +289,9 @@ class OpenVideo extends Component {
       () => {
         var mySession = this.state.session;
 
+        this.props.setOvSession(this.state.session);
+        this.props.setUserId(this.state.myUserName);
+
         // --- 3) Specify the actions when events take place in the session ---
 
         // On every new Stream received...
@@ -339,10 +325,32 @@ class OpenVideo extends Component {
 
         mySession.on("signal:cakeshow", (event) => {
           let cakeShow = event.data.split(",");
-          if (cakeShow[0] !== this.state.myUserName) {
-            this.setState({
-              cakeshow: cakeShow[1] === "true" ? false : true,
-            });
+          // if (cakeShow[0] !== this.state.myUserName) { //sendcakeByclick 에서 스테이트 직접 변경하지 않고 내가보낸 시그널도 내가 직접받게 구현함
+          this.setState({
+            cakeshow: cakeShow[1] === "true" ? false : true,
+          });
+          this.props.setCake(cakeShow[1] === "true" ? "false" : "true");
+          // }
+        });
+
+        //모션인식 받는 부분
+        mySession.on("signal:motion", (event) => {
+          let chatdata = event.data.split(",");
+          if (chatdata[0] !== this.state.myUserName) {
+            switch (chatdata[1]) {
+              case "hand-v":
+                break;
+              case "hand-heart":
+                break;
+              case "hand-flip":
+                this.fire();
+                break;
+              case "hand-one":
+                break;
+              default:
+                break;
+            }
+            console.log(chatdata[1]);
           }
         });
 
@@ -368,9 +376,7 @@ class OpenVideo extends Component {
             .connect(token, { clientData: this.state.myUserName })
             .then(async () => {
               var devices = await this.OV.getDevices();
-              var videoDevices = devices.filter(
-                (device) => device.kind === "videoinput"
-              );
+              var videoDevices = devices.filter((device) => device.kind === "videoinput");
 
               // --- 5) Get your own camera stream ---
 
@@ -435,9 +441,7 @@ class OpenVideo extends Component {
   async switchCamera() {
     try {
       const devices = await this.OV.getDevices();
-      var videoDevices = devices.filter(
-        (device) => device.kind === "videoinput"
-      );
+      var videoDevices = devices.filter((device) => device.kind === "videoinput");
 
       if (videoDevices && videoDevices.length > 1) {
         var newVideoDevice = videoDevices.filter(
@@ -469,55 +473,61 @@ class OpenVideo extends Component {
       console.error(e);
     }
   }
-  
 
   render() {
     const popover1 = (
       <Popover className="popover1">
-        <button className="takebtn" onClick={()=>{
-          this.removediv()
-          this.setState({shot:true})
-          }}>사진찍기</button>
-        {
-          this.state.shot ? 
-        <div className="timer-wrapper">
-        <CountdownCircleTimer
-          isPlaying
-          duration={3}
-          colors={["#004777"]}
-          trailStrokeWidth={0}
-          strokeWidth={0}
-          onComplete={()=>{
-            // 사진찍는 함수 삽입
-            this.takepicture()
-            this.setState({shot:false})
-            console.log('종료')
+        <button
+          className="takebtn"
+          onClick={() => {
+            this.removediv();
+            this.setState({ shot: true });
           }}
         >
-          {({ remainingTime }) => remainingTime}
-        </CountdownCircleTimer>
-      </div> : null
-        }
-      
+          사진찍기
+        </button>
+        {this.state.shot ? (
+          <div className="timer-wrapper">
+            <CountdownCircleTimer
+              isPlaying
+              duration={3}
+              colors={["#004777"]}
+              trailStrokeWidth={0}
+              strokeWidth={0}
+              onComplete={() => {
+                // 사진찍는 함수 삽입
+                this.takepicture();
+                this.setState({ shot: false });
+                console.log("종료");
+              }}
+            >
+              {({ remainingTime }) => remainingTime}
+            </CountdownCircleTimer>
+          </div>
+        ) : null}
+
         <div id="frame" className="frame"></div>
         <div className="bar">
           <p className="text5">최대 5장까지 저장할 수 있습니다.</p>
-          <button className="downloadbtn" onClick={()=>{
-            console.log(this.state.imgUrl)
-            let token = sessionStorage.getItem("accessToken");
-            this.removediv()
-            axios({
-              url: 'https://i7c203.p.ssafy.io/api/picture',
-              method:'post',
-              headers:{
-                accessToken: token,
-              },
-              data: {
-                roomIdx: this.state.roomId,
-                picture:this.state.imgUrl
-              }
-            })
-          }}>
+          <button
+            className="downloadbtn"
+            onClick={() => {
+              console.log(this.state.imgUrl);
+              let token = sessionStorage.getItem("accessToken");
+              this.removediv();
+              axios({
+                url: "https://i7c203.p.ssafy.io/api/picture",
+                method: "post",
+                headers: {
+                  accessToken: token,
+                },
+                data: {
+                  roomIdx: this.state.roomId,
+                  picture: this.state.imgUrl,
+                },
+              });
+            }}
+          >
             <img className="download" src="/download.png" alt="download" />
           </button>
           <button className="trashbtn" onClick={this.removediv}>
@@ -575,7 +585,7 @@ class OpenVideo extends Component {
     const timerProps = {
       isPlaying: true,
       size: 120,
-      strokeWidth: 6
+      strokeWidth: 6,
     };
 
     const renderTime = (dimension, time) => {
@@ -591,9 +601,8 @@ class OpenVideo extends Component {
     const getTimeMinutes = (time) => ((time % hourSeconds) / minuteSeconds) | 0;
     const getTimeHours = (time) => ((time % daySeconds) / hourSeconds) | 0;
     const getTimeDays = (time) => (time / daySeconds) | 0;
-    
 
-    const stratTime = Date.now() / 1000; 
+    const stratTime = Date.now() / 1000;
     const endTime = new Date(this.state.partyDate) / 1000;
     const remainingTime = endTime - stratTime;
     const days = Math.ceil(remainingTime / daySeconds);
@@ -603,8 +612,7 @@ class OpenVideo extends Component {
     function textOverlay() {
       publisher.stream
         .applyFilter("GStreamerFilter", {
-          command:
-            "timeoverlay valignment=bottom halignment=right font-desc='Sans, 20'",
+          command: "timeoverlay valignment=bottom halignment=right font-desc='Sans, 20'",
         })
         .then(() => {
           console.log("time added!");
@@ -698,10 +706,10 @@ class OpenVideo extends Component {
                     strokeWidth={10}
                     duration={daysDuration}
                     initialRemainingTime={remainingTime}
-                    onComplete={()=>{
+                    onComplete={() => {
                       // countCompleted state가 true가 되면 참여하기 버튼이 보이게 구현
-                      this.setState({countCompleted:true})
-                      console.log('타이머 종료')
+                      this.setState({ countCompleted: true });
+                      console.log("타이머 종료");
                     }}
                   >
                     {({ elapsedTime, color }) => (
@@ -717,7 +725,7 @@ class OpenVideo extends Component {
                     duration={daySeconds}
                     initialRemainingTime={remainingTime % daySeconds}
                     onComplete={(totalElapsedTime) => ({
-                      shouldRepeat: remainingTime - totalElapsedTime > hourSeconds
+                      shouldRepeat: remainingTime - totalElapsedTime > hourSeconds,
                     })}
                   >
                     {({ elapsedTime, color }) => (
@@ -733,7 +741,7 @@ class OpenVideo extends Component {
                     strokeWidth={10}
                     initialRemainingTime={remainingTime % hourSeconds}
                     onComplete={(totalElapsedTime) => ({
-                      shouldRepeat: remainingTime - totalElapsedTime > minuteSeconds
+                      shouldRepeat: remainingTime - totalElapsedTime > minuteSeconds,
                     })}
                   >
                     {({ elapsedTime, color }) => (
@@ -749,7 +757,7 @@ class OpenVideo extends Component {
                     duration={minuteSeconds}
                     initialRemainingTime={remainingTime % minuteSeconds}
                     onComplete={(totalElapsedTime) => ({
-                      shouldRepeat: remainingTime - totalElapsedTime > 0
+                      shouldRepeat: remainingTime - totalElapsedTime > 0,
                     })}
                   >
                     {({ elapsedTime, color }) => (
@@ -800,27 +808,14 @@ class OpenVideo extends Component {
                     required
                   />
                 </p> */}
-                {
-                  this.state.countCompleted ?
-                <p className="text-center">
-                  <input
-                    className="joinbtn"
-                    name="commit"
-                    type="submit"
-                    value="참여하기"
-                  />
-                </p> :
-                null
-                }
-                {this.state.partyHost === this.state.myEmail &&
-                this.state.partyHost != "" ? (
+                {this.state.countCompleted ? (
                   <p className="text-center">
-                    <input
-                      className="joinbtn"
-                      name="commit"
-                      type="submit"
-                      value="파티수정"
-                    />
+                    <input className="joinbtn" name="commit" type="submit" value="참여하기" />
+                  </p>
+                ) : null}
+                {this.state.partyHost === this.state.myEmail && this.state.partyHost != "" ? (
+                  <p className="text-center">
+                    <input className="joinbtn" name="commit" type="submit" value="파티수정" />
                   </p>
                 ) : (
                   <p>게스트입니다.</p>
@@ -843,22 +838,12 @@ class OpenVideo extends Component {
                 height="75px"
               ></img>
               {/* 호스트인지 게스트인지 버튼 구분 */}
-              {this.state.partyHost === this.state.myEmail &&
-              this.state.partyHost != "" ? (
+              {this.state.partyHost === this.state.myEmail && this.state.partyHost != "" ? (
                 <>
                   <button className="navbtn" onClick={this.sendcakeByClick}>
-                    <img
-                      src="/birthday-cake.png"
-                      alt="logo"
-                      width="60px"
-                      height="60px"
-                    ></img>
+                    <img src="/birthday-cake.png" alt="logo" width="60px" height="60px"></img>
                   </button>
-                  <OverlayTrigger
-                    trigger="click"
-                    placement="bottom"
-                    overlay={popover1}
-                  >
+                  <OverlayTrigger trigger="click" placement="bottom" overlay={popover1}>
                     <Image
                       className="capture"
                       src="/camera.png"
@@ -866,11 +851,7 @@ class OpenVideo extends Component {
                       style={{ width: "60px", height: "60px" }}
                     />
                   </OverlayTrigger>
-                  <OverlayTrigger
-                    trigger="click"
-                    placement="bottom"
-                    overlay={popover3}
-                  >
+                  <OverlayTrigger trigger="click" placement="bottom" overlay={popover3}>
                     <Image
                       className="music"
                       src="/music.png"
@@ -882,21 +863,17 @@ class OpenVideo extends Component {
               ) : (
                 <>
                   <button className="navbtn">
-                    <img
-                      src="/birthday-cake.png"
-                      alt="logo"
-                      width="60px"
-                      height="60px"
-                    ></img>
+                    <img src="/birthday-cake.png" alt="logo" width="60px" height="60px"></img>
                   </button>
                   <OverlayTrigger trigger="click" placement="bottom" overlay={popover1}>
-                    <Image className="capture" src="/camera.png" alt="capture" style={{width:'60px', height:"60px"}}/>
+                    <Image
+                      className="capture"
+                      src="/camera.png"
+                      alt="capture"
+                      style={{ width: "60px", height: "60px" }}
+                    />
                   </OverlayTrigger>
-                  <OverlayTrigger
-                    trigger="click"
-                    placement="bottom"
-                    overlay={popover3}
-                  >
+                  <OverlayTrigger trigger="click" placement="bottom" overlay={popover3}>
                     <Image
                       className="music"
                       src="/music.png"
@@ -911,9 +888,7 @@ class OpenVideo extends Component {
               <div id="main-container" className={Main}>
                 {this.state.mainStreamManager !== undefined ? (
                   <div id="main-video" className="main-video">
-                    <UserVideoComponent
-                      streamManager={this.state.mainStreamManager}
-                    />
+                    <UserVideoComponent streamManager={this.state.mainStreamManager} />
                     {/* <input
                       className="btn btn-large btn-success"
                       type="button"
@@ -935,18 +910,8 @@ class OpenVideo extends Component {
                   </div>
                 ))}
 
-                <img
-                  id="cake1"
-                  className={Cakeshow}
-                  src="/cake1.png"
-                  alt="cake1"
-                ></img>
-                <img
-                  id="heart"
-                  className={Candleshow}
-                  src="/heart.png"
-                  alt="heart"
-                />
+                <img id="cake1" className={Cakeshow} src="/cake1.png" alt="cake1"></img>
+                <img id="heart" className={Candleshow} src="/heart.png" alt="heart" />
               </div>
 
               <div>
@@ -1005,11 +970,7 @@ class OpenVideo extends Component {
                     <img className="micoff" src="/micoff.png" />
                   )}
                 </button>
-                <OverlayTrigger
-                  trigger="click"
-                  placement="top"
-                  overlay={popover2}
-                >
+                <OverlayTrigger trigger="click" placement="top" overlay={popover2}>
                   <Image
                     className="voice"
                     src="/voice.png"
@@ -1027,31 +988,20 @@ class OpenVideo extends Component {
             </div>
             <Camera style="display: none" />
             <Speech />
+            <ReactCanvasConfetti refConfetti={this.getInstance} style={canvasStyles} />
           </div>
         ) : null}
         {/* <div class="canvas-wrapper"></div> */}
 
-        <Modal
-          show={this.state.show}
-          className="chatmodal"
-          onHide={this.toggleShow}
-        >
+        <Modal show={this.state.show} className="chatmodal" onHide={this.toggleShow}>
           <div>
             <div className="chatbox__support chatbox--active">
               <div style={{ "text-align": "center" }}>
-                <img
-                  src="/pazamafont.png"
-                  alt="logo"
-                  width="80px"
-                  height="40px"
-                ></img>
+                <img src="/pazamafont.png" alt="logo" width="80px" height="40px"></img>
               </div>
 
               <div className="chatbox__messages" ref="chatoutput">
-                <Messages
-                  messages={messages}
-                  myUserName={this.state.myUserName}
-                />
+                <Messages messages={messages} myUserName={this.state.myUserName} />
               </div>
 
               <div className="chatbox__footer">
@@ -1065,10 +1015,7 @@ class OpenVideo extends Component {
                   value={this.state.message}
                 />
                 {this.state.message !== "" ? (
-                  <button
-                    className="chatbox__send--footer"
-                    onClick={this.sendmessageByClick}
-                  >
+                  <button className="chatbox__send--footer" onClick={this.sendmessageByClick}>
                     전송
                   </button>
                 ) : (
@@ -1113,8 +1060,7 @@ class OpenVideo extends Component {
       axios
         .post(OPENVIDU_SERVER_URL + "/openvidu/api/sessions", data, {
           headers: {
-            Authorization:
-              "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
+            Authorization: "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
             "Content-Type": "application/json",
           },
         })
@@ -1142,9 +1088,7 @@ class OpenVideo extends Component {
                   '"'
               )
             ) {
-              window.location.assign(
-                OPENVIDU_SERVER_URL + "/accept-certificate"
-              );
+              window.location.assign(OPENVIDU_SERVER_URL + "/accept-certificate");
             }
           }
         });
@@ -1160,20 +1104,12 @@ class OpenVideo extends Component {
         },
       });
       axios
-        .post(
-          OPENVIDU_SERVER_URL +
-            "/openvidu/api/sessions/" +
-            sessionId +
-            "/connection",
-          data,
-          {
-            headers: {
-              Authorization:
-                "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
-              "Content-Type": "application/json",
-            },
-          }
-        )
+        .post(OPENVIDU_SERVER_URL + "/openvidu/api/sessions/" + sessionId + "/connection", data, {
+          headers: {
+            Authorization: "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
+            "Content-Type": "application/json",
+          },
+        })
         .then((response) => {
           console.log("TOKEN", response);
           resolve(response.data.token);
@@ -1188,13 +1124,13 @@ class OpenVideo extends Component {
     // const targetvideo = document.querySelector("#localUser").querySelector("video");
     html2canvas(targetvideo).then((xcanvas) => {
       const canvdata = xcanvas.toDataURL("image/png");
-      
-      const mimeType = 'image/png'   // image/jpeg
-      const realData = canvdata.split(',')[1]   // 이 경우에선 /9j/4AAQSkZJRgABAQAAAQABAAD...
-      const blob = b64toBlob(realData, mimeType)
+
+      const mimeType = "image/png"; // image/jpeg
+      const realData = canvdata.split(",")[1]; // 이 경우에선 /9j/4AAQSkZJRgABAQAAAQABAAD...
+      const blob = b64toBlob(realData, mimeType);
       // document.getElementById('myimage').src = window.URL.createObjectURL(blob)
-     
-      this.setState({imgUrl:window.URL.createObjectURL(blob)})
+
+      this.setState({ imgUrl: window.URL.createObjectURL(blob) });
       var photo = document.createElement("img");
       photo.setAttribute("src", canvdata);
       photo.setAttribute("width", 200);
@@ -1207,6 +1143,47 @@ class OpenVideo extends Component {
     const framediv = document.getElementById("frame");
     framediv.innerHTML = "";
   }
+  //종이꽃효과
+  makeShot = (particleRatio, opts) => {
+    this.animationInstance &&
+      this.animationInstance({
+        ...opts,
+        origin: { y: 0.7 },
+        particleCount: Math.floor(200 * particleRatio),
+      });
+  };
+  fire = () => {
+    this.makeShot(0.25, {
+      spread: 26,
+      startVelocity: 55,
+    });
+
+    this.makeShot(0.2, {
+      spread: 60,
+    });
+
+    this.makeShot(0.35, {
+      spread: 100,
+      decay: 0.91,
+      scalar: 0.8,
+    });
+
+    this.makeShot(0.1, {
+      spread: 120,
+      startVelocity: 25,
+      decay: 0.92,
+      scalar: 1.2,
+    });
+
+    this.makeShot(0.1, {
+      spread: 120,
+      startVelocity: 45,
+    });
+  };
+  getInstance = (instance) => {
+    this.animationInstance = instance;
+  };
 }
 
-export default OpenVideo;
+// export default OpenVideo;
+export default connect(mapStateToProps, mapDispatchToProps())(OpenVideo);
