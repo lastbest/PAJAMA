@@ -177,9 +177,21 @@
 .micoff {
   height: 50px;
   width: 50px;
+  transform: scaleX(-1);
 }
 
 .micon {
+  height: 50px;
+  width: 50px;
+}
+
+
+.voicerecog-btn {
+  background: none;
+  border: none;
+}
+
+.voicerecog {
   height: 50px;
   width: 50px;
 }
@@ -288,11 +300,18 @@
 
 .musicmodal {
   overflow-y: initial !important;
-  width: 300px;
+  width: 280px;
+  display:flex;
+  justify-content: center;
+  align-items: center;
   position: fixed;
   top: 15%;
   left: 70%;
+  background-color: #fd7a99;
+  border-radius: 10px;
+  height: 350px;
 }
+
 
 .modal-backdrop {
   --bs-backdrop-bg: none;
