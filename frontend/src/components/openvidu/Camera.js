@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./OpenVideo.css";
 import { connect } from "react-redux";
-import { setOvSession, setUserId, setCake } from "../../modules/ovsessionSlice";
+import { setOvSession, setUserId, setCake, setMusic } from "../../modules/ovsessionSlice";
 import "react-circular-progressbar/dist/styles.css";
 
 import * as tf from "@tensorflow/tfjs";
@@ -16,8 +16,9 @@ const mapStateToProps = (state) => ({
   ovsession: state.ovsession.value,
   uid: state.ovsession.userid,
   ovcake: state.ovsession.cake,
+  ovmusic: state.ovsession.music,
 });
-const mapDispatchToProps = { setOvSession, setUserId, setCake };
+const mapDispatchToProps = { setOvSession, setUserId, setCake, setMusic };
 
 var publisher;
 //모션캡처 온오프
