@@ -78,10 +78,11 @@ class OpenVideo extends Component {
       partyHost: "",
       partyName: "",
       partyDesc: "",
-      partyDate: "2099-09-30 12:22:22",
+      partyDate: props.partyDate,
       shot: false,
       imgUrl: undefined,
-      countCompleted: false,
+      countCompleted: true,
+      count: 0,
     };
     this.props.setCake("false");
 
@@ -121,7 +122,6 @@ class OpenVideo extends Component {
           partyHost: res.data.result.partyHost,
           partyName: res.data.result.partyName,
           partyDesc: res.data.result.partyDesc,
-          partyDate: res.data.result.partyDate,
         });
         if (this.state.partyHost == this.state.myEmail) {
           this.setState((state) => ({ isHost: true }));
@@ -557,12 +557,6 @@ class OpenVideo extends Component {
       </Popover>
     );
 
-    const popover3 = (
-      <Popover className="popover3">
-        <Music />
-      </Popover>
-    );
-
     const mySessionId = this.state.mySessionId;
     const messages = this.state.messages;
     const isHost = this.state.isHost;
@@ -777,17 +771,14 @@ class OpenVideo extends Component {
                     colors="#218380"
                     strokeWidth={10}
                     duration={minuteSeconds}
-                    initialRemainingTime={remainingTime}
+                    initialRemainingTime={remainingTime % minuteSeconds}
                     onComplete={(totalElapsedTime) => ({
                       shouldRepeat: remainingTime - totalElapsedTime > 0,
                     })}
                   >
                     {({ elapsedTime, color }) => (
                       <span style={{ color }}>
-                        {renderTime(
-                          "seconds",
-                          getTimeSeconds(elapsedTime) % 60
-                        )}
+                        {renderTime("seconds", getTimeSeconds(elapsedTime))}
                       </span>
                     )}
                   </CountdownCircleTimer>
@@ -840,6 +831,14 @@ class OpenVideo extends Component {
               {this.state.partyHost === this.state.myEmail &&
               this.state.partyHost != "" ? (
                 <>
+                  <div className="musicmodal">
+                    <div>
+                      <div className="musicDiv" style={{ display: "none" }}>
+                        <Music />
+                        <div className="chatbox__footer"></div>
+                      </div>
+                    </div>
+                  </div>
                   <button className="navbtn" onClick={this.sendcakeByClick}>
                     <img
                       src="/birthday-cake.png"
@@ -860,21 +859,36 @@ class OpenVideo extends Component {
                       style={{ width: "60px", height: "60px" }}
                     />
                   </OverlayTrigger>
-                  <OverlayTrigger
-                    trigger="click"
-                    placement="bottom"
-                    overlay={popover3}
-                  >
-                    <Image
-                      className="music"
-                      src="/music.png"
-                      alt="logo"
-                      style={{ width: "60px", height: "60px" }}
-                    />
-                  </OverlayTrigger>
+                  <Image
+                    type="button"
+                    onClick={() => {
+                      if (this.state.count % 2 == 0) {
+                        const di = (document.querySelector(
+                          ".musicDiv"
+                        ).style.display = "block");
+                      } else {
+                        const di = (document.querySelector(
+                          ".musicDiv"
+                        ).style.display = "none");
+                      }
+                      this.setState({ count: this.state.count + 1 });
+                    }}
+                    className="music"
+                    src="/music.png"
+                    alt="logo"
+                    style={{ width: "60px", height: "60px" }}
+                  />
                 </>
               ) : (
                 <>
+                  <div className="musicmodal">
+                    <div>
+                      <div className="musicDiv" style={{ display: "block" }}>
+                        <Music />
+                        <div className="chatbox__footer"></div>
+                      </div>
+                    </div>
+                  </div>
                   <button className="navbtn">
                     <img
                       src="/birthday-cake.png"
@@ -895,21 +909,16 @@ class OpenVideo extends Component {
                       style={{ width: "60px", height: "60px" }}
                     />
                   </OverlayTrigger>
-                  <OverlayTrigger
-                    trigger="click"
-                    placement="bottom"
-                    overlay={popover3}
-                  >
-                    <Image
-                      className="music"
-                      src="/music.png"
-                      alt="logo"
-                      style={{ width: "60px", height: "60px" }}
-                    />
-                  </OverlayTrigger>
+                  <Image
+                    className="music"
+                    src="/music.png"
+                    alt="logo"
+                    style={{ width: "60px", height: "60px" }}
+                  />
                 </>
               )}
             </div>
+
             <div id="session" className="main-session">
               <div id="main-container" className={Main}>
                 {this.state.mainStreamManager !== undefined ? (
