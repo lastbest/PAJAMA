@@ -1017,6 +1017,9 @@ class OpenVideo extends Component {
                     <img className="micoff" src="/micoff.png" />
                   )}
                 </button>
+                <button className="voicerecog-btn">
+                    <img className="voicerecog" src="/voicerecog.png"></img>
+                </button>
                 <OverlayTrigger
                   trigger="click"
                   placement="top"
