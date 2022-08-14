@@ -1,7 +1,7 @@
 .stream-video {
   padding: 0;
   margin: auto;
-  height:auto;
+  height: auto;
 }
 
 .header {
@@ -103,7 +103,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height:auto;
+  height: auto;
 }
 
 .cake {
@@ -286,15 +286,23 @@
   left: 70%;
 }
 
+.musicmodal {
+  overflow-y: initial !important;
+  width: 300px;
+  position: fixed;
+  top: 15%;
+  left: 70%;
+}
+
 .modal-backdrop {
   --bs-backdrop-bg: none;
   background-color: var(--bs-backdrop-bg);
 }
 
 .popover1 {
-  width:250px;
-  height:200px;
-  background-color:white;
+  width: 250px;
+  height: 200px;
+  background-color: white;
   text-align: center;
 }
 
@@ -302,47 +310,47 @@
   background: white;
   border: none;
   border-radius: 10px;
-  width:20px;
-  height:20px;
+  width: 20px;
+  height: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin:3px;
+  margin: 3px;
 }
 
 .download {
-  width:15px;
-  height:15px;
-  color:white;
+  width: 15px;
+  height: 15px;
+  color: white;
 }
 
 .trashbtn {
   background: white;
-  border:none;
+  border: none;
   border-radius: 10px;
-  width:20px;
-  height:20px;
+  width: 20px;
+  height: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin:3px;
+  margin: 3px;
 }
 
 .trash {
-  width:15px;
-  height:15px;
+  width: 15px;
+  height: 15px;
 }
 
 .bar {
   display: inline-flex;
   justify-content: center;
-  align-items: center;  
+  align-items: center;
 }
 
 .frame {
-  width:200px;
-  height:150px;
-  margin-top:10px;
+  width: 200px;
+  height: 150px;
+  margin-top: 10px;
   margin-bottom: 5px;
 }
 
@@ -350,41 +358,41 @@
   background: none;
   background-color: none;
   border: none;
-  width:50px;
-  height:50px;
+  width: 50px;
+  height: 50px;
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  margin:3px;
+  margin: 3px;
 }
 
 .voice1 {
-  width:40px;
-  height:40px;
+  width: 40px;
+  height: 40px;
 }
 
 .voice2 {
-  width:40px;
-  height:40px;
+  width: 40px;
+  height: 40px;
 }
 
 .popover2 {
-  width:250px;
-  height:60px;
-  background-color:white;
+  width: 250px;
+  height: 60px;
+  background-color: white;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .voice3 {
-  width:40px;
-  height:40px;
+  width: 40px;
+  height: 40px;
 }
 
 .voice4 {
-  width:40px;
-  height:40px;
+  width: 40px;
+  height: 40px;
 }
 
 .timer-wrapper {
@@ -414,8 +422,8 @@
 }
 
 .pazama {
-  margin:0px;
-  width:150px;
+  margin: 0px;
+  width: 150px;
 }
 
 .text5 {
@@ -426,19 +434,20 @@
   font-family: "oldpicture";
 }
 
-
-.bs-popover-auto[data-popper-placement^=top]>.popover-arrow, .bs-popover-top>.popover-arrow{
-  display:none;
+.bs-popover-auto[data-popper-placement^="top"] > .popover-arrow,
+.bs-popover-top > .popover-arrow {
+  display: none;
 }
 
-.bs-popover-auto[data-popper-placement^=bottom]>.popover-arrow, .bs-popover-bottom>.popover-arrow {
-  display:none;
+.bs-popover-auto[data-popper-placement^="bottom"] > .popover-arrow,
+.bs-popover-bottom > .popover-arrow {
+  display: none;
 }
 
 .frame {
   height: 100px;
   margin: auto;
-  width:100%;
+  width: 100%;
 }
 
 .camerabtn {
@@ -458,35 +467,35 @@
 }
 
 .takebtn {
-  margin:10px;
+  margin: 10px;
   border: none;
-  color:white;
+  color: white;
   border-radius: 5px;
-  background-color: #FD7A99;
+  background-color: #fd7a99;
   font-family: "oldpicture";
 }
 
 .popover3 {
-  width:250px;
-  height:350px;
-  background-color:white;
+  width: 250px;
+  height: 350px;
+  background-color: white;
   text-align: center;
-  display:flex;
+  display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .popover1 {
-  --bs-border-color-translucent: #FD7A99;
+  --bs-border-color-translucent: #fd7a99;
   --bs-popover-border-color: var(--bs-border-color-translucent);
 }
 
 .popover2 {
-  --bs-border-color-translucent: #FD7A99;
+  --bs-border-color-translucent: #fd7a99;
   --bs-popover-border-color: var(--bs-border-color-translucent);
 }
 
 .popover3 {
-  --bs-border-color-translucent: #FD7A99;
+  --bs-border-color-translucent: #fd7a99;
   --bs-popover-border-color: var(--bs-border-color-translucent);
 }

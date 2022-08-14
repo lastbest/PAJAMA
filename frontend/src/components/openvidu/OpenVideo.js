@@ -72,17 +72,17 @@ class OpenVideo extends Component {
       show2: false,
       cakeshow: false,
 
-      loding: true,
       isHost: false,
       myEmail: "",
       roomId: props.roomIdx,
       partyHost: "",
       partyName: "",
-      partyDesc: "2022-09-30 12:22:22",
+      partyDesc: "",
       partyDate: props.partyDate,
       shot: false,
       imgUrl: undefined,
-      countCompleted: false,
+      countCompleted: true,
+      count: 0,
     };
     this.props.setCake("false");
 
@@ -122,7 +122,6 @@ class OpenVideo extends Component {
           partyHost: res.data.result.partyHost,
           partyName: res.data.result.partyName,
           partyDesc: res.data.result.partyDesc,
-          partyDate: res.data.result.partyDate,
         });
         if (this.state.partyHost == this.state.myEmail) {
           this.setState((state) => ({ isHost: true }));
@@ -376,7 +375,9 @@ class OpenVideo extends Component {
             .connect(token, { clientData: this.state.myUserName })
             .then(async () => {
               var devices = await this.OV.getDevices();
-              var videoDevices = devices.filter((device) => device.kind === "videoinput");
+              var videoDevices = devices.filter(
+                (device) => device.kind === "videoinput"
+              );
 
               // --- 5) Get your own camera stream ---
 
@@ -441,7 +442,9 @@ class OpenVideo extends Component {
   async switchCamera() {
     try {
       const devices = await this.OV.getDevices();
-      var videoDevices = devices.filter((device) => device.kind === "videoinput");
+      var videoDevices = devices.filter(
+        (device) => device.kind === "videoinput"
+      );
 
       if (videoDevices && videoDevices.length > 1) {
         var newVideoDevice = videoDevices.filter(
@@ -554,12 +557,6 @@ class OpenVideo extends Component {
       </Popover>
     );
 
-    const popover3 = (
-      <Popover className="popover3">
-        <Music />
-      </Popover>
-    );
-
     const mySessionId = this.state.mySessionId;
     const messages = this.state.messages;
     const isHost = this.state.isHost;
@@ -597,6 +594,8 @@ class OpenVideo extends Component {
       );
     };
 
+    const validURL = encodeURIComponent(this.state.roomId);
+
     const getTimeSeconds = (time) => (minuteSeconds - time) | 0;
     const getTimeMinutes = (time) => ((time % hourSeconds) / minuteSeconds) | 0;
     const getTimeHours = (time) => ((time % daySeconds) / hourSeconds) | 0;
@@ -604,7 +603,11 @@ class OpenVideo extends Component {
 
     const stratTime = Date.now() / 1000;
     const endTime = new Date(this.state.partyDate) / 1000;
+    console.log(endTime + "  111111111111111111");
+    console.log(stratTime + "  22222222222222222");
     const remainingTime = endTime - stratTime;
+
+    console.log(remainingTime + "  3333333333333333");
     const days = Math.ceil(remainingTime / daySeconds);
     const daysDuration = days * daySeconds;
 
@@ -612,7 +615,8 @@ class OpenVideo extends Component {
     function textOverlay() {
       publisher.stream
         .applyFilter("GStreamerFilter", {
-          command: "timeoverlay valignment=bottom halignment=right font-desc='Sans, 20'",
+          command:
+            "timeoverlay valignment=bottom halignment=right font-desc='Sans, 20'",
         })
         .then(() => {
           console.log("time added!");
@@ -686,7 +690,7 @@ class OpenVideo extends Component {
 
     return (
       <div>
-        {this.state.session === undefined && this.state.loding ? (
+        {this.state.session === undefined ? (
           <div id="join">
             <div id="img-div">
               <img
@@ -714,7 +718,11 @@ class OpenVideo extends Component {
                   >
                     {({ elapsedTime, color }) => (
                       <span style={{ color }}>
-                        {renderTime("days", getTimeDays(daysDuration - elapsedTime))}
+                        {renderTime(
+                          "days",
+
+                          getTimeDays(daysDuration - elapsedTime)
+                        )}
                       </span>
                     )}
                   </CountdownCircleTimer>
@@ -723,14 +731,18 @@ class OpenVideo extends Component {
                     colors="#D14081"
                     strokeWidth={10}
                     duration={daySeconds}
-                    initialRemainingTime={remainingTime % daySeconds}
+                    initialRemainingTime={remainingTime}
                     onComplete={(totalElapsedTime) => ({
-                      shouldRepeat: remainingTime - totalElapsedTime > hourSeconds,
+                      shouldRepeat:
+                        remainingTime - totalElapsedTime > hourSeconds,
                     })}
                   >
                     {({ elapsedTime, color }) => (
                       <span style={{ color }}>
-                        {renderTime("hours", getTimeHours(daySeconds - elapsedTime))}
+                        {renderTime(
+                          "hours",
+                          getTimeHours(daySeconds - elapsedTime)
+                        )}
                       </span>
                     )}
                   </CountdownCircleTimer>
@@ -739,14 +751,18 @@ class OpenVideo extends Component {
                     colors="#EF798A"
                     duration={hourSeconds}
                     strokeWidth={10}
-                    initialRemainingTime={remainingTime % hourSeconds}
+                    initialRemainingTime={remainingTime}
                     onComplete={(totalElapsedTime) => ({
-                      shouldRepeat: remainingTime - totalElapsedTime > minuteSeconds,
+                      shouldRepeat:
+                        remainingTime - totalElapsedTime > minuteSeconds,
                     })}
                   >
                     {({ elapsedTime, color }) => (
                       <span style={{ color }}>
-                        {renderTime("minutes", getTimeMinutes(hourSeconds - elapsedTime))}
+                        {renderTime(
+                          "minutes",
+                          getTimeMinutes(hourSeconds - elapsedTime)
+                        )}
                       </span>
                     )}
                   </CountdownCircleTimer>
@@ -768,54 +784,28 @@ class OpenVideo extends Component {
                   </CountdownCircleTimer>
                 </div>
 
-                {/* <CountdownCircleTimer
-                  isPlaying
-                  duration={(new Date(this.state.partyDate).getTime()-new Date().getTime())/1000}
-                  colors={['#004777']}
-                  trailStrokeWidth={10}
-                  strokeWidth={10}
-                >
-                  {({ remainingTime }) => `${remainingTime/3600/24}`}
-                </CountdownCircleTimer> */}
-
-                {/* <div id="counter" className="counter" /> */}
-
-                {/* <span>
-                  유저 & 방정보
-                  <br />
-                  ------------------------------
-                  <br />
-                  마이닉네임: {this.state.myUserName}
-                  <br />
-                  마이이메일: {this.state.myEmail}
-                  <br />
-                  방이름 : {this.state.partyName}
-                  <br />
-                  방설명 : {this.state.partyDesc}
-                  <br />
-                  파티시간 : {this.state.partyDate}
-                  <br />
-                  파티호스트 : {this.state.partyHost}
-                </span>
-                <p>
-                  <label> Session: </label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    id="sessionId"
-                    value={mySessionId}
-                    onChange={this.handleChangeSessionId}
-                    required
-                  />
-                </p> */}
                 {this.state.countCompleted ? (
                   <p className="text-center">
-                    <input className="joinbtn" name="commit" type="submit" value="참여하기" />
+                    <input
+                      className="joinbtn"
+                      name="commit"
+                      type="submit"
+                      value="참여하기"
+                    />
                   </p>
                 ) : null}
-                {this.state.partyHost === this.state.myEmail && this.state.partyHost != "" ? (
+                {this.state.partyHost === this.state.myEmail &&
+                this.state.partyHost != "" ? (
                   <p className="text-center">
-                    <input className="joinbtn" name="commit" type="submit" value="파티수정" />
+                    <input
+                      className="joinbtn"
+                      name="commit"
+                      type="button"
+                      value="파티수정"
+                      onClick={() => {
+                        document.location.href = `/updateparty/${validURL}`;
+                      }}
+                    />
                   </p>
                 ) : (
                   <p>게스트입니다.</p>
@@ -838,12 +828,30 @@ class OpenVideo extends Component {
                 height="75px"
               ></img>
               {/* 호스트인지 게스트인지 버튼 구분 */}
-              {this.state.partyHost === this.state.myEmail && this.state.partyHost != "" ? (
+              {this.state.partyHost === this.state.myEmail &&
+              this.state.partyHost != "" ? (
                 <>
+                  <div className="musicmodal">
+                    <div>
+                      <div className="musicDiv" style={{ display: "none" }}>
+                        <Music />
+                        <div className="chatbox__footer"></div>
+                      </div>
+                    </div>
+                  </div>
                   <button className="navbtn" onClick={this.sendcakeByClick}>
-                    <img src="/birthday-cake.png" alt="logo" width="60px" height="60px"></img>
+                    <img
+                      src="/birthday-cake.png"
+                      alt="logo"
+                      width="60px"
+                      height="60px"
+                    ></img>
                   </button>
-                  <OverlayTrigger trigger="click" placement="bottom" overlay={popover1}>
+                  <OverlayTrigger
+                    trigger="click"
+                    placement="bottom"
+                    overlay={popover1}
+                  >
                     <Image
                       className="capture"
                       src="/camera.png"
@@ -851,21 +859,49 @@ class OpenVideo extends Component {
                       style={{ width: "60px", height: "60px" }}
                     />
                   </OverlayTrigger>
-                  <OverlayTrigger trigger="click" placement="bottom" overlay={popover3}>
-                    <Image
-                      className="music"
-                      src="/music.png"
-                      alt="logo"
-                      style={{ width: "60px", height: "60px" }}
-                    />
-                  </OverlayTrigger>
+                  <Image
+                    type="button"
+                    onClick={() => {
+                      if (this.state.count % 2 == 0) {
+                        const di = (document.querySelector(
+                          ".musicDiv"
+                        ).style.display = "block");
+                      } else {
+                        const di = (document.querySelector(
+                          ".musicDiv"
+                        ).style.display = "none");
+                      }
+                      this.setState({ count: this.state.count + 1 });
+                    }}
+                    className="music"
+                    src="/music.png"
+                    alt="logo"
+                    style={{ width: "60px", height: "60px" }}
+                  />
                 </>
               ) : (
                 <>
+                  <div className="musicmodal">
+                    <div>
+                      <div className="musicDiv" style={{ display: "block" }}>
+                        <Music />
+                        <div className="chatbox__footer"></div>
+                      </div>
+                    </div>
+                  </div>
                   <button className="navbtn">
-                    <img src="/birthday-cake.png" alt="logo" width="60px" height="60px"></img>
+                    <img
+                      src="/birthday-cake.png"
+                      alt="logo"
+                      width="60px"
+                      height="60px"
+                    ></img>
                   </button>
-                  <OverlayTrigger trigger="click" placement="bottom" overlay={popover1}>
+                  <OverlayTrigger
+                    trigger="click"
+                    placement="bottom"
+                    overlay={popover1}
+                  >
                     <Image
                       className="capture"
                       src="/camera.png"
@@ -873,22 +909,23 @@ class OpenVideo extends Component {
                       style={{ width: "60px", height: "60px" }}
                     />
                   </OverlayTrigger>
-                  <OverlayTrigger trigger="click" placement="bottom" overlay={popover3}>
-                    <Image
-                      className="music"
-                      src="/music.png"
-                      alt="logo"
-                      style={{ width: "60px", height: "60px" }}
-                    />
-                  </OverlayTrigger>
+                  <Image
+                    className="music"
+                    src="/music.png"
+                    alt="logo"
+                    style={{ width: "60px", height: "60px" }}
+                  />
                 </>
               )}
             </div>
+
             <div id="session" className="main-session">
               <div id="main-container" className={Main}>
                 {this.state.mainStreamManager !== undefined ? (
                   <div id="main-video" className="main-video">
-                    <UserVideoComponent streamManager={this.state.mainStreamManager} />
+                    <UserVideoComponent
+                      streamManager={this.state.mainStreamManager}
+                    />
                     {/* <input
                       className="btn btn-large btn-success"
                       type="button"
@@ -910,8 +947,18 @@ class OpenVideo extends Component {
                   </div>
                 ))}
 
-                <img id="cake1" className={Cakeshow} src="/cake1.png" alt="cake1"></img>
-                <img id="heart" className={Candleshow} src="/heart.png" alt="heart" />
+                <img
+                  id="cake1"
+                  className={Cakeshow}
+                  src="/cake1.png"
+                  alt="cake1"
+                ></img>
+                <img
+                  id="heart"
+                  className={Candleshow}
+                  src="/heart.png"
+                  alt="heart"
+                />
               </div>
 
               <div>
@@ -970,7 +1017,11 @@ class OpenVideo extends Component {
                     <img className="micoff" src="/micoff.png" />
                   )}
                 </button>
-                <OverlayTrigger trigger="click" placement="top" overlay={popover2}>
+                <OverlayTrigger
+                  trigger="click"
+                  placement="top"
+                  overlay={popover2}
+                >
                   <Image
                     className="voice"
                     src="/voice.png"
@@ -981,27 +1032,46 @@ class OpenVideo extends Component {
                 <button className="chatbtn" onClick={this.toggleShow}>
                   <img className="chat" src="/chat.png" />
                 </button>
-                <button className="leavebtn" id="buttonLeaveSession" onClick={this.leaveSession}>
+                <button
+                  className="leavebtn"
+                  id="buttonLeaveSession"
+                  onClick={this.leaveSession}
+                >
                   <img className="leave" src="/shutdown.png" />
                 </button>
               </div>
             </div>
             <Camera style="display: none" />
             <Speech />
-            <ReactCanvasConfetti refConfetti={this.getInstance} style={canvasStyles} />
+            <ReactCanvasConfetti
+              refConfetti={this.getInstance}
+              style={canvasStyles}
+            />
           </div>
         ) : null}
         {/* <div class="canvas-wrapper"></div> */}
 
-        <Modal show={this.state.show} className="chatmodal" onHide={this.toggleShow}>
+        <Modal
+          show={this.state.show}
+          className="chatmodal"
+          onHide={this.toggleShow}
+        >
           <div>
             <div className="chatbox__support chatbox--active">
               <div style={{ "text-align": "center" }}>
-                <img src="/pazamafont.png" alt="logo" width="80px" height="40px"></img>
+                <img
+                  src="/pazamafont.png"
+                  alt="logo"
+                  width="80px"
+                  height="40px"
+                ></img>
               </div>
 
               <div className="chatbox__messages" ref="chatoutput">
-                <Messages messages={messages} myUserName={this.state.myUserName} />
+                <Messages
+                  messages={messages}
+                  myUserName={this.state.myUserName}
+                />
               </div>
 
               <div className="chatbox__footer">
@@ -1015,7 +1085,10 @@ class OpenVideo extends Component {
                   value={this.state.message}
                 />
                 {this.state.message !== "" ? (
-                  <button className="chatbox__send--footer" onClick={this.sendmessageByClick}>
+                  <button
+                    className="chatbox__send--footer"
+                    onClick={this.sendmessageByClick}
+                  >
                     전송
                   </button>
                 ) : (
@@ -1060,7 +1133,8 @@ class OpenVideo extends Component {
       axios
         .post(OPENVIDU_SERVER_URL + "/openvidu/api/sessions", data, {
           headers: {
-            Authorization: "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
+            Authorization:
+              "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
             "Content-Type": "application/json",
           },
         })
@@ -1088,7 +1162,9 @@ class OpenVideo extends Component {
                   '"'
               )
             ) {
-              window.location.assign(OPENVIDU_SERVER_URL + "/accept-certificate");
+              window.location.assign(
+                OPENVIDU_SERVER_URL + "/accept-certificate"
+              );
             }
           }
         });
@@ -1104,12 +1180,20 @@ class OpenVideo extends Component {
         },
       });
       axios
-        .post(OPENVIDU_SERVER_URL + "/openvidu/api/sessions/" + sessionId + "/connection", data, {
-          headers: {
-            Authorization: "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
-            "Content-Type": "application/json",
-          },
-        })
+        .post(
+          OPENVIDU_SERVER_URL +
+            "/openvidu/api/sessions/" +
+            sessionId +
+            "/connection",
+          data,
+          {
+            headers: {
+              Authorization:
+                "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
+              "Content-Type": "application/json",
+            },
+          }
+        )
         .then((response) => {
           console.log("TOKEN", response);
           resolve(response.data.token);
