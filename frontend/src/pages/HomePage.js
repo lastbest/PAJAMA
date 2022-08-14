@@ -7,7 +7,6 @@ import Modal from 'react-bootstrap/Modal';
 import { BrowserView, MobileView } from 'react-device-detect';
 import HomeCarouselMobile from '../components/homecarousel/HomeCarouselMobile';
 
-
 const CreateBtn = styled.div`
     display: flex;
     justify-content: center;
@@ -81,7 +80,7 @@ const HomePage = () => {
         <div>
             <NavBar></NavBar>
             <BrowserView>
-                <HomeCarousel></HomeCarousel>
+                <HomeCarousel />
             </BrowserView>
             <MobileView>
                 <HomeCarouselMobile></HomeCarouselMobile>
@@ -115,19 +114,19 @@ const HomePage = () => {
                 </MobileView>
             </CreateBtn>
             <Img>
-                <img src="/maintext3.png" style={{width:'80%', marginTop:"20px"}}/>
+                <img src="/maintext3.png" alt="maintext" style={{width:'80%', marginTop:"20px"}}/>
             </Img>
             <Img>
-                <img src="/subtext1.png" style={{width:'70%'}}/>
+                <img src="/subtext1.png" alt="subtext1" style={{width:'70%'}}/>
             </Img>
             <Img>
-                <img src="/subtext2.png" style={{width:'70%'}}/>
+                <img src="/subtext2.png" alt="subtext2" style={{width:'70%'}}/>
             </Img>
             <Img>
-                <img src="/subtext3.png" style={{width:'70%'}}/>
+                <img src="/subtext3.png" alt="subtext3" style={{width:'70%'}}/>
             </Img>
             <Img>
-                <img src="/subtext4.png" style={{width:'70%'}}/>
+                <img src="/subtext4.png" alt="subtext4" style={{width:'70%'}}/>
             </Img>
 
             <Modal
