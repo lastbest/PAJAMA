@@ -75,7 +75,7 @@ class OpenVideo extends Component {
       messages: [],
       message: "",
       show: false,
-      show2: false,
+      show2: true,
       cakeshow: false,
 
       isHost: false,
@@ -84,6 +84,9 @@ class OpenVideo extends Component {
       partyHost: "",
       partyName: "",
       partyDesc: "",
+      partyBg: "",
+      partyCake: "",
+      partyCandle: "",
       partyDate: props.partyDate,
       shot: false,
       imgUrl: undefined,
@@ -122,12 +125,15 @@ class OpenVideo extends Component {
       },
     })
       .then((res) => {
-        console.log("방정보 불러오기 성공");
-        console.log(this.state.roomId);
+        console.log("방정보 불러오기 성공", res.data.result);
+        // console.log(this.state.roomId);
         this.setState({
           partyHost: res.data.result.partyHost,
           partyName: res.data.result.partyName,
           partyDesc: res.data.result.partyDesc,
+          partyBg: "/frame"+(res.data.result.partyBg+1)+".png",
+          partyCake: "/cake"+(res.data.result.partyCake+1)+".png",
+          partyCandle: "/candle"+(res.data.result.partyCandle+1)+".png"
         });
         if (this.state.partyHost == this.state.myEmail) {
           this.setState((state) => ({ isHost: true }));
@@ -669,11 +675,11 @@ class OpenVideo extends Component {
 
     const stratTime = Date.now() / 1000;
     const endTime = new Date(this.state.partyDate) / 1000;
-    console.log(endTime + "  111111111111111111");
-    console.log(stratTime + "  22222222222222222");
+    // console.log(endTime + "  111111111111111111");
+    // console.log(stratTime + "  22222222222222222");
     const remainingTime = endTime - stratTime;
 
-    console.log(remainingTime + "  3333333333333333");
+    // console.log(remainingTime + "  3333333333333333");
     const days = Math.ceil(remainingTime / daySeconds);
     const daysDuration = days * daySeconds;
 
@@ -947,7 +953,7 @@ class OpenVideo extends Component {
               )}
             </div>
 
-            <div id="session" className="main-session">
+            <div id="session" className="main-session" style={{backgroundImage:"url("+`${this.state.partyBg}`+")"}}>
               <div id="main-container" className={Main}>
                 {this.state.mainStreamManager !== undefined ? (
                   <div id="main-video" className="main-video">
@@ -973,8 +979,9 @@ class OpenVideo extends Component {
                   </div>
                 ))}
 
-                <img id="cake1" className={Cakeshow} src="/cake1.png" alt="cake1"></img>
-                <img id="heart" className={Candleshow} src="/heart.png" alt="heart" />
+                <img id="cake1" className={Cakeshow} src={this.state.partyCake} alt="cake1"></img>
+                <img id="heart" className={Candleshow} src={this.state.partyCandle} alt="heart" />
+                {/* <button onClick={()=>{this.setState({show2:false})}}>촛불끄기</button> */}
               </div>
 
               <div>
