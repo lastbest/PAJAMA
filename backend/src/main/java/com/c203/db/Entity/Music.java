@@ -11,6 +11,7 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 public class Music {
+
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     @Column(name = "music_idx")
