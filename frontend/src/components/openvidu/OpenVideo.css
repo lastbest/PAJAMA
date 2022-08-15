@@ -291,10 +291,10 @@
 
 .chatmodal {
   overflow-y: initial !important;
-  width: 300px;
-  position: fixed;
-  top: 15%;
-  left: 70%;
+  width: 300px !important;
+  position: fixed !important;
+  top: 15% !important;
+  left: 70% !important;
 }
 
 .musicmodal {
@@ -314,7 +314,7 @@
 }
 
 .modal-backdrop {
-  --bs-backdrop-bg: none;
+  --bs-backdrop-bg: none !important;
   background-color: var(--bs-backdrop-bg);
 }
 
@@ -322,7 +322,7 @@
   width: 250px;
   height: 200px;
   background-color: white;
-  text-align: center;
+  text-align: center !important;
 }
 
 .downloadbtn {
@@ -399,9 +399,9 @@
   width: 250px;
   height: 60px;
   background-color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
 }
 
 .voice3 {
@@ -518,3 +518,8 @@
   --bs-border-color-translucent: #fd7a99;
   --bs-popover-border-color: var(--bs-border-color-translucent);
 }
+
+.popover .popover-arrow {
+  display:none !important;
+}
+
