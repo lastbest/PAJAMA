@@ -224,9 +224,10 @@ class Camera extends Component {
       } else if (emo_type == "cake_hand") {
         //케이크 끄기
         mySession.signal({
-          data: `${this.props.uid},${this.props.ovcake}`,
+          data: `${this.props.uid},fire-off`,
           to: [],
-          type: "cakeshow",
+          type: "motion",
+          // type: "cakeshow",
         });
         // connect.log("케이크 보내고 현재상태는=========", this.props);
         // emo.innerHTML = "케이크 꺼짐";
