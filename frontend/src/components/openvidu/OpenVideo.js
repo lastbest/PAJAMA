@@ -137,9 +137,9 @@ class OpenVideo extends Component {
           partyHost: res.data.result.partyHost,
           partyName: res.data.result.partyName,
           partyDesc: res.data.result.partyDesc,
-          partyBg: "/frame"+(res.data.result.partyBg+1)+".png",
-          partyCake: "/cake"+(res.data.result.partyCake+1)+".png",
-          partyCandle: "/candle"+(res.data.result.partyCandle+1)+".png"
+          partyBg: "/frame" + (res.data.result.partyBg + 1) + ".png",
+          partyCake: "/cake" + (res.data.result.partyCake + 1) + ".png",
+          partyCandle: "/candle" + (res.data.result.partyCandle + 1) + ".png",
         });
         if (this.state.partyHost == this.state.myEmail) {
           this.setState((state) => ({ isHost: true }));
@@ -570,8 +570,8 @@ class OpenVideo extends Component {
           }}
         >
           사진찍기
-        </button>       
-        
+        </button>
+
         <div id="frame" className="frame"></div>
         <div className="bar">
           <p className="text5">최대 5장까지 저장할 수 있습니다.</p>
@@ -636,7 +636,7 @@ class OpenVideo extends Component {
       Main = "main-container1";
       Candleshow = "candle";
       Fireshow = "fire";
-      Firecssshow= "firecss";
+      Firecssshow = "firecss";
     } else {
       Cakeshow = "cake1";
       Main = "main-container";
@@ -885,7 +885,13 @@ class OpenVideo extends Component {
               )}
             </div>
 
-            <div id="session" className="main-session" style={{backgroundImage:"url("+`${this.state.partyBg}`+")"}}>
+            <div
+              id="session"
+              className="main-session"
+              style={{
+                backgroundImage: "url(" + `${this.state.partyBg}` + ")",
+              }}
+            >
               <div id="main-container" className={Main}>
                 {this.state.mainStreamManager !== undefined ? (
                   <div id="main-video" className="main-video">
@@ -903,49 +909,53 @@ class OpenVideo extends Component {
                 ) : null}
 
                 {this.state.subscribers.map((sub, i) => (
-                  <div
-                    key={i}
-                    className="stream-video"
-                    id="stream-video"
-                    onClick={() => this.handleMainVideoStream(sub)}
-                  >
+                  <div key={i} className="stream-video" id="stream-video">
                     <UserVideoComponent streamManager={sub} />
                   </div>
                 ))}
-                  <img id="cake1" className={Cakeshow} src={this.state.partyCake} alt="cake1"></img>
-                  <img id="heart" className={Candleshow} src={this.state.partyCandle} alt="heart" />
-                  <div className={Firecssshow}>
-                    <FadeInOut show={this.state.show2} duration={500}>
-                      <img className={Fireshow}
-                        id="heartfire"
-                        src="/fire.gif"
-                        alt="fire"
-                      />
-                    </FadeInOut>
-                  </div>
+                <img
+                  id="cake1"
+                  className={Cakeshow}
+                  src={this.state.partyCake}
+                  alt="cake1"
+                ></img>
+                <img
+                  id="heart"
+                  className={Candleshow}
+                  src={this.state.partyCandle}
+                  alt="heart"
+                />
+                <div className={Firecssshow}>
+                  <FadeInOut show={this.state.show2} duration={500}>
+                    <img
+                      className={Fireshow}
+                      id="heartfire"
+                      src="/fire.gif"
+                      alt="fire"
+                    />
+                  </FadeInOut>
+                </div>
               </div>
-
-
             </div>
             {this.state.shot ? (
-                  <div className="timer-wrapper">
-                    <CountdownCircleTimer
-                      isPlaying
-                      duration={3}
-                      colors={["#004777"]}
-                      trailStrokeWidth={0}
-                      strokeWidth={0}
-                      onComplete={() => {
-                        // 사진찍는 함수 삽입
-                        this.takepicture();
-                        this.setState({ shot: false });
-                        console.log("종료");
-                      }}
-                    >
-                      {({ remainingTime }) => remainingTime}
-                    </CountdownCircleTimer>
-                  </div>
-                ) : null}
+              <div className="timer-wrapper">
+                <CountdownCircleTimer
+                  isPlaying
+                  duration={3}
+                  colors={["#004777"]}
+                  trailStrokeWidth={0}
+                  strokeWidth={0}
+                  onComplete={() => {
+                    // 사진찍는 함수 삽입
+                    this.takepicture();
+                    this.setState({ shot: false });
+                    console.log("종료");
+                  }}
+                >
+                  {({ remainingTime }) => remainingTime}
+                </CountdownCircleTimer>
+              </div>
+            ) : null}
             <div className="main-footer">
               <div className="footer">
                 {this.state.videostate === undefined || this.state.videostate
@@ -984,7 +994,7 @@ class OpenVideo extends Component {
                   )}
                 </button>
                 <button className="voicerecog-btn">
-                    <img className="voicerecog" src="/voicerecog.png"></img>
+                  <img className="voicerecog" src="/voicerecog.png"></img>
                 </button>
                 <OverlayTrigger
                   trigger="click"
