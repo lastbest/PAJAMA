@@ -104,7 +104,7 @@ class OpenVideo extends Component {
     // 자신의 회원정보 불러오기
     let token = sessionStorage.getItem("accessToken");
     axios({
-      url: "http://i7c203.p.ssafy.io:8082/users/me",
+      url: "https://i7c203.p.ssafy.io/api/users/me",
       method: "get",
       headers: { accessToken: token },
     })
@@ -123,7 +123,7 @@ class OpenVideo extends Component {
 
     // 현재 방정보 불로오기
     axios({
-      url: "http://i7c203.p.ssafy.io:8082/rooms",
+      url: "https://i7c203.p.ssafy.io/api/rooms",
       method: "get",
       headers: { accessToken: token },
       params: {

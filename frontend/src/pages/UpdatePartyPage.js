@@ -155,7 +155,7 @@ const UpdatePartyPage = () => {
   let token = sessionStorage.getItem("accessToken");
   useEffect(() => {
     axios({
-      url: "http://i7c203.p.ssafy.io:8082/rooms",
+      url: "https://i7c203.p.ssafy.io/api/rooms",
       method: "get",
       headers: { accessToken: token },
       params: {
@@ -487,7 +487,7 @@ const UpdatePartyPage = () => {
             if (!(token == "" || token == undefined)) {
               setPartyDate(partyDate.setHours(partyDate.getHours() + 9));
               axios({
-                url: "http://i7c203.p.ssafy.io:8082/rooms",
+                url: "https://i7c203.p.ssafy.io/api/rooms",
                 method: "put",
                 headers: { accessToken: token },
                 params: {

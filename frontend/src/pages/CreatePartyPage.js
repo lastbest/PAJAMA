@@ -150,7 +150,7 @@ const CreatePartyPage = () => {
   let token = sessionStorage.getItem("accessToken");
   useEffect(() => {
     axios({
-      url: "http://i7c203.p.ssafy.io:8082/users/me",
+      url: "https://i7c203.p.ssafy.io/api/users/me",
       method: "get",
       headers: { accessToken: token },
     })
@@ -378,7 +378,7 @@ const CreatePartyPage = () => {
             if (!(token == "" || token == undefined)) {
               setPartyDate(partyDate.setHours(partyDate.getHours() + 9));
               axios({
-                url: "http://i7c203.p.ssafy.io:8082/rooms",
+                url: "https://i7c203.p.ssafy.io/api/rooms",
                 method: "post",
                 headers: { accessToken: token },
                 data: {
@@ -428,7 +428,7 @@ const CreatePartyPage = () => {
             <form>
               <textarea
                 ref={textAreaRef}
-                value={`https://i7c203.p.ssafy.io/invite/${roomId}`}
+                value={`https://i7c203.p.ssafy.io/api/invite/${roomId}`}
                 style={{ width: "100%", height: "100%" }}
               />
             </form>

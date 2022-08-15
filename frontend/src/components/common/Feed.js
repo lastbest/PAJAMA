@@ -87,7 +87,7 @@ function Feed({ feed_idx, feed_user, feed_description, feed_picture }) {
         onClick={()=>{
           setCredentials((credentials.comment = comment))
           axios({
-            url: "http://i7c203.p.ssafy.io:8082/mypage" +"feedidx",
+            url: "https://i7c203.p.ssafy.io/api/mypage" +"feedidx",
             method:"post",
             data:credentials,
           })

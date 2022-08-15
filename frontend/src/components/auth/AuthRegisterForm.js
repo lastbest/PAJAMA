@@ -191,7 +191,7 @@ const AuthRegisterForm = () => {
               (credentials.tel = tel)
             );
             axios({
-              url: "http://i7c203.p.ssafy.io:8082/users",
+              url: "https://i7c203.p.ssafy.io/api/users",
               method: "post",
               data: credentials,
             })
@@ -223,7 +223,7 @@ const AuthRegisterForm = () => {
     console.log("삭제");
     console.log(userEmail);
     axios({
-      url: "http://i7c203.p.ssafy.io:8082/users/mail",
+      url: "https://i7c203.p.ssafy.io/api/users/mail",
       method: "delete",
       data: {
         email: userEmail,
@@ -241,7 +241,7 @@ const AuthRegisterForm = () => {
 
   function sendCheck() {
     axios({
-      url: "http://i7c203.p.ssafy.io:8082/users/mail",
+      url: "https://i7c203.p.ssafy.io/api/users/mail",
       method: "post",
       data: {
         id: userEmail,
@@ -366,7 +366,7 @@ const AuthRegisterForm = () => {
                 console.log("확인시작");
 
                 axios({
-                  url: "http://i7c203.p.ssafy.io:8082/users/mail",
+                  url: "https://i7c203.p.ssafy.io/api/users/mail",
                   method: "get",
                   params: credential,
                 })

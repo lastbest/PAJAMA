@@ -45,7 +45,7 @@ const RoomPage = () => {
   }, [flag]);
 
   axios({
-    url: "http://i7c203.p.ssafy.io:8082/rooms",
+    url: "https://i7c203.p.ssafy.io/api/rooms",
     method: "get",
     headers: { accessToken: token },
     params: {
