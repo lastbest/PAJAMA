@@ -125,7 +125,9 @@ const AuthRegisterForm = () => {
   const renderTime = (dimension, time) => {
     return (
       <div className="time-wrapper">
-        <div className="time">{time}</div>
+        <div className="time" style={{ fontSize: "0.8rem" }}>
+          {time}
+        </div>
         <div>{dimension}</div>
       </div>
     );
