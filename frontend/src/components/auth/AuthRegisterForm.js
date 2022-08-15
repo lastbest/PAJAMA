@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import Button from "../common/Button";
 import axios from "axios";
-import Modal from 'react-bootstrap/Modal';
-
+import Modal from "react-bootstrap/Modal";
+import { CountdownCircleTimer } from "react-countdown-circle-timer";
 
 const AuthFormBlock = styled.div`
   h3 {
@@ -26,7 +26,28 @@ const StyledInput = styled.input`
   outline: none;
   width: 100%;
   display: flex;
-  font-family:"oldpicture";
+  font-family: "oldpicture";
+  &:focus {
+    color: $oc-teal-7;
+    border-bottom: 1px solid #fd7a99;
+  }
+  & + & {
+    margin-top: 1rem;
+  }
+`;
+
+const StyledInputDis = styled.input`
+  border-radius: 10px;
+  font-size: 1rem;
+  border: none;
+  border-bottom: 1px solid #ffe9ef;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+  outline: none;
+  width: 100%;
+  display: flex;
+  font-family: "oldpicture";
   &:focus {
     color: $oc-teal-7;
     border-bottom: 1px solid #fd7a99;
@@ -58,32 +79,63 @@ const StyleButton = styled.button`
   }
 `;
 
-const AuthRegisterForm = () => {
-  const [show1, setShow1] = useState(false);  //모달(이메일인증X)
-    const handleClose1 = () => setShow1(false);
-    const handleShow1 = () => setShow1(true);
-  const [show2, setShow2] = useState(false);  //비밀번호자릿수
-    const handleClose2 = () => setShow2(false);
-    const handleShow2 = () => setShow2(true);
-  const [show3, setShow3] = useState(false);  //이메일인증실패
-    const handleClose3 = () => setShow3(false);
-    const handleShow3 = () => setShow3(true);
-  const [show4, setShow4] = useState(false);  //비밀번호영문자혼합
-    const handleClose4 = () => setShow4(false);
-    const handleShow4 = () => setShow4(true);
-  const [show5, setShow5] = useState(false);  //비밀번호불일치
-    const handleClose5 = () => setShow5(false);
-    const handleShow5 = () => setShow5(true);
-  const [show6, setShow6] = useState(false);  //존재하는이메일
-    const handleClose6 = () => setShow6(false);
-    const handleShow6 = () => setShow6(true);
-  const [show7, setShow7] = useState(false);  //회원가입성공
-    const handleClose7 = () => setShow7(false);
-    const handleShow7 = () => setShow7(true);
-  const [show8, setShow8] = useState(false);  //회원가입실패
-    const handleClose8 = () => setShow8(false);
-    const handleShow8 = () => setShow8(true);
+const Counter = styled.div`
+  display: flex;
+  size: 20px;
+`;
 
+const AuthRegisterForm = () => {
+  const [show1, setShow1] = useState(false); //모달(이메일인증X)
+  const handleClose1 = () => setShow1(false);
+  const handleShow1 = () => setShow1(true);
+  const [show2, setShow2] = useState(false); //비밀번호자릿수
+  const handleClose2 = () => setShow2(false);
+  const handleShow2 = () => setShow2(true);
+  const [show3, setShow3] = useState(false); //이메일인증실패
+  const handleClose3 = () => setShow3(false);
+  const handleShow3 = () => setShow3(true);
+  const [show4, setShow4] = useState(false); //비밀번호영문자혼합
+  const handleClose4 = () => setShow4(false);
+  const handleShow4 = () => setShow4(true);
+  const [show5, setShow5] = useState(false); //비밀번호불일치
+  const handleClose5 = () => setShow5(false);
+  const handleShow5 = () => setShow5(true);
+  const [show6, setShow6] = useState(false); //존재하는이메일
+  const handleClose6 = () => setShow6(false);
+  const handleShow6 = () => setShow6(true);
+  const [show7, setShow7] = useState(false); //회원가입성공
+  const handleClose7 = () => setShow7(false);
+  const handleShow7 = () => setShow7(true);
+  const [show8, setShow8] = useState(false); //회원가입실패
+  const handleClose8 = () => setShow8(false);
+  const handleShow8 = () => setShow8(true);
+
+  const minuteSeconds = 60;
+  const hourSeconds = 3600;
+
+  const [playing, setPlaying] = useState(false);
+  const [replay, setReplay] = useState(false);
+
+  const timerProps = {
+    isPlaying: playing,
+    size: 30,
+    strokeWidth: 0,
+  };
+
+  const renderTime = (dimension, time) => {
+    return (
+      <div className="time-wrapper">
+        <div className="time">{time}</div>
+        <div>{dimension}</div>
+      </div>
+    );
+  };
+
+  let stratTime = Date.now() / 1000;
+  let endTime = stratTime + 180;
+  let remainingTime = endTime - stratTime;
+  const getTimeSeconds = (time) => (minuteSeconds - time) | 0;
+  const getTimeMinutes = (time) => ((time % hourSeconds) / minuteSeconds) | 0;
 
   let [credentials, setCredentials] = useState({
     email: "",
@@ -93,15 +145,11 @@ const AuthRegisterForm = () => {
     name: "",
   });
 
-  let [check, setCheck] = useState({
-    id: "",
-    type: "",
-  });
-
   let [credential, setCredential] = useState({
     authNumber: "",
     email: "",
   });
+
   const [emailvalid, setEmailvalid] = useState(false);
   const [count, setCount] = useState(0);
 
@@ -170,6 +218,45 @@ const AuthRegisterForm = () => {
       handleShow1();
     }
   }
+
+  function expireCheck() {
+    console.log("삭제");
+    console.log(userEmail);
+    axios({
+      url: "http://i7c203.p.ssafy.io:8082/users/mail",
+      method: "delete",
+      data: {
+        email: userEmail,
+      },
+    })
+      .then((res) => {
+        console.log(res);
+        console.log("삭제성공");
+      })
+      .catch((res) => {
+        console.log(res);
+        console.log("삭제실패");
+      });
+  }
+
+  function sendCheck() {
+    axios({
+      url: "http://i7c203.p.ssafy.io:8082/users/mail",
+      method: "post",
+      data: {
+        id: userEmail,
+        type: 0,
+      },
+    })
+      .then((res) => {
+        console.log(res);
+        console.log("성공");
+      })
+      .catch((res) => {
+        console.log(res);
+      });
+  }
+
   return (
     <AuthFormBlock>
       <h3>회원가입</h3>
@@ -187,26 +274,64 @@ const AuthRegisterForm = () => {
 
           <StyleButton
             onClick={(e) => {
+              setPlaying(true);
               e.preventDefault();
-              setCount(count + 1);
-              setCheck((check.id = userEmail), (check.type = "0"));
-              console.log(check);
               console.log("시작");
-              axios({
-                url: "http://i7c203.p.ssafy.io:8082/users/mail",
-                method: "post",
-                data: check,
-              })
-                .then((res) => {
-                  console.log(res);
-                  console.log("성공");
-                })
-                .catch((res) => {
-                  console.log(res);
-                });
             }}
           >
-            {count === 0 ? "인증하기" : "재인증"}
+            <div>
+              {replay ? (
+                <Counter>
+                  <CountdownCircleTimer
+                    {...timerProps}
+                    colors="#000000"
+                    duration={hourSeconds}
+                    initialRemainingTime={remainingTime % hourSeconds}
+                    onComplete={() => {
+                      setReplay(false);
+                      if (remainingTime == 0) {
+                        expireCheck();
+                      }
+                    }}
+                  >
+                    {({ elapsedTime, color }) => (
+                      <span style={{ color }}>
+                        {renderTime(
+                          "",
+                          getTimeMinutes(hourSeconds - elapsedTime)
+                        )}
+                      </span>
+                    )}
+                  </CountdownCircleTimer>
+                  <div>:</div>
+                  <CountdownCircleTimer
+                    {...timerProps}
+                    colors="#000000"
+                    duration={minuteSeconds}
+                    initialRemainingTime={remainingTime}
+                    onComplete={() => {
+                      expireCheck();
+                    }}
+                  >
+                    {({ elapsedTime, color }) => (
+                      <span style={{ color }}>
+                        {renderTime("", getTimeSeconds(elapsedTime) % 60)}
+                      </span>
+                    )}
+                  </CountdownCircleTimer>
+                </Counter>
+              ) : (
+                <div
+                  onClick={() => {
+                    setReplay(true);
+                    sendCheck();
+                    setCount(count + 1);
+                  }}
+                >
+                  {count === 0 ? "인증하기" : "재인증"}
+                </div>
+              )}
+            </div>
           </StyleButton>
         </div>
         <div className="d-flex">
@@ -249,6 +374,7 @@ const AuthRegisterForm = () => {
                     console.log(res);
                     console.log("성공");
                     if (res.data.result === "success") {
+                      setReplay(true);
                       setEmailvalid(true);
                     } else {
                       handleShow3();
@@ -319,17 +445,29 @@ const AuthRegisterForm = () => {
         onHide={handleClose1}
         backdrop="static"
         keyboard={false}
-    >
+      >
         <Modal.Header closeButton>
-        <Modal.Title style={{'font-family':'star', 'color':'#FD7A99'}}>PAZAMA</Modal.Title>
+          <Modal.Title style={{ "font-family": "star", color: "#FD7A99" }}>
+            PAZAMA
+          </Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{'font-family':'oldpicture', 'font-size':'20px'}}>
-        이메일을 인증해주세요.
+        <Modal.Body
+          style={{ "font-family": "oldpicture", "font-size": "20px" }}
+        >
+          이메일을 인증해주세요.
         </Modal.Body>
         <Modal.Footer>
-        <Button style={{'border':'none','font-family':'oldpicture', 'backgroundColor':'#9D9D9D', 'color':'white',}} onClick={handleClose1}>
+          <Button
+            style={{
+              border: "none",
+              "font-family": "oldpicture",
+              backgroundColor: "#9D9D9D",
+              color: "white",
+            }}
+            onClick={handleClose1}
+          >
             Close
-        </Button>
+          </Button>
         </Modal.Footer>
       </Modal>
 
@@ -340,17 +478,29 @@ const AuthRegisterForm = () => {
         onHide={handleClose2}
         backdrop="static"
         keyboard={false}
-    >
+      >
         <Modal.Header closeButton>
-        <Modal.Title style={{'font-family':'star', 'color':'#FD7A99'}}>PAZAMA</Modal.Title>
+          <Modal.Title style={{ "font-family": "star", color: "#FD7A99" }}>
+            PAZAMA
+          </Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{'font-family':'oldpicture', 'font-size':'20px'}}>
-        비밀번호를 6자리 이상 16자리 이하로 입력하세요.
+        <Modal.Body
+          style={{ "font-family": "oldpicture", "font-size": "20px" }}
+        >
+          비밀번호를 6자리 이상 16자리 이하로 입력하세요.
         </Modal.Body>
         <Modal.Footer>
-        <Button style={{'border':'none','font-family':'oldpicture', 'backgroundColor':'#9D9D9D', 'color':'white',}} onClick={handleClose2}>
+          <Button
+            style={{
+              border: "none",
+              "font-family": "oldpicture",
+              backgroundColor: "#9D9D9D",
+              color: "white",
+            }}
+            onClick={handleClose2}
+          >
             Close
-        </Button>
+          </Button>
         </Modal.Footer>
       </Modal>
 
@@ -361,17 +511,29 @@ const AuthRegisterForm = () => {
         onHide={handleClose3}
         backdrop="static"
         keyboard={false}
-    >
+      >
         <Modal.Header closeButton>
-        <Modal.Title style={{'font-family':'star', 'color':'#FD7A99'}}>PAZAMA</Modal.Title>
+          <Modal.Title style={{ "font-family": "star", color: "#FD7A99" }}>
+            PAZAMA
+          </Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{'font-family':'oldpicture', 'font-size':'20px'}}>
-        인증번호가 일치하지 않습니다.
+        <Modal.Body
+          style={{ "font-family": "oldpicture", "font-size": "20px" }}
+        >
+          인증번호가 일치하지 않습니다.
         </Modal.Body>
         <Modal.Footer>
-        <Button style={{'border':'none','font-family':'oldpicture', 'backgroundColor':'#9D9D9D', 'color':'white',}} onClick={handleClose3}>
+          <Button
+            style={{
+              border: "none",
+              "font-family": "oldpicture",
+              backgroundColor: "#9D9D9D",
+              color: "white",
+            }}
+            onClick={handleClose3}
+          >
             Close
-        </Button>
+          </Button>
         </Modal.Footer>
       </Modal>
 
@@ -382,17 +544,29 @@ const AuthRegisterForm = () => {
         onHide={handleClose4}
         backdrop="static"
         keyboard={false}
-    >
+      >
         <Modal.Header closeButton>
-        <Modal.Title style={{'font-family':'star', 'color':'#FD7A99'}}>PAZAMA</Modal.Title>
+          <Modal.Title style={{ "font-family": "star", color: "#FD7A99" }}>
+            PAZAMA
+          </Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{'font-family':'oldpicture', 'font-size':'20px'}}>
-        비밀번호는 영어와 숫자가 혼용되어야 합니다.
+        <Modal.Body
+          style={{ "font-family": "oldpicture", "font-size": "20px" }}
+        >
+          비밀번호는 영어와 숫자가 혼용되어야 합니다.
         </Modal.Body>
         <Modal.Footer>
-        <Button style={{'border':'none','font-family':'oldpicture', 'backgroundColor':'#9D9D9D', 'color':'white',}} onClick={handleClose4}>
+          <Button
+            style={{
+              border: "none",
+              "font-family": "oldpicture",
+              backgroundColor: "#9D9D9D",
+              color: "white",
+            }}
+            onClick={handleClose4}
+          >
             Close
-        </Button>
+          </Button>
         </Modal.Footer>
       </Modal>
 
@@ -403,17 +577,29 @@ const AuthRegisterForm = () => {
         onHide={handleClose5}
         backdrop="static"
         keyboard={false}
-    >
+      >
         <Modal.Header closeButton>
-        <Modal.Title style={{'font-family':'star', 'color':'#FD7A99'}}>PAZAMA</Modal.Title>
+          <Modal.Title style={{ "font-family": "star", color: "#FD7A99" }}>
+            PAZAMA
+          </Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{'font-family':'oldpicture', 'font-size':'20px'}}>
-        비밀번호가 일치하지 않습니다.
+        <Modal.Body
+          style={{ "font-family": "oldpicture", "font-size": "20px" }}
+        >
+          비밀번호가 일치하지 않습니다.
         </Modal.Body>
         <Modal.Footer>
-        <Button style={{'border':'none','font-family':'oldpicture', 'backgroundColor':'#9D9D9D', 'color':'white',}} onClick={handleClose5}>
+          <Button
+            style={{
+              border: "none",
+              "font-family": "oldpicture",
+              backgroundColor: "#9D9D9D",
+              color: "white",
+            }}
+            onClick={handleClose5}
+          >
             Close
-        </Button>
+          </Button>
         </Modal.Footer>
       </Modal>
 
@@ -424,21 +610,32 @@ const AuthRegisterForm = () => {
         onHide={handleClose6}
         backdrop="static"
         keyboard={false}
-        >
+      >
         <Modal.Header closeButton>
-        <Modal.Title style={{'font-family':'star', 'color':'#FD7A99'}}>PAZAMA</Modal.Title>
+          <Modal.Title style={{ "font-family": "star", color: "#FD7A99" }}>
+            PAZAMA
+          </Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{'font-family':'oldpicture', 'font-size':'20px'}}>
-        해당 이메일이 존재합니다.
+        <Modal.Body
+          style={{ "font-family": "oldpicture", "font-size": "20px" }}
+        >
+          해당 이메일이 존재합니다.
         </Modal.Body>
         <Modal.Footer>
-        <Button style={{'border':'none','font-family':'oldpicture', 'backgroundColor':'#9D9D9D', 'color':'white',}} onClick={handleClose6}>
+          <Button
+            style={{
+              border: "none",
+              "font-family": "oldpicture",
+              backgroundColor: "#9D9D9D",
+              color: "white",
+            }}
+            onClick={handleClose6}
+          >
             Close
-        </Button>
+          </Button>
         </Modal.Footer>
       </Modal>
 
-      
       {/* 회원가입성공 */}
       <Modal
         centered
@@ -446,22 +643,46 @@ const AuthRegisterForm = () => {
         onHide={handleClose7}
         backdrop="static"
         keyboard={false}
-        >
+      >
         <Modal.Header closeButton>
-        <Modal.Title style={{'font-family':'star', 'color':'#FD7A99'}}>PAZAMA</Modal.Title>
+          <Modal.Title style={{ "font-family": "star", color: "#FD7A99" }}>
+            PAZAMA
+          </Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{'font-family':'oldpicture', 'font-size':'20px'}}>
-        회원가입에 성공했습니다!
+        <Modal.Body
+          style={{ "font-family": "oldpicture", "font-size": "20px" }}
+        >
+          회원가입에 성공했습니다!
         </Modal.Body>
         <Modal.Footer>
-        <Button style={{'border':'none','font-family':'oldpicture', 'backgroundColor':'#9D9D9D', 'color':'white',}} onClick={handleClose7}>
+          <Button
+            style={{
+              border: "none",
+              "font-family": "oldpicture",
+              backgroundColor: "#9D9D9D",
+              color: "white",
+            }}
+            onClick={handleClose7}
+          >
             Close
-        </Button>
-        <Button style={{'color':'black', 'backgroundColor':'#FD7A99', 'border':'none','font-family':'oldpicture', 'box-shadow':'none' }} onClick={()=>{document.location.href='/login'}}>로그인</Button>
+          </Button>
+          <Button
+            style={{
+              color: "black",
+              backgroundColor: "#FD7A99",
+              border: "none",
+              "font-family": "oldpicture",
+              "box-shadow": "none",
+            }}
+            onClick={() => {
+              document.location.href = "/login";
+            }}
+          >
+            로그인
+          </Button>
         </Modal.Footer>
       </Modal>
 
-      
       {/* 회원가입 실패 */}
       <Modal
         centered
@@ -469,17 +690,29 @@ const AuthRegisterForm = () => {
         onHide={handleClose8}
         backdrop="static"
         keyboard={false}
-        >
+      >
         <Modal.Header closeButton>
-        <Modal.Title style={{'font-family':'star', 'color':'#FD7A99'}}>PAZAMA</Modal.Title>
+          <Modal.Title style={{ "font-family": "star", color: "#FD7A99" }}>
+            PAZAMA
+          </Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{'font-family':'oldpicture', 'font-size':'20px'}}>
-        회원가입에 실패했습니다.
+        <Modal.Body
+          style={{ "font-family": "oldpicture", "font-size": "20px" }}
+        >
+          회원가입에 실패했습니다.
         </Modal.Body>
         <Modal.Footer>
-        <Button style={{'border':'none','font-family':'oldpicture', 'backgroundColor':'#9D9D9D', 'color':'white',}} onClick={handleClose8}>
+          <Button
+            style={{
+              border: "none",
+              "font-family": "oldpicture",
+              backgroundColor: "#9D9D9D",
+              color: "white",
+            }}
+            onClick={handleClose8}
+          >
             Close
-        </Button>
+          </Button>
         </Modal.Footer>
       </Modal>
     </AuthFormBlock>

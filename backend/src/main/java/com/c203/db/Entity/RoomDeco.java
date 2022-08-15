@@ -21,5 +21,4 @@ public class RoomDeco {
     private int roomdeco_bg;
     private int roomdeco_candle;
     private int roomdeco_object;
-
 }

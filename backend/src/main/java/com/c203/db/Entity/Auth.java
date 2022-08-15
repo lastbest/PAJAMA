@@ -11,6 +11,7 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 public class Auth {
+
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer auth_idx;

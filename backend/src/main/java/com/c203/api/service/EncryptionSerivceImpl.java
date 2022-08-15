@@ -16,6 +16,8 @@ public class EncryptionSerivceImpl implements EncryptionService{
     private final String key = "01234567890123456789012345678901";
     private final String iv = key.substring(0, 16); // 16byte
 
+    // 룸 번호 암호화를 위함
+    // 인코딩
     @Override
     public String encrypt(String text) throws Exception {
         Cipher cipher = Cipher.getInstance(alg);
@@ -31,6 +33,7 @@ public class EncryptionSerivceImpl implements EncryptionService{
         return uriencoded;
     }
 
+    // 디코딩
     @Override
     public String decrypt(String cipherText) throws Exception {
         Cipher cipher = Cipher.getInstance(alg);
@@ -46,5 +49,4 @@ public class EncryptionSerivceImpl implements EncryptionService{
         String decrptedString = new String(decrypted, "UTF-8");
         return decrptedString;
     }
-
 }

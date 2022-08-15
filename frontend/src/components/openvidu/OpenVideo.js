@@ -6,68 +6,61 @@ app.js에 이미지 경로 수정해야합니다(drawResult(hand))
  */
 import axios from "axios";
 import { OpenVidu } from "openvidu-browser";
-import React, { Component, useEffect, useState } from "react";
+import React, { Component, useEffect, useState, useRef } from "react";
 import "./OpenVideo.css";
 import UserVideoComponent from "./UserVideoComponent";
 import Messages from "./Messages";
 import FadeInOut from "../common/FadeInOut";
 import Modal from "react-bootstrap/Modal";
 import Camera from "./Camera";
+import { connect } from "react-redux";
+import {
+  setOvSession,
+  setUserId,
+  setCake,
+  setMusic,
+} from "../../modules/ovsessionSlice";
 import ReactDOM from "react-dom";
-import { Popover, OverlayTrigger, Image } from 'react-bootstrap';
-
+import { Popover, OverlayTrigger, Image } from "react-bootstrap";
+import Speech from "./Speech";
 import html2canvas from "html2canvas";
+import ReactCanvasConfetti from "react-canvas-confetti";
 import * as tf from "@tensorflow/tfjs";
 import * as tfjsWasm from "@tensorflow/tfjs-backend-wasm";
 import * as handdetection from "@tensorflow-models/hand-pose-detection";
 import { setThreadsCount } from "@tensorflow/tfjs-backend-wasm";
+import { CountdownCircleTimer } from "react-countdown-circle-timer";
+import Music from "./../common/Music";
+import b64toBlob from "b64-to-blob";
+
 tfjsWasm.setWasmPaths(
   `https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm@${tfjsWasm.version_wasm}/dist/`
 );
 
+//rtk 관련코드
+const mapStateToProps = (state) => ({
+  ovsession: state.ovsession.value,
+  uid: state.ovsession.userid,
+  ovcake: state.ovsession.cake,
+  ovmusic: state.ovsession.music,
+});
+const mapDispatchToProps = () => ({
+  setOvSession,
+  setUserId,
+  setCake,
+  setMusic,
+});
+
+const canvasStyles = {
+  position: "fixed",
+  pointerEvents: "none",
+  width: "100%",
+  height: "100%",
+  top: 0,
+  left: 0,
+};
+
 var publisher;
-//모션캡처 온오프
-let tracking = true;
-// function toggleTraking() {
-//   if (tracking) tracking = false;
-//   else tracking = true;
-// }
-
-let emo = document.querySelector("#emo");
-let video = document.querySelector("#video");
-
-let detector, camera, stats;
-let startInferenceTime,
-  numInferences = 0;
-let inferenceTimeSum = 0,
-  lastPanelUpdate = 0;
-
-//손가락 뒤집기 코드
-let test_hand = 0; //손등 : 1, 손바닥 : 2, 손 안펴져있으면 : 0
-let hand_timer = 0; //손 뒤집을때가지 시간
-let hand_flip_cnt = 0; //손뒤집은횟수
-let firework_timer = 0;
-
-const fingerLookupIndices = {
-  thumb: [0, 1, 2, 3, 4],
-  indexFinger: [0, 5, 6, 7, 8],
-  middleFinger: [0, 9, 10, 11, 12],
-  ringFinger: [0, 13, 14, 15, 16],
-  pinky: [0, 17, 18, 19, 20],
-}; // 각 keypoint(손가락)을 이어주는 연결을 표현하기 위함
-
-function isiOS() {
-  return /iPhone|iPad|iPod/i.test(navigator.userAgent);
-}
-
-function isAndroid() {
-  return /Android/i.test(navigator.userAgent);
-}
-
-function isMobile() {
-  //mobile인지 확인
-  return isAndroid() || isiOS();
-}
 
 const OPENVIDU_SERVER_URL = "https://i7c203.p.ssafy.io:8447";
 const OPENVIDU_SERVER_SECRET = "PAZAMA";
@@ -75,9 +68,10 @@ const OPENVIDU_SERVER_SECRET = "PAZAMA";
 class OpenVideo extends Component {
   constructor(props) {
     super(props);
+    this.animationInstance = null;
 
     this.state = {
-      mySessionId: "SessionA",
+      mySessionId: props.roomIdx.slice(0, props.roomIdx.length - 6),
       myUserName: "temp",
       session: undefined,
       mainStreamManager: undefined,
@@ -89,15 +83,19 @@ class OpenVideo extends Component {
       show2: false,
       cakeshow: false,
 
-      loding: false,
       isHost: false,
       myEmail: "",
-      roomId: "",
+      roomId: props.roomIdx,
       partyHost: "",
       partyName: "",
-      partyDesc: "2022-09-30 12:22:22",
-      partyDate: "",
+      partyDesc: "",
+      partyDate: props.partyDate,
+      shot: false,
+      imgUrl: undefined,
+      countCompleted: true,
+      count: 0,
     };
+    this.props.setCake("false");
 
     // 자신의 회원정보 불러오기
     let token = sessionStorage.getItem("accessToken");
@@ -121,23 +119,21 @@ class OpenVideo extends Component {
 
     // 현재 방정보 불로오기
     axios({
-      url: "http://localhost:8082/rooms",
+      url: "http://i7c203.p.ssafy.io:8082/rooms",
       method: "get",
       headers: { accessToken: token },
       params: {
-        roomIdx: "MJktgPP9VHR5cwtdJ5IVtQ%3D%3D", // params
+        roomIdx: this.state.roomId, // params
       },
     })
       .then((res) => {
         console.log("방정보 불러오기 성공");
+        console.log(this.state.roomId);
         this.setState({
           partyHost: res.data.result.partyHost,
           partyName: res.data.result.partyName,
           partyDesc: res.data.result.partyDesc,
-          partyDate: res.data.result.partyDate,
         });
-
-        this.setState((state) => ({ loding: true }));
         if (this.state.partyHost == this.state.myEmail) {
           this.setState((state) => ({ isHost: true }));
         }
@@ -223,6 +219,7 @@ class OpenVideo extends Component {
         },
       ],
     });
+
     const mySession = this.state.session;
 
     mySession.signal({
@@ -237,10 +234,13 @@ class OpenVideo extends Component {
   }
 
   sendcakeByClick() {
-    this.setState({
-      cakeshow: !this.state.cakeshow,
-    });
-
+    // 모션인식이나 음성인식으로 케이크를 끌때는 로컬 스테이트를 바꾸기가 힘들어서 이렇게 변경
+    // 케이크 시그널을 보낼때 로컬 스테이트는 바꾸지 않는다.
+    // => 내가 나한테 보낸 시그널도 조건문 거치지않고 받아서 openvideo.js안에서 스테이트를 변경하도록
+    // this.setState({
+    //   cakeshow: !this.state.cakeshow,
+    // });
+    // this.props.setCake(this.state.cakeshow);
     const mySession = this.state.session;
     console.log(this.state.cakeshow, this.state.myUserName);
 
@@ -299,6 +299,9 @@ class OpenVideo extends Component {
       () => {
         var mySession = this.state.session;
 
+        this.props.setOvSession(this.state.session);
+        this.props.setUserId(this.state.myUserName);
+
         // --- 3) Specify the actions when events take place in the session ---
 
         // On every new Stream received...
@@ -332,11 +335,79 @@ class OpenVideo extends Component {
 
         mySession.on("signal:cakeshow", (event) => {
           let cakeShow = event.data.split(",");
-          if (cakeShow[0] !== this.state.myUserName) {
-            this.setState({
-              cakeshow: cakeShow[1] === "true" ? false : true,
-            });
+          // if (cakeShow[0] !== this.state.myUserName) { //sendcakeByclick 에서 스테이트 직접 변경하지 않고 내가보낸 시그널도 내가 직접받게 구현함
+          this.setState({
+            cakeshow: cakeShow[1] === "true" ? false : true,
+          });
+          this.props.setCake(cakeShow[1] === "true" ? "false" : "true");
+          // }
+        });
+
+        //모션인식 받는 부분
+        mySession.on("signal:motion", (event) => {
+          let chatdata = event.data.split(",");
+          switch (chatdata[1]) {
+            case "hand-v":
+              break;
+            case "hand-heart":
+              break;
+            case "hand-flip":
+              this.confetti();
+              break;
+            case "hand-one":
+              break;
+            default:
+              break;
           }
+          // console.log(chatdata[1]);
+        });
+        //음성인식 받는 부분
+        mySession.on("signal:speech", (event) => {
+          let chatdata = event.data.split(",");
+          switch (chatdata[1]) {
+            case "music_hiphop":
+              this.props.ovmusic("hiphop");
+              break;
+            case "music_cyworld":
+              this.props.ovmusic("cyworld");
+              break;
+            case "music_dance":
+              this.props.ovmusic("dance");
+              break;
+            case "music_jazz":
+              this.props.ovmusic("jazz");
+              break;
+            case "music_birthday":
+              this.props.ovmusic("birthday");
+              break;
+            case "music_indie":
+              this.props.ovmusic("independent");
+              break;
+            case "cake_show":
+              this.setState({
+                cakeshow: true,
+              });
+              this.props.setCake("true");
+              break;
+            case "cake_clear":
+              this.setState({
+                cakeshow: false,
+              });
+              this.props.setCake("false");
+              break;
+            case "confetti":
+              this.confetti();
+              break;
+            case "heart":
+              break;
+            case "hand-v":
+              break;
+            case "hand-one":
+              break;
+            default:
+              break;
+          }
+          // console.log(chatdata[1]);
         });
 
         // On every Stream destroyed...
@@ -418,7 +489,7 @@ class OpenVideo extends Component {
     this.setState({
       session: undefined,
       subscribers: [],
-      mySessionId: "SessionA",
+      mySessionId: this.state.roomId,
       myUserName: this.state.myUserName,
       mainStreamManager: undefined,
       publisher: undefined,
@@ -464,26 +535,84 @@ class OpenVideo extends Component {
   }
 
   render() {
-    const popover = (
-      <Popover className="popover">
-        <button onClick={this.takepicture}>사진찍기</button>
-      <div id="frame"></div>
-      <div className="bar">
-          <p className='text5'>최대 5장까지 저장할 수 있습니다.</p>
-          <button className="downloadbtn"><img className='download' src="/download.png" alt="download"/></button>
-          <button className="trashbtn" onClick={this.removediv}><img className='trash' src="/trash.png" alt="trash"/></button>
-      </div>
+    const popover1 = (
+      <Popover className="popover1">
+        <button
+          className="takebtn"
+          onClick={() => {
+            this.removediv();
+            this.setState({ shot: true });
+          }}
+        >
+          사진찍기
+        </button>
+        {this.state.shot ? (
+          <div className="timer-wrapper">
+            <CountdownCircleTimer
+              isPlaying
+              duration={3}
+              colors={["#004777"]}
+              trailStrokeWidth={0}
+              strokeWidth={0}
+              onComplete={() => {
+                // 사진찍는 함수 삽입
+                this.takepicture();
+                this.setState({ shot: false });
+                console.log("종료");
+              }}
+            >
+              {({ remainingTime }) => remainingTime}
+            </CountdownCircleTimer>
+          </div>
+        ) : null}
+
+        <div id="frame" className="frame"></div>
+        <div className="bar">
+          <p className="text5">최대 5장까지 저장할 수 있습니다.</p>
+          <button
+            className="downloadbtn"
+            onClick={() => {
+              console.log(this.state.imgUrl);
+              let token = sessionStorage.getItem("accessToken");
+              this.removediv();
+              axios({
+                url: "https://i7c203.p.ssafy.io/api/picture",
+                method: "post",
+                headers: {
+                  accessToken: token,
+                },
+                data: {
+                  roomIdx: this.state.roomId,
+                  picture: this.state.imgUrl,
+                },
+              });
+            }}
+          >
+            <img className="download" src="/download.png" alt="download" />
+          </button>
+          <button className="trashbtn" onClick={this.removediv}>
+            <img className="trash" src="/trash.png" alt="trash" />
+          </button>
+        </div>
       </Popover>
     );
 
     const popover2 = (
       <Popover className="popover2">
-          <button className="voicebtn" onClick={this.higherPitch}><img className='voice1' src="/arrow-up.png" alt="voice1"/></button>
-          <button className="voicebtn" onClick={this.lowerPitch}><img className='voice2' src="/down-arrow.png" alt="voice2"/></button>
-          <button className="voicebtn"><img className='voice3' src="/mic2.png" alt="voice3"/></button>
-          <button className="voicebtn" onClick={this.removeFilters}><img className='voice4' src="/voiceoff.png" alt="voice4"/></button>
+        <button className="voicebtn" onClick={this.higherPitch}>
+          <img className="voice1" src="/arrow-up.png" alt="voice1" />
+        </button>
+        <button className="voicebtn" onClick={this.lowerPitch}>
+          <img className="voice2" src="/down-arrow.png" alt="voice2" />
+        </button>
+        <button className="voicebtn">
+          <img className="voice3" src="/mic2.png" alt="voice3" />
+        </button>
+        <button className="voicebtn" onClick={this.removeFilters}>
+          <img className="voice4" src="/voiceoff.png" alt="voice4" />
+        </button>
       </Popover>
-   );
+    );
 
     const mySessionId = this.state.mySessionId;
     const messages = this.state.messages;
@@ -503,6 +632,41 @@ class OpenVideo extends Component {
       Main = "main-container";
       Candleshow = "candle1";
     }
+    const minuteSeconds = 60;
+    const hourSeconds = 3600;
+    const daySeconds = 86400;
+
+    const timerProps = {
+      isPlaying: true,
+      size: 120,
+      strokeWidth: 6,
+    };
+
+    const renderTime = (dimension, time) => {
+      return (
+        <div className="time-wrapper">
+          <div className="time">{time}</div>
+          <div>{dimension}</div>
+        </div>
+      );
+    };
+
+    const validURL = encodeURIComponent(this.state.roomId);
+
+    const getTimeSeconds = (time) => (minuteSeconds - time) | 0;
+    const getTimeMinutes = (time) => ((time % hourSeconds) / minuteSeconds) | 0;
+    const getTimeHours = (time) => ((time % daySeconds) / hourSeconds) | 0;
+    const getTimeDays = (time) => (time / daySeconds) | 0;
+
+    const stratTime = Date.now() / 1000;
+    const endTime = new Date(this.state.partyDate) / 1000;
+    console.log(endTime + "  111111111111111111");
+    console.log(stratTime + "  22222222222222222");
+    const remainingTime = endTime - stratTime;
+
+    console.log(remainingTime + "  3333333333333333");
+    const days = Math.ceil(remainingTime / daySeconds);
+    const daysDuration = days * daySeconds;
 
     //오픈비두 필터
     function textOverlay() {
@@ -583,7 +747,7 @@ class OpenVideo extends Component {
 
     return (
       <div>
-        {this.state.session === undefined && this.state.loding ? (
+        {this.state.session === undefined ? (
           <div id="join">
             <div id="img-div">
               <img
@@ -596,52 +760,108 @@ class OpenVideo extends Component {
               <form className="form-group" onSubmit={this.joinSession}>
                 <div className="nameDiv">{this.state.partyName}</div>
                 <div className="descDiv">{this.state.partyDesc}</div>
-                <div id="counter" className="counter" />
+                <div className="ddaycounter">
+                  <CountdownCircleTimer
+                    {...timerProps}
+                    colors="#7E2E84"
+                    strokeWidth={10}
+                    duration={daysDuration}
+                    initialRemainingTime={remainingTime}
+                    onComplete={() => {
+                      // countCompleted state가 true가 되면 참여하기 버튼이 보이게 구현
+                      this.setState({ countCompleted: true });
+                      console.log("타이머 종료");
+                    }}
+                  >
+                    {({ elapsedTime, color }) => (
+                      <span style={{ color }}>
+                        {renderTime(
+                          "days",
 
-                {/* <span>
-                  유저 & 방정보
-                  <br />
-                  ------------------------------
-                  <br />
-                  마이닉네임: {this.state.myUserName}
-                  <br />
-                  마이이메일: {this.state.myEmail}
-                  <br />
-                  방이름 : {this.state.partyName}
-                  <br />
-                  방설명 : {this.state.partyDesc}
-                  <br />
-                  파티시간 : {this.state.partyDate}
-                  <br />
-                  파티호스트 : {this.state.partyHost}
-                </span>
-                <p>
-                  <label> Session: </label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    id="sessionId"
-                    value={mySessionId}
-                    onChange={this.handleChangeSessionId}
-                    required
-                  />
-                </p> */}
-                <p className="text-center">
-                  <input
-                    className="joinbtn"
-                    name="commit"
-                    type="submit"
-                    value="참여하기"
-                  />
-                </p>
+                          getTimeDays(daysDuration - elapsedTime)
+                        )}
+                      </span>
+                    )}
+                  </CountdownCircleTimer>
+                  <CountdownCircleTimer
+                    {...timerProps}
+                    colors="#D14081"
+                    strokeWidth={10}
+                    duration={daySeconds}
+                    initialRemainingTime={remainingTime}
+                    onComplete={(totalElapsedTime) => ({
+                      shouldRepeat:
+                        remainingTime - totalElapsedTime > hourSeconds,
+                    })}
+                  >
+                    {({ elapsedTime, color }) => (
+                      <span style={{ color }}>
+                        {renderTime(
+                          "hours",
+                          getTimeHours(daySeconds - elapsedTime)
+                        )}
+                      </span>
+                    )}
+                  </CountdownCircleTimer>
+                  <CountdownCircleTimer
+                    {...timerProps}
+                    colors="#EF798A"
+                    duration={hourSeconds}
+                    strokeWidth={10}
+                    initialRemainingTime={remainingTime}
+                    onComplete={(totalElapsedTime) => ({
+                      shouldRepeat:
+                        remainingTime - totalElapsedTime > minuteSeconds,
+                    })}
+                  >
+                    {({ elapsedTime, color }) => (
+                      <span style={{ color }}>
+                        {renderTime(
+                          "minutes",
+                          getTimeMinutes(hourSeconds - elapsedTime)
+                        )}
+                      </span>
+                    )}
+                  </CountdownCircleTimer>
+                  <CountdownCircleTimer
+                    {...timerProps}
+                    colors="#218380"
+                    strokeWidth={10}
+                    duration={minuteSeconds}
+                    initialRemainingTime={remainingTime % minuteSeconds}
+                    onComplete={(totalElapsedTime) => ({
+                      shouldRepeat: remainingTime - totalElapsedTime > 0,
+                    })}
+                  >
+                    {({ elapsedTime, color }) => (
+                      <span style={{ color }}>
+                        {renderTime("seconds", getTimeSeconds(elapsedTime))}
+                      </span>
+                    )}
+                  </CountdownCircleTimer>
+                </div>
+
+                {this.state.countCompleted ? (
+                  <p className="text-center">
+                    <input
+                      className="joinbtn"
+                      name="commit"
+                      type="submit"
+                      value="참여하기"
+                    />
+                  </p>
+                ) : null}
                 {this.state.partyHost === this.state.myEmail &&
                 this.state.partyHost != "" ? (
                   <p className="text-center">
                     <input
                       className="joinbtn"
                       name="commit"
-                      type="submit"
+                      type="button"
                       value="파티수정"
+                      onClick={() => {
+                        document.location.href = `/updateparty/${validURL}`;
+                      }}
                     />
                   </p>
                 ) : (
@@ -658,6 +878,7 @@ class OpenVideo extends Component {
           <div className="partyroom">
             <div className="header">
               <img
+                className="pazama"
                 src="/pazamafont.png"
                 alt="logo"
                 width="150px"
@@ -667,6 +888,14 @@ class OpenVideo extends Component {
               {this.state.partyHost === this.state.myEmail &&
               this.state.partyHost != "" ? (
                 <>
+                  <div className="musicmodal" style={{ display: "none" }}>
+                    <div>
+                      <div className="musicDiv">
+                        <Music />
+                        <div className="chatbox__footer"></div>
+                      </div>
+                    </div>
+                  </div>
                   <button className="navbtn" onClick={this.sendcakeByClick}>
                     <img
                       src="/birthday-cake.png"
@@ -675,20 +904,48 @@ class OpenVideo extends Component {
                       height="60px"
                     ></img>
                   </button>
-                  <OverlayTrigger trigger="click" placement="bottom" overlay={popover}>
-                    <Image className="capture" src="/camera.png" alt="capture" style={{width:'60px', height:"60px"}}/>
+                  <OverlayTrigger
+                    trigger="click"
+                    placement="bottom"
+                    overlay={popover1}
+                  >
+                    <Image
+                      className="capture"
+                      src="/camera.png"
+                      alt="capture"
+                      style={{ width: "60px", height: "60px" }}
+                    />
                   </OverlayTrigger>
-                  <button className="navbtn">
-                    <img
-                      src="/music.png"
-                      alt="logo"
-                      width="60px"
-                      height="60px"
-                    ></img>
-                  </button>{" "}
+                  <Image
+                    type="button"
+                    onClick={() => {
+                      if (this.state.count % 2 == 0) {
+                        const di = (document.querySelector(
+                          ".musicmodal"
+                        ).style.display = "block");
+                      } else {
+                        const di = (document.querySelector(
+                          ".musicmodal"
+                        ).style.display = "none");
+                      }
+                      this.setState({ count: this.state.count + 1 });
+                    }}
+                    className="music"
+                    src="/music.png"
+                    alt="logo"
+                    style={{ width: "60px", height: "60px" }}
+                  />
                 </>
               ) : (
                 <>
+                  <div className="musicmodal">
+                    <div>
+                      <div className="musicDiv" style={{ display: "block" }}>
+                        <Music />
+                        <div className="chatbox__footer"></div>
+                      </div>
+                    </div>
+                  </div>
                   <button className="navbtn">
                     <img
                       src="/birthday-cake.png"
@@ -697,20 +954,28 @@ class OpenVideo extends Component {
                       height="60px"
                     ></img>
                   </button>
-                  <OverlayTrigger trigger="click" placement="bottom" overlay={popover}>
-                    <Image className="capture" src="/camera.png" alt="capture" style={{width:'60px', height:"60px"}}/>
+                  <OverlayTrigger
+                    trigger="click"
+                    placement="bottom"
+                    overlay={popover1}
+                  >
+                    <Image
+                      className="capture"
+                      src="/camera.png"
+                      alt="capture"
+                      style={{ width: "60px", height: "60px" }}
+                    />
                   </OverlayTrigger>
-                  <button className="navbtn">
-                    <img
-                      src="/music.png"
-                      alt="logo"
-                      width="60px"
-                      height="60px"
-                    ></img>
-                  </button>
+                  <Image
+                    className="music"
+                    src="/music.png"
+                    alt="logo"
+                    style={{ width: "60px", height: "60px" }}
+                  />
                 </>
               )}
             </div>
+
             <div id="session" className="main-session">
               <div id="main-container" className={Main}>
                 {this.state.mainStreamManager !== undefined ? (
@@ -759,14 +1024,14 @@ class OpenVideo extends Component {
                   <FadeInOut show={this.state.show2} duration={500}>
                     <img
                       id="heartfire"
-                      src="/fire.gif"
+                      src="/confetti.gif"
                       style={{
                         width: "100px",
                         height: "100px",
                         "margin-left": "0px",
                         "margin-top": "-1050px",
                       }}
-                      alt="fire"
+                      alt="confetti"
                     />
                   </FadeInOut>
                 </div>
@@ -786,9 +1051,9 @@ class OpenVideo extends Component {
                   }}
                 >
                   {this.state.videostate ? (
-                    <img className="camoff" src="/videocamoff.png" />
-                  ) : (
                     <img className="camon" src="/videocamon.png" />
+                  ) : (
+                    <img className="camoff" src="/videocamoff.png" />
                   )}
                 </button>
 
@@ -804,23 +1069,41 @@ class OpenVideo extends Component {
                   }}
                 >
                   {this.state.audiostate ? (
-                    <img className="micoff" src="/micoff.png" />
-                  ) : (
                     <img className="micon" src="/micon.png" />
+                  ) : (
+                    <img className="micoff" src="/micoff.png" />
                   )}
                 </button>
-                <OverlayTrigger trigger="click" placement="top" overlay={popover2}>
-                  <Image className="voice" src="/voice.png" alt="voice" style={{width:'50px',height:"50px"}}/>
+                <OverlayTrigger
+                  trigger="click"
+                  placement="top"
+                  overlay={popover2}
+                >
+                  <Image
+                    className="voice"
+                    src="/voice.png"
+                    alt="voice"
+                    style={{ width: "50px", height: "50px" }}
+                  />
                 </OverlayTrigger>
                 <button className="chatbtn" onClick={this.toggleShow}>
-                  <img className="chat" src="chat.png" />
+                  <img className="chat" src="/chat.png" />
                 </button>
-                <button id="buttonLeaveSession" onClick={this.leaveSession}>
+                <button
+                  className="leavebtn"
+                  id="buttonLeaveSession"
+                  onClick={this.leaveSession}
+                >
                   <img className="leave" src="/shutdown.png" />
                 </button>
               </div>
             </div>
             <Camera style="display: none" />
+            <Speech />
+            <ReactCanvasConfetti
+              refConfetti={this.getInstance}
+              style={canvasStyles}
+            />
           </div>
         ) : null}
         {/* <div class="canvas-wrapper"></div> */}
@@ -982,6 +1265,13 @@ class OpenVideo extends Component {
     // const targetvideo = document.querySelector("#localUser").querySelector("video");
     html2canvas(targetvideo).then((xcanvas) => {
       const canvdata = xcanvas.toDataURL("image/png");
+
+      const mimeType = "image/png"; // image/jpeg
+      const realData = canvdata.split(",")[1]; // 이 경우에선 /9j/4AAQSkZJRgABAQAAAQABAAD...
+      const blob = b64toBlob(realData, mimeType);
+      // document.getElementById('myimage').src = window.URL.createObjectURL(blob)
+
+      this.setState({ imgUrl: window.URL.createObjectURL(blob) });
       var photo = document.createElement("img");
       photo.setAttribute("src", canvdata);
       photo.setAttribute("width", 200);
@@ -993,7 +1283,48 @@ class OpenVideo extends Component {
   removediv() {
     const framediv = document.getElementById("frame");
     framediv.innerHTML = "";
+  }
+  //종이꽃효과
+  makeShot = (particleRatio, opts) => {
+    this.animationInstance &&
+      this.animationInstance({
+        ...opts,
+        origin: { y: 0.7 },
+        particleCount: Math.floor(200 * particleRatio),
+      });
+  };
+  confetti = () => {
+    this.makeShot(0.25, {
+      spread: 26,
+      startVelocity: 55,
+    });
+
+    this.makeShot(0.2, {
+      spread: 60,
+    });
+
+    this.makeShot(0.35, {
+      spread: 100,
+      decay: 0.91,
+      scalar: 0.8,
+    });
+
+    this.makeShot(0.1, {
+      spread: 120,
+      startVelocity: 25,
+      decay: 0.92,
+      scalar: 1.2,
+    });
+
+    this.makeShot(0.1, {
+      spread: 120,
+      startVelocity: 45,
+    });
+  };
+  getInstance = (instance) => {
+    this.animationInstance = instance;
   };
 }
 
-export default OpenVideo;
+// export default OpenVideo;
+export default connect(mapStateToProps, mapDispatchToProps())(OpenVideo);

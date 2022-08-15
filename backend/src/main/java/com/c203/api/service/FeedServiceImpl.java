@@ -42,6 +42,7 @@ public class FeedServiceImpl implements FeedService {
         return feedShowDto;
     }
 
+    // 피드 삭제
     @Override
     @Transactional
     public boolean deleteFeed(String email, String roomIdx) throws Exception {

@@ -35,20 +35,20 @@ public class MailServiceImpl implements MailService {
     public void mailSend(MailSendDto mailSendDto) {
         String authKey = makeAuthNumber();
         SimpleMailMessage message = new SimpleMailMessage();
-        String subText = "[PAZAMA] 인증번호 입니다. \n 인증번호 : " + authKey;
+        String subText = "[PAJAMA] 인증번호 입니다. \n 인증번호 : " + authKey;
         message.setTo(mailSendDto.getId());
         message.setFrom(MailServiceImpl.FROM_ADDRESS);
         message.setSubject("[인증번호]");
         message.setText(subText);
         javaMailSender.send(message); // 메일 전송
         List<Auth> mailCheck = mailRepository.findByAuthEmail(mailSendDto.getId());
-        if(!mailCheck.isEmpty()){ //기존에 인증번호가 있다면 제거
+        if(!mailCheck.isEmpty()){ // 기존에 인증번호가 있다면 제거
             mailRepository.deleteByAuthEmail(mailSendDto.getId());
         }
         Auth mail = new Auth();
         mail.setAuthEmail(mailSendDto.getId());
         mail.setAuthNum(authKey);
-        mailRepository.saveAndFlush(mail); //DB 등록
+        mailRepository.saveAndFlush(mail); // DB 등록
     }
 
     public String makeAuthNumber() {
@@ -66,12 +66,13 @@ public class MailServiceImpl implements MailService {
         }
         return false;
     }
+
     // 임시비밀번호 발급
     @Override
     public void mailPwd(MailPwdDto mailPwdDto) {
         String authKey = makeRanNumber();
         SimpleMailMessage message = new SimpleMailMessage();
-        String subText = "[PAZAMA] 임시 비밀번호 안내 관련 입니다. \n임시비밀번호 : " + authKey;
+        String subText = "[PAJAMA] 임시 비밀번호 안내 관련 입니다. \n임시비밀번호 : " + authKey;
         message.setTo(mailPwdDto.getEmail());
         message.setFrom(MailServiceImpl.FROM_ADDRESS);
         message.setSubject("[임시 비밀번호 발급]"); // 제목
@@ -82,6 +83,7 @@ public class MailServiceImpl implements MailService {
         user.setUserPwd(authKey);
         userRepository.saveAndFlush(user);
     }
+
     // 3분 지나면 DB에 저장된 인증번호 삭제되게 하기
     @Override
     @Transactional
@@ -101,6 +103,4 @@ public class MailServiceImpl implements MailService {
         }
         return str;
     }
-
-
 }

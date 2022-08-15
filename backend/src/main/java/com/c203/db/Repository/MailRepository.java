@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-
 @Repository
 public interface MailRepository extends JpaRepository<Auth, Integer> {
     Optional<Auth> findByAuthEmailAndAuthNum(String email, String authNumber);

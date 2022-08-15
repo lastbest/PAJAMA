@@ -12,9 +12,6 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class Letter {
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private User user2;
-
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private int letter_idx;
@@ -24,5 +21,4 @@ public class Letter {
     private int letter_room;
     private String letter_title;
     private String letter_content;
-
 }

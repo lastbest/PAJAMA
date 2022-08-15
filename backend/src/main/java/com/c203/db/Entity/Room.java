@@ -27,5 +27,4 @@ public class Room  {
     private LocalDateTime room_date;
     private LocalDateTime room_opendate;
     private String room_link;
-
 }

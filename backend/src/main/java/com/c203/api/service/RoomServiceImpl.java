@@ -6,8 +6,10 @@ import com.c203.api.dto.Room.RoomModifyDto;
 import com.c203.api.dto.Room.RoomShowDto;
 import com.c203.db.Entity.Room;
 import com.c203.db.Entity.RoomDeco;
+import com.c203.db.Entity.User;
 import com.c203.db.Repository.RoomDecoRepository;
 import com.c203.db.Repository.RoomRepository;
+import com.c203.db.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +24,8 @@ public class RoomServiceImpl implements RoomService {
     private RoomRepository roomRepository;
     @Autowired
     private RoomDecoRepository roomDecoRepository;
-
+    @Autowired
+    private UserRepository userRepository;
     @Autowired
     private EncryptionService encryptionService;
 
@@ -55,6 +58,7 @@ public class RoomServiceImpl implements RoomService {
         return roomDecoDto;
     }
 
+    // 방 삭제
     @Override
     @Transactional
     public boolean deleteRoom(String email, String idx) throws Exception {
@@ -68,6 +72,7 @@ public class RoomServiceImpl implements RoomService {
         return true;
     }
 
+    // 방 정보 수정 - 기존 방 등록에서 했던 값들 수정 가능
     @Override
     public boolean modifyRoom(RoomModifyDto roomModifyDto, String roomIdx) throws Exception {
         // 원래 room_idx 원래 값
@@ -87,6 +92,7 @@ public class RoomServiceImpl implements RoomService {
         roomDecoRepository.save(roomDeco);
         return true;
     }
+
     // 룸정보 보여주기
     @Override
     public RoomShowDto showRoom(String email, String idx) throws Exception {// 원래 room_idx 원래 값
@@ -102,6 +108,9 @@ public class RoomServiceImpl implements RoomService {
             roomShowDto.setPartyCandle(roomDeco.getRoomdeco_candle());
             // 호스트 설정
             roomShowDto.setPartyHost(room.get().getRoomHost());
+            // 닉네임 설정
+            Optional<User> user = userRepository.findByUserEmail(email);
+            roomShowDto.setPartyNickname(user.get().getUserNickname());
             roomShowDto.setPartyDate(room.get().getRoom_date());
             roomShowDto.setPartyDesc(room.get().getRoomDesc());
             roomShowDto.setPartyName(room.get().getRoomName());
@@ -109,5 +118,4 @@ public class RoomServiceImpl implements RoomService {
         }
         else return null;
     }
-
 }
