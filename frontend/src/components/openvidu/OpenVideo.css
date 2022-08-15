@@ -165,6 +165,21 @@
   height: 13%;
 }
 
+.firecss1 {
+  display:none;
+  margin: auto;
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start: 1;
+  grid-row-end: 4;
+  display:flex;
+  justify-content: center;
+  margin-top: 0%;
+  width: 8%;
+  height: 13%;
+}
+
+
 .candle1 {
   display: none;
   width: 85px;

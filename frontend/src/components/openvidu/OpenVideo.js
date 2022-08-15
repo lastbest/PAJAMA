@@ -629,17 +629,20 @@ class OpenVideo extends Component {
     let Cakeshow = "";
     let Candleshow = "";
     let Fireshow = "";
+    let Firecssshow = "";
 
     if (cakeshow === true) {
       Cakeshow = "cake";
       Main = "main-container1";
       Candleshow = "candle";
-      Fireshow = "fire"
+      Fireshow = "fire";
+      Firecssshow= "firecss";
     } else {
       Cakeshow = "cake1";
       Main = "main-container";
       Candleshow = "candle1";
-      Fireshow = "fire1"
+      Fireshow = "fire1";
+      Firecssshow = "firecss1";
     }
     const minuteSeconds = 60;
     const hourSeconds = 3600;
@@ -911,7 +914,7 @@ class OpenVideo extends Component {
                 ))}
                   <img id="cake1" className={Cakeshow} src={this.state.partyCake} alt="cake1"></img>
                   <img id="heart" className={Candleshow} src={this.state.partyCandle} alt="heart" />
-                  <div className="firecss">
+                  <div className={Firecssshow}>
                     <FadeInOut show={this.state.show2} duration={500}>
                       <img className={Fireshow}
                         id="heartfire"
