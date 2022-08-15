@@ -7,9 +7,7 @@ public interface UserService {
     UserInfoDto infoUser(String email);
     boolean findUser(String email,String name);
     boolean registUser(UserRegistDto userRegistDto);
-
     boolean modifyUser(UserModifyDto userModifyDto);
-
     boolean deleteUser(String decodeEmail);
     UserShowDto showUser(String email);
     String findEmail(String tel);

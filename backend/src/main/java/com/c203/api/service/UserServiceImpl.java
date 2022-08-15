@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
         else return null;
     }
 
-    // 이메일 보낼때 user가 맞는지 확인하려고
+    // 이메일 보낼때 user가 맞는지 확인하기
     @Override
     public boolean findUser(String email, String name) {
         return false;
@@ -115,5 +115,4 @@ public class UserServiceImpl implements UserService {
         String result = front + middle + back;
         return result;
     }
-
 }

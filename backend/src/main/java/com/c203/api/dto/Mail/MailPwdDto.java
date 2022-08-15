@@ -9,5 +9,4 @@ import lombok.Setter;
 @NoArgsConstructor
 public class MailPwdDto {
     private String email;
-//  private String name;
 }

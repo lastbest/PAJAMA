@@ -18,30 +18,24 @@ import java.util.Map;
 @Service
 public class JwtServiceImpl implements JwtService {
 
-
     public static final Logger logger = LoggerFactory.getLogger(JwtServiceImpl.class);
-
     private static final String SALT = "qwerasdf";
-    private static final int EXPIRE_MINUTES = 100; //토큰 만료 시간
+    private static final int EXPIRE_MINUTES = 600; //토큰 만료 시간
 
-
-
-
-    //토큰 발급 메서드를 활용한  refresh 토큰 생성
+    // 토큰 발급 메서드를 활용한  refresh 토큰 생성
     @Override
     public <T> String createRefreshToken(String key, T data) {
-        //데이터는 별도로 넣지 않음. 유효기간만 5배로 연장
+        // 데이터는 별도로 넣지 않음. 유효기간만 5배로 연장
         return create(key, data, "refresh-token", EXPIRE_MINUTES*5);
     }
 
-    //토큰 발급 메서드를 활용한 ACCESS 토큰 생성
+    // 토큰 발급 메서드를 활용한 ACCESS 토큰 생성
     @Override
     public <T> String createAccessToken(String key, T data) {
-
         return create(key, data, "access-token", EXPIRE_MINUTES);
     }
 
-    //Token 발급 메서드
+    // Token 발급 메서드
     /**
      * key : Claim에 셋팅될 key 값
      * data : Claim에 셋팅 될 data 값
@@ -52,16 +46,16 @@ public class JwtServiceImpl implements JwtService {
     @Override
     public <T> String create(String key, T data, String subject, long expir) {
         String jwt = Jwts.builder()
-                //header 설정 : 토큰의 타입, 알고리즘 정보 등을 셋팅
-                .setHeaderParam("typ", "JWT") //header 세팅
-                .setHeaderParam("regDate", System.currentTimeMillis()) //header 세팅
-                //payload 설정 : 유효기간(Expiration), 토큰 제목(Subject), 데이터(claim) 등등 담고 싶은 정보 설정
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * expir)) //토큰 유효기간 설정
+                // header 설정 : 토큰의 타입, 알고리즘 정보 등을 셋팅
+                .setHeaderParam("typ", "JWT") // header 세팅
+                .setHeaderParam("regDate", System.currentTimeMillis()) // header 세팅
+                // payload 설정 : 유효기간(Expiration), 토큰 제목(Subject), 데이터(claim) 등등 담고 싶은 정보 설정
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * expir)) // 토큰 유효기간 설정
                 .setSubject(subject) // 토큰 제목 설정 ex) access-token, refresh-token
                 .claim(key, data)
-                //SIGNATURE 설정 : secret key를 이용한 암호화
+                // SIGNATURE 설정 : secret key를 이용한 암호화
                 .signWith(SignatureAlgorithm.HS256, this.generateKey())
-                .compact();//직렬화 처리
+                .compact(); // 직렬화 처리
         logger.debug("토큰 발생! : {}", jwt);
         return jwt;
     }
@@ -71,8 +65,8 @@ public class JwtServiceImpl implements JwtService {
     private byte[] generateKey() {
         byte[] key = null;
         try {
-            //byte 코드로 인코딩 해주기
-            //캐릭터셋 인자로 안주면 사용자 플랫폼의 기본 인코딩 설정대로 인코딩
+            // byte 코드로 인코딩
+            // 캐릭터셋 인자로 안주면 사용자 플랫폼의 기본 인코딩 설정대로 인코딩
             key = SALT.getBytes("UTF-8");
         } catch (UnsupportedEncodingException e) {
             if (logger.isInfoEnabled()) {
@@ -85,13 +79,13 @@ public class JwtServiceImpl implements JwtService {
         return key;
     }
 
-    //	전달 받은 토큰이 제대로 생성된것인지 확인 하고 문제가 있다면Exception을 발생.
+    // 전달 받은 토큰이 제대로 생성 된건지 확인 후 문제 있다면 exception
     @Override
     public String decodeToken(String jwt) {
         try {
-            //Json Web Signature? 서버에서 인증을 근거로 인증정보를 서버의 private key로 서명 한것을 토큰화 한것
-            //setSigningKey : JWS 서명 검증을 위한  secretkey 셋팅
-            //parseClaimsJws : 파싱하여 원본 jws 만들기
+            // Json Web Signature? 서버에서 인증을 근거로 인증정보를 서버의 private key로 서명 한것을 토큰화 한것
+            // setSigningKey : JWS 서명 검증을 위한  secretkey 셋팅
+            // parseClaimsJws : 파싱하여 원본 jws 만들기
             Jws<Claims> claims = Jwts.parser().setSigningKey(this.generateKey()).parseClaimsJws(jwt);
             logger.debug("claim : ", claims);
             return claims.getBody().get("id").toString();
