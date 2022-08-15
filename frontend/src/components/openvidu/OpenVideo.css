@@ -166,7 +166,7 @@
 }
 
 .firecss1 {
-  display:none;
+  display:none !important;
   margin: auto;
   grid-column-start: 2;
   grid-column-end: 3;
