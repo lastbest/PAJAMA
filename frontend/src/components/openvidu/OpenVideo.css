@@ -58,7 +58,7 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  background-image: url("/public/frameimg1.png");
+  /* background-image: url("./../../../public/frame1.png"); */
   background-size: contain;
   background-position: center center;
   background-repeat: no-repeat;
