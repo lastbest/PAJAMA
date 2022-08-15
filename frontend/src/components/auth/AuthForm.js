@@ -111,7 +111,8 @@ const AuthForm = () => {
                 console.log(res.data);
                 if (res.data.accessToken === undefined) {
                   handleShow();
-                  document.location.href = "/login";
+                  // document.location.href = "/login";
+                  
                 } else {
                   sessionStorage.setItem("accessToken", res.data.accessToken);
                   if (roomIdx !== undefined) {
@@ -122,6 +123,7 @@ const AuthForm = () => {
                 }
               })
               .catch(() => {
+                handleShow()
                 console.log("로그인 실패");
               });
           }}
@@ -142,7 +144,8 @@ const AuthForm = () => {
           회원가입
         </Link>
       </Footer>
-
+      {
+        show ? 
       <Modal
         centered
         show={show}
@@ -170,12 +173,13 @@ const AuthForm = () => {
               backgroundColor: "#9D9D9D",
               color: "white",
             }}
-            onClick={handleClose}
+            onClick={()=>{document.location.href="/login"}}
           >
             Close
           </Button>
         </Modal.Footer>
-      </Modal>
+      </Modal> : null
+      }
     </AuthFormBlock>
   );
 };
