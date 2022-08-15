@@ -12,10 +12,6 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 public class Feed {
-//
-//    @ManyToOne
-//    @JoinColumn(name = "user_idx")
-//    private User user;
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
