@@ -42,16 +42,6 @@ public class PictureServiceImpl implements PictureService {
         // 해당 방에 있는 모든 참여자들의 feed테이블에 사진 값 저장하기
         List<Participant> list = participantRepository.findByParticipantRoom(id);
         int size = list.size();
-        // 호스트는 paricipant에 없으니까 따로 추가해주기
-//        Optional<Room> room = roomRepository.findByRoomIdx(id);
-//        Feed feed = new Feed();
-//        feed.setFeedUser(room.get().getRoomHost());
-//        feed.setFeed_time(picture.getPicture_time());
-//        feed.setFeedPicture(picture.getPicture());
-//        feed.setFeedRoomIdx(id);
-//        feed.setFeedRepresent(false);
-//        feedRepository.save(feed);
-        System.out.println(size);
         for(int i=0;i<size;i++){
             // 참여자들 목록 확인해서 각자 피드에 사진 넣어주기
             Participant participant = list.get(i);
@@ -62,7 +52,6 @@ public class PictureServiceImpl implements PictureService {
             feed2.setFeedRoomIdx(id);
             feed2.setFeedRepresent(false);
             feedRepository.save(feed2);
-            System.out.println(feed2.getFeedRoomIdx());
         }
         return true;
     }
