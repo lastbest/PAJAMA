@@ -596,16 +596,16 @@ class OpenVideo extends Component {
 
     const popover2 = (
       <Popover className="popover2">
-        <button className="voicebtn" onClick={higherPitch}>
+        <button className="voicebtn" onClick={this.higherPitch}>
           <img className="voice1" src="/arrow-up.png" alt="voice1" />
         </button>
-        <button className="voicebtn" onClick={lowerPitch}>
+        <button className="voicebtn" onClick={this.lowerPitch}>
           <img className="voice2" src="/down-arrow.png" alt="voice2" />
         </button>
         <button className="voicebtn">
           <img className="voice3" src="/mic2.png" alt="voice3" />
         </button>
-        <button className="voicebtn" onClick={removeFilters}>
+        <button className="voicebtn" onClick={this.removeFilters}>
           <img className="voice4" src="/voiceoff.png" alt="voice4" />
         </button>
       </Popover>
@@ -942,9 +942,7 @@ class OpenVideo extends Component {
                     <img className="micoff" src="/micoff.png" />
                   )}
                 </button>
-                <button className="voicerecog-btn">
-                  <img className="voicerecog" src="/voicerecog.png"></img>
-                </button>
+                <Speech />
                 <OverlayTrigger trigger="click" placement="top" overlay={popover2}>
                   <Image
                     className="voice"
@@ -962,7 +960,7 @@ class OpenVideo extends Component {
               </div>
             </div>
             <Camera style="display: none" />
-            <Speech />
+
             <ReactCanvasConfetti refConfetti={this.getInstance} style={canvasStyles} />
           </div>
         ) : null}
