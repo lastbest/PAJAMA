@@ -98,6 +98,15 @@ const RoomPage = () => {
         var btn = document.createElement("button");
         btn.innerHTML = "참여하기";
         btn.className = "joinbtn";
+        btn.onclick = function () {
+          axios({
+            url: `https://i7c203.p.ssafy.io/api/participant/${validURL}`,
+            method: "post",
+            headers: { accessToken: token },
+          }).then((res) => {
+            console.log("success");
+          });
+        };
         document.getElementById("bu").appendChild(btn);
       }
     }
