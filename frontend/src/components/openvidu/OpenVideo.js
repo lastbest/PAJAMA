@@ -359,6 +359,11 @@ class OpenVideo extends Component {
               break;
             case "hand-one":
               break;
+            case "fire-off":
+              this.setState({
+                show2: false,
+              });
+              break;
             default:
               break;
           }
@@ -978,14 +983,14 @@ class OpenVideo extends Component {
                   <FadeInOut show={this.state.show2} duration={500}>
                     <img
                       id="heartfire"
-                      src="/confetti.gif"
+                      src="/fire.gif"
                       style={{
                         width: "100px",
                         height: "100px",
                         "margin-left": "0px",
                         "margin-top": "-1050px",
                       }}
-                      alt="confetti"
+                      alt="fire"
                     />
                   </FadeInOut>
                 </div>
