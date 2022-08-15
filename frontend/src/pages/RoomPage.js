@@ -5,7 +5,6 @@ import styles from "./RoomPage.module.css";
 import OpenVideo from "../components/openvidu/OpenVideo";
 import axios from "axios";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
-import useForceUpdate from "use-force-update";
 
 const Header = styled.div`
   display: grid;

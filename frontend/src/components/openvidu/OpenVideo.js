@@ -363,8 +363,14 @@ class OpenVideo extends Component {
           let chatdata = event.data.split(",");
           switch (chatdata[1]) {
             case "hand-v":
+              console.log("촛불성공");
+              this.setState({
+                show2: false,
+              });
+              
               break;
             case "hand-heart":
+              
               break;
             case "hand-flip":
               this.confetti();
@@ -372,9 +378,7 @@ class OpenVideo extends Component {
             case "hand-one":
               break;
             case "fire-off":
-              this.setState({
-                show2: false,
-              });
+              
               break;
             default:
               break;
@@ -647,15 +651,18 @@ class OpenVideo extends Component {
     let Main = "";
     let Cakeshow = "";
     let Candleshow = "";
+    let Fireshow = "";
 
     if (cakeshow === true) {
       Cakeshow = "cake";
       Main = "main-container1";
       Candleshow = "candle";
+      Fireshow = "fire"
     } else {
       Cakeshow = "cake1";
       Main = "main-container";
       Candleshow = "candle1";
+      Fireshow = "fire1"
     }
     const minuteSeconds = 60;
     const hourSeconds = 3600;
@@ -933,17 +940,11 @@ class OpenVideo extends Component {
 
               <div>
                 {/* 하트초 */}
-                <div className="text-center">
+                <div >
                   <FadeInOut show={this.state.show2} duration={500}>
-                    <img
+                    <img className={Fireshow}
                       id="heartfire"
                       src="/fire.gif"
-                      style={{
-                        width: "100px",
-                        height: "100px",
-                        "margin-left": "0px",
-                        "margin-top": "-1050px",
-                      }}
                       alt="fire"
                     />
                   </FadeInOut>
