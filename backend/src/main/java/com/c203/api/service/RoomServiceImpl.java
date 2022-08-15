@@ -7,7 +7,6 @@ import com.c203.api.dto.Room.RoomShowDto;
 import com.c203.db.Entity.Room;
 import com.c203.db.Entity.RoomDeco;
 import com.c203.db.Entity.User;
-import com.c203.db.Repository.ParticipantRepository;
 import com.c203.db.Repository.RoomDecoRepository;
 import com.c203.db.Repository.RoomRepository;
 import com.c203.db.Repository.UserRepository;
@@ -59,6 +58,7 @@ public class RoomServiceImpl implements RoomService {
         return roomDecoDto;
     }
 
+    // 방 삭제
     @Override
     @Transactional
     public boolean deleteRoom(String email, String idx) throws Exception {
@@ -72,6 +72,7 @@ public class RoomServiceImpl implements RoomService {
         return true;
     }
 
+    // 방 정보 수정 - 기존 방 등록에서 했던 값들 수정 가능
     @Override
     public boolean modifyRoom(RoomModifyDto roomModifyDto, String roomIdx) throws Exception {
         // 원래 room_idx 원래 값
@@ -91,6 +92,7 @@ public class RoomServiceImpl implements RoomService {
         roomDecoRepository.save(roomDeco);
         return true;
     }
+
     // 룸정보 보여주기
     @Override
     public RoomShowDto showRoom(String email, String idx) throws Exception {// 원래 room_idx 원래 값
@@ -116,5 +118,4 @@ public class RoomServiceImpl implements RoomService {
         }
         else return null;
     }
-
 }

@@ -2,7 +2,6 @@ package com.c203.api.controller;
 
 import com.c203.api.dto.Feed.FeedRegistDto;
 import com.c203.api.dto.Feed.FeedShowDto;
-import com.c203.api.dto.User.UserInfoDto;
 import com.c203.api.service.FeedService;
 import com.c203.api.service.JwtService;
 import com.c203.api.service.UserService;
