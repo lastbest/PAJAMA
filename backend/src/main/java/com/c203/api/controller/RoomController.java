@@ -62,6 +62,7 @@ public class RoomController {
             roomIdx = roomIdx.replace("&","%26");
             roomIdx = roomIdx.replace("+","%2B");
             roomIdx = roomIdx.replace("=","%3D");
+            roomIdx = roomIdx.replace("/","%2F");
 
             // room_idx와 email이 같으면 삭제 - 만든 사람이 삭제하도록
             if(!decodeEmail.equals("timeout")){

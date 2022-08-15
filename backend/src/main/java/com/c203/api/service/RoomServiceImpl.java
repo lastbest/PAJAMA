@@ -4,9 +4,11 @@ import com.c203.api.dto.Room.RoomCreateDto;
 import com.c203.api.dto.Room.RoomDecoDto;
 import com.c203.api.dto.Room.RoomModifyDto;
 import com.c203.api.dto.Room.RoomShowDto;
+import com.c203.db.Entity.Participant;
 import com.c203.db.Entity.Room;
 import com.c203.db.Entity.RoomDeco;
 import com.c203.db.Entity.User;
+import com.c203.db.Repository.ParticipantRepository;
 import com.c203.db.Repository.RoomDecoRepository;
 import com.c203.db.Repository.RoomRepository;
 import com.c203.db.Repository.UserRepository;
@@ -28,6 +30,8 @@ public class RoomServiceImpl implements RoomService {
     private UserRepository userRepository;
     @Autowired
     private EncryptionService encryptionService;
+    @Autowired
+    private ParticipantRepository participantRepository;
 
     @Override
     public RoomDecoDto createRoom(RoomCreateDto roomCreateDto) throws Exception {
@@ -55,6 +59,11 @@ public class RoomServiceImpl implements RoomService {
         String n = Integer.toString(num);
         String temp = encryptionService.encrypt(n);
         roomDecoDto.setRoomId(temp); // 프론트에 암호화한 room_idx던져주기
+        // 참여자 정보에 host미리 넣어두기
+        Participant participant = new Participant();
+        participant.setParticipantRoom(num);
+        participant.setParticipantUser(roomCreateDto.getPartyHost());
+        participantRepository.save(participant);
         return roomDecoDto;
     }
 
@@ -98,6 +107,7 @@ public class RoomServiceImpl implements RoomService {
     public RoomShowDto showRoom(String email, String idx) throws Exception {// 원래 room_idx 원래 값
         String temp = encryptionService.decrypt(idx);
         int id = Integer.parseInt(temp);
+        System.out.println(temp);
         // 룸 번호로만 찾기
         Optional<Room> room = roomRepository.findByRoomIdx(id);
         RoomDeco roomDeco = roomDecoRepository.findByRoomdecoIdx(id);
