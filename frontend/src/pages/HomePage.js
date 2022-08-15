@@ -128,6 +128,9 @@ const HomePage = () => {
             <Img>
                 <img src="/subtext4.png" alt="subtext4" style={{width:'70%'}}/>
             </Img>
+            <Img>
+                <img src="/subtext5.png" alt="subtext4" style={{width:'70%'}}/>
+            </Img>
 
             <Modal
                 centered
