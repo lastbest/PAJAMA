@@ -43,11 +43,11 @@
 }
 
 @font-face{
-  font-family: "star";
-  src: url("/public/a북두칠성.ttf");
+  font-family: "oldpicture";
+  src: url("/public/Cafe24SsurroundAir.ttf");
 }
 
 @font-face{
-  font-family: "oldpicture";
-  src: url("/public/a옛날사진관3.ttf");
+  font-family: "star";
+  src: url("/public/tway_sky.ttf");
 }
