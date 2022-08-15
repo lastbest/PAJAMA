@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class FeedServiceImpl implements FeedService {
@@ -34,6 +36,8 @@ public class FeedServiceImpl implements FeedService {
         }
         feed.setFeedRepresent(true);
         feed.setFeed_description(feedRegistDto.getDescription());
+        feed.setFeedRoomIdx(id);
+        System.out.println(id);
         feedRepository.save(feed);
         FeedShowDto feedShowDto = new FeedShowDto();
         feedShowDto.setTime(feed.getFeed_time());
@@ -50,5 +54,21 @@ public class FeedServiceImpl implements FeedService {
         int id = Integer.parseInt(temp); // room_idx
         feedRepository.deleteByFeedRoomIdxAndFeedUser(id,email);
         return true;
+    }
+
+    // 사진 가져오기
+    @Override
+    public Map showPicture(String decodeEmail, String roomIdx) throws Exception {
+        String temp = encryptionService.decrypt(roomIdx);
+        int id = Integer.parseInt(temp); // room_idx
+        Map<Integer,Byte[]> map = new HashMap<>();
+        List<Feed> list = feedRepository.findByFeedRoomIdxAndFeedUser(id, decodeEmail);
+        int size = list.size();
+        for (int i=0;i<size;i++){
+            Feed feedtemp = list.get(i);
+            Byte[] pictureName = feedtemp.getFeedPicture();
+            map.put(i,pictureName);
+        }
+        return map;
     }
 }

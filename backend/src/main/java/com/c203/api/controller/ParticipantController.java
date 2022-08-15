@@ -30,12 +30,18 @@ public class ParticipantController {
     }
     // 참여하기 버튼 누르는 경우 파티 참여자 정보 추가
     @PostMapping("/participant/{roomIdx}")
-    public ResponseEntity<?> registParticipant(@PathVariable("roomIdx") String roomIdx, HttpServletRequest request){
+    public ResponseEntity<?> registParticipant(@PathVariable ("roomIdx") String roomIdx, HttpServletRequest request){
         Map<String,Object> result = new HashMap<>();
         HttpStatus status;
         try{
             String accessToken = request.getHeader("accessToken");
             String decodeEmail = jwtService.decodeToken(accessToken);
+
+            roomIdx = roomIdx.replace("&","%26");
+            roomIdx = roomIdx.replace("+","%2B");
+            roomIdx = roomIdx.replace("=","%3D");
+            roomIdx = roomIdx.replace( "/","%2F");
+
             if(!decodeEmail.equals("timeout")){
                 boolean is = participantService.registParticipant(roomIdx,decodeEmail);
                 if(is) {
@@ -48,6 +54,7 @@ public class ParticipantController {
                 status = HttpStatus.UNAUTHORIZED;
             }
         }catch (Exception e){
+            System.out.println(e);
             result.put("result","서버에러");
             status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
