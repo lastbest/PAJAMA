@@ -12,10 +12,6 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 public class Feed {
-//
-//    @ManyToOne
-//    @JoinColumn(name = "user_idx")
-//    private User user;
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -24,7 +20,7 @@ public class Feed {
     @Column(name = "feed_user")
     private String feedUser;
     private String feed_description;
-    @Column(name = "feed_roomIdx")
+    @Column(name = "feed_room_idx")
     private int feedRoomIdx;
     @Column(name = "feed_represent")
     private Boolean feedRepresent; // 대표하는 사진인지 체크

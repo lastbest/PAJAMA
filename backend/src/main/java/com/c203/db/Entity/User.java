@@ -13,16 +13,6 @@ import javax.persistence.*;
 
 public class User {
 
-//    @OneToMany(mappedBy = "user1")
-//    private List<Room> rooms = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "user2")
-//    private List<Letter> letters = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "user3")
-//    private List<Feed> feeds = new ArrayList<>();
-
-
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer user_idx;

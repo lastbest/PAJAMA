@@ -1,10 +1,10 @@
 import React from "react";
 import styled from "styled-components";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Button from "../common/Button";
 import axios from "axios";
 import { useState } from "react";
-import Modal from 'react-bootstrap/Modal';
+import Modal from "react-bootstrap/Modal";
 
 const AuthFormBlock = styled.div`
   h3 {
@@ -25,7 +25,7 @@ const StyledInput = styled.input`
   outline: none;
   width: 100%;
   display: flex;
-  font-family:"oldpicture";
+  font-family: "oldpicture";
   &:focus {
     color: $oc-teal-7;
     border-bottom: 1px solid #fd7a99;
@@ -63,16 +63,16 @@ const ButtonWithMarinTop = styled(Button)`
 `;
 
 const AuthForm = () => {
+  let { roomIdx } = useParams();
   const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   let [credentials, setCredentials] = useState({ email: "", pwd: "" });
   let [userEmail, setUserEmail] = useState("");
   let [password, setPassword] = useState("");
   //   let [userid, setUserid] = useState({ id: "" });
-  //   setUserid(userid.id="11");
-  const navigate = useNavigate();
+  //   setUserid(userid.id="11")
   return (
     <AuthFormBlock>
       <h3>로그인</h3>
@@ -111,13 +111,19 @@ const AuthForm = () => {
                 console.log(res.data);
                 if (res.data.accessToken === undefined) {
                   handleShow();
-                  document.location.href = "/login";
+                  // document.location.href = "/login";
+                  
                 } else {
                   sessionStorage.setItem("accessToken", res.data.accessToken);
-                  document.location.href = "/";
+                  if (roomIdx !== undefined) {
+                    document.location.href = `/room/${roomIdx}`;
+                  } else {
+                    document.location.href = "/";
+                  }
                 }
               })
               .catch(() => {
+                handleShow()
                 console.log("로그인 실패");
               });
           }}
@@ -138,28 +144,42 @@ const AuthForm = () => {
           회원가입
         </Link>
       </Footer>
-
+      {
+        show ? 
       <Modal
         centered
         show={show}
         onHide={handleClose}
         backdrop="static"
         keyboard={false}
-    >
+      >
         <Modal.Header>
-        <Modal.Title style={{'font-family':'star', 'color':'#FD7A99'}}>PAZAMA</Modal.Title>
+          <Modal.Title style={{ "font-family": "star", color: "#FD7A99" }}>
+            PAZAMA
+          </Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{'font-family':'oldpicture', 'font-size':'20px'}}>
-        이메일 또는 비밀번호를 잘못 입력했습니다.
-        <br />
-        입력하신 내용을 다시 확인해주세요.
+        <Modal.Body
+          style={{ "font-family": "oldpicture", "font-size": "20px" }}
+        >
+          이메일 또는 비밀번호를 잘못 입력했습니다.
+          <br />
+          입력하신 내용을 다시 확인해주세요.
         </Modal.Body>
         <Modal.Footer>
-        <Button style={{'border':'none','font-family':'oldpicture', 'backgroundColor':'#9D9D9D', 'color':'white',}} onClick={handleClose}>
+          <Button
+            style={{
+              border: "none",
+              "font-family": "oldpicture",
+              backgroundColor: "#9D9D9D",
+              color: "white",
+            }}
+            onClick={()=>{document.location.href="/login"}}
+          >
             Close
-        </Button>
+          </Button>
         </Modal.Footer>
-      </Modal>
+      </Modal> : null
+      }
     </AuthFormBlock>
   );
 };

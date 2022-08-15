@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import styles from "./RoomPage.module.css";
 import OpenVideo from "../components/openvidu/OpenVideo";
 import axios from "axios";
+import { CountdownCircleTimer } from "react-countdown-circle-timer";
 
 const Header = styled.div`
   display: grid;
@@ -36,25 +37,28 @@ const StyledBtn = styled.button`
 const RoomPage = () => {
   const [token, setToken] = useState(sessionStorage.getItem("accessToken"));
   const [partyDate, setPartyDate] = useState(new Date());
+  const [flag, setFlag] = useState(false);
+  let { roomIdx } = useParams();
+  console.log(roomIdx);
   useEffect(() => {
     console.log(token);
+  }, [flag]);
 
-    axios({
-      url: "http://localhost:8082/rooms",
-      method: "get",
-      headers: { accessToken: token },
-      params: {
-        roomIdx: "MJktgPP9VHR5cwtdJ5IVtQ%3D%3D", // params
-      },
+  axios({
+    url: "http://i7c203.p.ssafy.io:8082/rooms",
+    method: "get",
+    headers: { accessToken: token },
+    params: {
+      roomIdx: roomIdx, // params
+    },
+  })
+    .then((res) => {
+      setPartyDate(res.data.result.partyDate);
+      console.log(res.data.result.partyDate);
     })
-      .then((res) => {
-        setPartyDate(res.data.result.partyDate);
-      })
-      .catch(() => {
-        alert("방정보 불러오기 실패??");
-      });
-  }, []);
-
+    .catch(() => {
+      alert("방정보 불러오기 실패??");
+    });
   var dday = new Date(partyDate).getTime();
   const interval = setInterval(function () {
     var today = new Date().getTime();
@@ -78,24 +82,32 @@ const RoomPage = () => {
         sec.toString().padStart(2, "0");
     }
     if (day == 0 && hour == 0 && min == 0 && sec == 0) {
-      console.log("timeout");
+      setFlag(true);
+      if (document.getElementById("bu").hasChildNodes() === false && flag) {
+        var btn = document.createElement("button");
+        btn.innerHTML = "참여하기";
+        btn.className = "joinbtn";
+        document.getElementById("bu").appendChild(btn);
+      }
       document.getElementById("counter").innerHTML = "D-00 : 00 : 00 : 00";
-
       clearInterval(interval);
     } else if (day == -1) {
       clearInterval(interval);
-      document.getElementById("counter").innerHTML = "D-00 : 00 : 00 : 00";
+      setFlag(true);
+      if (document.getElementById("bu").hasChildNodes() === false && flag) {
+        var btn = document.createElement("button");
+        btn.innerHTML = "참여하기";
+        btn.className = "joinbtn";
+        document.getElementById("bu").appendChild(btn);
+      }
     }
+    document.getElementById("counter").innerHTML = "D-00 : 00 : 00 : 00";
   }, 1000);
-
-  if (token === null) {
-  } else {
-  }
 
   return (
     <>
       <div>
-        <OpenVideo />
+        <OpenVideo roomIdx={roomIdx} partyDate={partyDate} flag={flag} />
       </div>
     </>
   );
