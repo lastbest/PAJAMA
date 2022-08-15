@@ -100,7 +100,7 @@ const RoomPage = () => {
         btn.className = "joinbtn";
         btn.onclick = function () {
           axios({
-            url: `https://i7c203.p.ssafy.io/api/participant/${validURL}`,
+            url: `https://i7c203.p.ssafy.io/api/participant/${roomIdx}`,
             method: "post",
             headers: { accessToken: token },
           }).then((res) => {
