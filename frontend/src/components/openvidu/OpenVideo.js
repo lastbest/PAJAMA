@@ -363,14 +363,8 @@ class OpenVideo extends Component {
           let chatdata = event.data.split(",");
           switch (chatdata[1]) {
             case "hand-v":
-              console.log("촛불성공");
-              this.setState({
-                show2: false,
-              });
-              
               break;
             case "hand-heart":
-              
               break;
             case "hand-flip":
               this.confetti();
@@ -378,7 +372,9 @@ class OpenVideo extends Component {
             case "hand-one":
               break;
             case "fire-off":
-              
+              this.setState({
+                show2: false,
+              });
               break;
             default:
               break;
@@ -574,27 +570,8 @@ class OpenVideo extends Component {
           }}
         >
           사진찍기
-        </button>
-        {this.state.shot ? (
-          <div className="timer-wrapper">
-            <CountdownCircleTimer
-              isPlaying
-              duration={3}
-              colors={["#004777"]}
-              trailStrokeWidth={0}
-              strokeWidth={0}
-              onComplete={() => {
-                // 사진찍는 함수 삽입
-                this.takepicture();
-                this.setState({ shot: false });
-                console.log("종료");
-              }}
-            >
-              {({ remainingTime }) => remainingTime}
-            </CountdownCircleTimer>
-          </div>
-        ) : null}
-
+        </button>       
+        
         <div id="frame" className="frame"></div>
         <div className="bar">
           <p className="text5">최대 5장까지 저장할 수 있습니다.</p>
@@ -932,25 +909,40 @@ class OpenVideo extends Component {
                     <UserVideoComponent streamManager={sub} />
                   </div>
                 ))}
-
-                <img id="cake1" className={Cakeshow} src={this.state.partyCake} alt="cake1"></img>
-                <img id="heart" className={Candleshow} src={this.state.partyCandle} alt="heart" />
-                {/* <button onClick={()=>{this.setState({show2:false})}}>촛불끄기</button> */}
+                  <img id="cake1" className={Cakeshow} src={this.state.partyCake} alt="cake1"></img>
+                  <img id="heart" className={Candleshow} src={this.state.partyCandle} alt="heart" />
+                  <div className="firecss">
+                    <FadeInOut show={this.state.show2} duration={500}>
+                      <img className={Fireshow}
+                        id="heartfire"
+                        src="/fire.gif"
+                        alt="fire"
+                      />
+                    </FadeInOut>
+                  </div>
               </div>
 
-              <div>
-                {/* 하트초 */}
-                <div >
-                  <FadeInOut show={this.state.show2} duration={500}>
-                    <img className={Fireshow}
-                      id="heartfire"
-                      src="/fire.gif"
-                      alt="fire"
-                    />
-                  </FadeInOut>
-                </div>
-              </div>
+
             </div>
+            {this.state.shot ? (
+                  <div className="timer-wrapper">
+                    <CountdownCircleTimer
+                      isPlaying
+                      duration={3}
+                      colors={["#004777"]}
+                      trailStrokeWidth={0}
+                      strokeWidth={0}
+                      onComplete={() => {
+                        // 사진찍는 함수 삽입
+                        this.takepicture();
+                        this.setState({ shot: false });
+                        console.log("종료");
+                      }}
+                    >
+                      {({ remainingTime }) => remainingTime}
+                    </CountdownCircleTimer>
+                  </div>
+                ) : null}
             <div className="main-footer">
               <div className="footer">
                 {this.state.videostate === undefined || this.state.videostate
@@ -987,6 +979,9 @@ class OpenVideo extends Component {
                   ) : (
                     <img className="micoff" src="/micoff.png" />
                   )}
+                </button>
+                <button className="voicerecog-btn">
+                    <img className="voicerecog" src="/voicerecog.png"></img>
                 </button>
                 <OverlayTrigger
                   trigger="click"
