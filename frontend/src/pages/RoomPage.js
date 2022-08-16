@@ -57,7 +57,7 @@ const RoomPage = () => {
       console.log(res.data.result.partyDate);
     })
     .catch(() => {
-      alert("방정보 불러오기 실패??");
+      document.location.href = "/NotFound";
     });
   var dday = new Date(partyDate).getTime();
   const interval = setInterval(function () {

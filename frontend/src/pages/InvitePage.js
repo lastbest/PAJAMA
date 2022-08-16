@@ -77,7 +77,7 @@ const InvitePage = () => {
                 style={{ width: "60%", height: "60%", maxWidth: "1024px" }}
               ></img>
             </div>
-            <a href={`/room/${roomIdx}`} className="clicklink">
+            <a href={`/room/${validURL}`} className="clicklink">
               JOIN PARTY
             </a>
           </>
@@ -99,7 +99,7 @@ const InvitePage = () => {
                 style={{ width: "60%", height: "60%", maxWidth: "1024px" }}
               ></img>
             </div>
-            <a href={`/login/${roomIdx}`} className="clicklink">
+            <a href={`/login/${validURL}`} className="clicklink">
               로그인이 필요합니다!
             </a>
           </>
