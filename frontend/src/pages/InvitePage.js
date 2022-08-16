@@ -142,7 +142,19 @@ const InvitePage = () => {
                 style={{ width: "20%", height: "20%" }}
               ></img>
             </div>
-            <a href={`/room/${validURL}`} className="clicklink">
+            <a
+              href={`/room/${validURL}`}
+              onClick={() => {
+                axios({
+                  url: `https://i7c203.p.ssafy.io/api/participant/${roomIdx}`,
+                  method: "post",
+                  headers: { accessToken: token },
+                }).then((res) => {
+                  console.log("success");
+                });
+              }}
+              className="clicklink"
+            >
               JOIN PARTY
             </a>
           </>
