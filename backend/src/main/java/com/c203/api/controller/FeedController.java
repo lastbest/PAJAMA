@@ -84,21 +84,17 @@ public class FeedController {
         return new ResponseEntity<>(result,status);
     }
     // 사진 불러오기
-    @GetMapping("/mypage/{roomIdx}")
-    public ResponseEntity<?> showPicture(HttpServletRequest request,@PathVariable("roomIdx") String roomIdx){
+    @GetMapping("/mypage")
+    public ResponseEntity<?> showPicture(HttpServletRequest request){
         Map<String,Object> result = new HashMap<>();
         HttpStatus status;
-
-        roomIdx = roomIdx.replace("&","%26");
-        roomIdx = roomIdx.replace("+","%2B");
-        roomIdx = roomIdx.replace("=","%3D");
-        roomIdx = roomIdx.replace( "/","%2F");
 
         try{
             String accessToken = request.getHeader("accessToken");
             String decodeEmail = jwtService.decodeToken(accessToken);
             if(!decodeEmail.equals("timeout")){
-                Map map = feedService.showPicture(decodeEmail, roomIdx);
+                // 완성하면 넣어야해요
+                Map map = feedService.showPicture(decodeEmail);
                 result.put("result",map);
                 status = HttpStatus.OK;
             }

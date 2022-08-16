@@ -59,17 +59,44 @@ public class FeedServiceImpl implements FeedService {
 
     // 사진 가져오기
     @Override
-    public Map showPicture(String decodeEmail, String roomIdx) throws Exception {
-        String temp = encryptionService.decrypt(roomIdx);
-        int id = Integer.parseInt(temp); // room_idx
-        Map<Integer,String> map = new HashMap<>();
-        List<Feed> list = feedRepository.findByFeedRoomIdxAndFeedUser(id, decodeEmail);
-        int size = list.size();
-        for (int i=0;i<size;i++){
-            Feed feedtemp = list.get(i);
-            String pictureName = feedtemp.getFeedPicture();
-            map.put(i,pictureName);
+    public Map showPicture(String decodeEmail) throws Exception {
+        // Map<roomIdx,Map<picture,desc>>
+        Map<Integer,Map> map = new HashMap<>();
+        // 확인했는지 체크 하기
+        Map<Integer,Integer> check = new HashMap<>();
+        // 피드에서 사람 기준으로 list로 가져오기
+        List<Feed> listAll = feedRepository.findByFeedUser(decodeEmail);
+        int sizeA = listAll.size();
+        int index = 0;
+        for(int i=0;i<sizeA;i++){
+            Feed feedtemp = listAll.get(i);
+            int size = check.size();
+            int num = 0; // 안들어간 roomIdx인지 확인해주기
+            for(int j=0;j<size;j++){
+                if(check.get(j) != feedtemp.getFeedRoomIdx()) num++; // 안들어가있는부분
+            }
+            // roomIdx 없었던 거 니까 집어 넣어줘야함
+            if(num == size){
+                check.put(index, feedtemp.getFeedRoomIdx());
+                index++; // i로 돌리면 안들어간거 있을 수 있는데 j에서 확인 못하니까 변수 선언
+                // 룸번호 별 피드 사진 가져오기
+                List<Feed> list = feedRepository.findByFeedRoomIdxAndFeedUser(feedtemp.getFeedRoomIdx(), decodeEmail);
+                Map<String,Object> innerMap = new HashMap<>();
+                int sizeB = list.size();
+                // 사진 : [사진1,사진2,사진3];
+                String[] arr = new String[sizeB];
+                String arr2 = "";
+                for (int k=0;k<sizeB;k++){
+                    Feed feedtemp2 = list.get(k);
+                    String pictureName = feedtemp2.getFeedPicture();
+                    arr[k] = pictureName;
+                }
+                innerMap.put("picture",arr);
+                innerMap.put("comment",arr2);
+                map.put(feedtemp.getFeedRoomIdx(),innerMap);
+            }
         }
+
         return map;
     }
 }
