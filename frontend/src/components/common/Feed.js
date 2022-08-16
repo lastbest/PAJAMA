@@ -72,6 +72,53 @@ function Feed(props) {
           <div className={styles.comment}>{comment}</div>
         </div>
       </div>
+    </div>
+
+    <Modal
+      centered
+      show={show}
+      onHide={handleClose}
+      backdrop="static"
+      keyboard={false}
+      className={styles.dialog}
+    >
+      <Modal.Header closeButton>
+        <Modal.Title style={{'font-family':'star', "color":"#FD7A99"}}>PAZAMA</Modal.Title>
+      </Modal.Header>
+      <Modal.Body className={styles.body}>
+
+        {  pictures.map((picture)=>(
+
+          <img src={picture} alt="파티사진" className={styles.picture}></img>
+        )
+        ) 
+        }
+      </Modal.Body>
+      <Modal.Footer>
+      <StyledInput
+          autoComplete="comment"
+          name="comment"
+          placeholder=" How was the Party?"
+          onInput={(event) => {
+            setWrite(event.target.value);
+          }}
+        />
+        <Button 
+        style={{'color':'black', 'backgroundColor':'#FFA4BD', 'border':'none','font-family':'oldpicture', 'box-shadow':'none' }} 
+        onClick={()=>{
+          setCredentials((credentials.description = write))
+          console.log(credentials)
+          axios({
+            url: "https://i7c203.p.ssafy.io/api/mypage",
+            method:"post",
+            headers: {accessToken : token},
+            data:credentials,
+          })
+            .then((res) => {
+              document.location.href='/mypage'
+              console.log(res.data);
+            })
+            .catch((err)=>{console.log(err)})
 
       <Modal
         style={{ top: "150px" }}

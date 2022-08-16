@@ -94,7 +94,7 @@ function MyPage() {
           </div>
         )}
       </div>
-      { !roomInfo.picture ? (
+      { !roomInfo ? (
           <div className={styles.emptycontainer}>
             <a className={styles.text1}>파티를 만들어보세요!</a>
             <br></br>

@@ -381,6 +381,11 @@ class OpenVideo extends Component {
                 show2: false,
               });
               break;
+            case "fire-on":
+            this.setState({
+              show2: true,
+            });
+            break;
             default:
               break;
           }
@@ -642,7 +647,7 @@ class OpenVideo extends Component {
           </button>
           <button className="trashbtn" onClick={()=>{
             if (this.state.partyHost === this.state.myEmail && this.state.partyHost != "") {
-              this.removediv
+              this.removediv()
             }
           }}>
             <img className="trash" src="/trash.png" alt="trash" />
@@ -680,7 +685,6 @@ class OpenVideo extends Component {
     let Firecssshow = "";
 
     if (cakeshow === true) {
-      this.setState({show2:true})
       Cakeshow = "cake";
       Main = "main-container1";
       Candleshow = "candle";
@@ -853,7 +857,16 @@ class OpenVideo extends Component {
                       </div>
                     </div>
                   </div>
-                  <button className="navbtn" onClick={this.sendcakeByClick}>
+                  <button className="navbtn" onClick={()=>{
+                    this.sendcakeByClick()
+                    // this.setState({show2:true})
+                    const mySession = this.state.session;
+                    mySession.signal({
+                      data: `${this.state.myUserName},fire-on`,
+                      to: [],
+                      type: "motion",
+                    });
+                  }}>
                     <img
                       src="/birthday-cake.png"
                       alt="logo"
@@ -1250,7 +1263,7 @@ class OpenVideo extends Component {
         new Date().getSeconds() +
         ".png";
       this.setState({ fileName: fileName });
-      let formData = new FormData();
+      let formData = new FormData();signal
       formData.append("uploadFile", file, fileName);
       this.setState({ imgUrl: formData });
 

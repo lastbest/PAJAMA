@@ -1,5 +1,6 @@
 package com.c203.api.controller;
 
+import com.c203.api.dto.Feed.FeedDeleteDto;
 import com.c203.api.dto.Feed.FeedRegistDto;
 import com.c203.api.dto.Feed.FeedShowDto;
 import com.c203.api.service.FeedService;
@@ -58,11 +59,12 @@ public class FeedController {
         return new ResponseEntity<>(result,status);
     }
     // 피드 삭제
-    @DeleteMapping("/mypage/{roomIdx}")
-    public ResponseEntity<?> deleteUser(HttpServletRequest request,@PathVariable("roomIdx") String roomIdx){
+    @DeleteMapping("/mypage")
+    public ResponseEntity<?> deleteUser(HttpServletRequest request,@RequestBody FeedDeleteDto feedDeleteDto){
         Map<String,Object> result = new HashMap<>();
         HttpStatus status;
 
+        String roomIdx = feedDeleteDto.getEmail();
         roomIdx = roomIdx.replace("&","%26");
         roomIdx = roomIdx.replace("+","%2B");
         roomIdx = roomIdx.replace("=","%3D");
