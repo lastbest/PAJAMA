@@ -270,8 +270,9 @@
 }
 
 .chatbox__footer {
-  display: inline;
   border-radius: 10px;
+  text-align: center;
+  justify-content: center;
 }
 
 .chat_message {
@@ -412,6 +413,7 @@
   display: inline-flex;
   justify-content: center;
   align-items: center;
+  padding-top:10px;
 }
 
 .frame {
@@ -444,7 +446,7 @@
 }
 
 .popover2 {
-  width: 250px;
+  width: 200px;
   height: 60px;
   background-color: white;
   display: flex !important;

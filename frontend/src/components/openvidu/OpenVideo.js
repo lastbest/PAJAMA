@@ -382,10 +382,10 @@ class OpenVideo extends Component {
               });
               break;
             case "fire-on":
-            this.setState({
-              show2: true,
-            });
-            break;
+              this.setState({
+                show2: true,
+              });
+              break;
             default:
               break;
           }
@@ -584,7 +584,10 @@ class OpenVideo extends Component {
         <button
           className="takebtn"
           onClick={() => {
-            if (this.state.partyHost === this.state.myEmail && this.state.partyHost != "") {
+            if (
+              this.state.partyHost === this.state.myEmail &&
+              this.state.partyHost != ""
+            ) {
               this.removediv();
               // this.setState({ shot: true });
               this.state.session.signal({
@@ -605,9 +608,12 @@ class OpenVideo extends Component {
             className="downloadbtn"
             onClick={() => {
               let token = sessionStorage.getItem("accessToken");
-              if (this.state.partyHost === this.state.myEmail && this.state.partyHost != "") {
+              if (
+                this.state.partyHost === this.state.myEmail &&
+                this.state.partyHost != ""
+              ) {
                 this.removediv();
-  
+
                 axios.all([
                   axios({
                     url: "https://i7c203.p.ssafy.io/image/upload",
@@ -624,7 +630,7 @@ class OpenVideo extends Component {
                     .catch((err) => {
                       console.log(err);
                     }),
-  
+
                   axios({
                     url: "https://i7c203.p.ssafy.io/api/picture",
                     method: "post",
@@ -640,16 +646,22 @@ class OpenVideo extends Component {
                       console.log(err);
                     }),
                 ]);
-              }}
               }
+            }}
           >
             <img className="download" src="/save.png" alt="download" />
           </button>
-          <button className="trashbtn" onClick={()=>{
-            if (this.state.partyHost === this.state.myEmail && this.state.partyHost != "") {
-              this.removediv()
-            }
-          }}>
+          <button
+            className="trashbtn"
+            onClick={() => {
+              if (
+                this.state.partyHost === this.state.myEmail &&
+                this.state.partyHost != ""
+              ) {
+                this.removediv();
+              }
+            }}
+          >
             <img className="trash" src="/trash.png" alt="trash" />
           </button>
         </div>
@@ -663,9 +675,6 @@ class OpenVideo extends Component {
         </button>
         <button className="voicebtn" onClick={lowerPitch}>
           <img className="voice2" src="/down-arrow.png" alt="voice2" />
-        </button>
-        <button className="voicebtn">
-          <img className="voice3" src="/mic2.png" alt="voice3" />
         </button>
         <button className="voicebtn" onClick={removeFilters}>
           <img className="voice4" src="/voiceoff.png" alt="voice4" />
@@ -797,7 +806,6 @@ class OpenVideo extends Component {
 
     return (
       <div>
-        
         {this.state.session === undefined ? (
           <div id="join">
             <div id="img-div">
@@ -849,7 +857,7 @@ class OpenVideo extends Component {
               {this.state.partyHost === this.state.myEmail &&
               this.state.partyHost != "" ? (
                 <>
-                  <div className="musicmodal" style={{ display: "none"}}>
+                  <div className="musicmodal" style={{ display: "none" }}>
                     <div>
                       <div className="musicDiv">
                         <Music />
@@ -857,16 +865,19 @@ class OpenVideo extends Component {
                       </div>
                     </div>
                   </div>
-                  <button className="navbtn" onClick={()=>{
-                    this.sendcakeByClick()
-                    // this.setState({show2:true})
-                    const mySession = this.state.session;
-                    mySession.signal({
-                      data: `${this.state.myUserName},fire-on`,
-                      to: [],
-                      type: "motion",
-                    });
-                  }}>
+                  <button
+                    className="navbtn"
+                    onClick={() => {
+                      this.sendcakeByClick();
+                      // this.setState({show2:true})
+                      const mySession = this.state.session;
+                      mySession.signal({
+                        data: `${this.state.myUserName},fire-on`,
+                        to: [],
+                        type: "motion",
+                      });
+                    }}
+                  >
                     <img
                       src="/birthday-cake.png"
                       alt="logo"
@@ -883,7 +894,11 @@ class OpenVideo extends Component {
                       className="capture"
                       src="/camera.png"
                       alt="capture"
-                      style={{ width: "60px", height: "60px", "cursor":"pointer" }}
+                      style={{
+                        width: "60px",
+                        height: "60px",
+                        cursor: "pointer",
+                      }}
                     />
                   </OverlayTrigger>
                   <Image
@@ -910,7 +925,7 @@ class OpenVideo extends Component {
                 <>
                   <div className="musicmodal" style={{ display: "none" }}>
                     <div>
-                      <div className="musicDiv" >
+                      <div className="musicDiv">
                         <Music />
                         <div className="chatbox__footer"></div>
                       </div>
@@ -1018,7 +1033,6 @@ class OpenVideo extends Component {
               </div>
             ) : null}
             <div className="main-footer">
-            
               <div className="footer">
                 {this.state.videostate === undefined || this.state.videostate
                   ? (this.state.videostate = true)
@@ -1263,7 +1277,7 @@ class OpenVideo extends Component {
         new Date().getSeconds() +
         ".png";
       this.setState({ fileName: fileName });
-      let formData = new FormData();signal
+      let formData = new FormData();
       formData.append("uploadFile", file, fileName);
       this.setState({ imgUrl: formData });
 
