@@ -11,6 +11,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class FeedShowDto {
     private String description;
-    private Byte[] picture;
+    private String picture;
     private LocalDateTime time;
 }

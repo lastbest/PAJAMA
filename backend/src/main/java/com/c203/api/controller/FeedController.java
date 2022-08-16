@@ -31,6 +31,12 @@ public class FeedController {
     public ResponseEntity<?> registFeed(@RequestBody FeedRegistDto feedRegistDto, HttpServletRequest request,@PathVariable("roomIdx") String roomIdx){
         Map<String,Object> result = new HashMap<>();
         HttpStatus status;
+
+        roomIdx = roomIdx.replace("&","%26");
+        roomIdx = roomIdx.replace("+","%2B");
+        roomIdx = roomIdx.replace("=","%3D");
+        roomIdx = roomIdx.replace( "/","%2F");
+
         try{
             String accessToken = request.getHeader("accessToken");
             String decodeEmail = jwtService.decodeToken(accessToken);
@@ -46,6 +52,7 @@ public class FeedController {
                 status = HttpStatus.UNAUTHORIZED;
             }
         }catch (Exception e){
+            System.out.println(e);
             result.put("result","서버에러");
             status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
@@ -56,6 +63,12 @@ public class FeedController {
     public ResponseEntity<?> deleteUser(HttpServletRequest request,@PathVariable("roomIdx") String roomIdx){
         Map<String,Object> result = new HashMap<>();
         HttpStatus status;
+
+        roomIdx = roomIdx.replace("&","%26");
+        roomIdx = roomIdx.replace("+","%2B");
+        roomIdx = roomIdx.replace("=","%3D");
+        roomIdx = roomIdx.replace( "/","%2F");
+
         String accessToken = request.getHeader("accessToken");
         String decodeEmail = jwtService.decodeToken(accessToken);
         try{
@@ -75,6 +88,12 @@ public class FeedController {
     public ResponseEntity<?> showPicture(HttpServletRequest request,@PathVariable("roomIdx") String roomIdx){
         Map<String,Object> result = new HashMap<>();
         HttpStatus status;
+
+        roomIdx = roomIdx.replace("&","%26");
+        roomIdx = roomIdx.replace("+","%2B");
+        roomIdx = roomIdx.replace("=","%3D");
+        roomIdx = roomIdx.replace( "/","%2F");
+
         try{
             String accessToken = request.getHeader("accessToken");
             String decodeEmail = jwtService.decodeToken(accessToken);
