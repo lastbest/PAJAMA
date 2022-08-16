@@ -22,5 +22,5 @@ public class Picture {
 
     private LocalDateTime picture_time; // now()
     private int picture_roomIdx;
-    private Byte[] picture;
+    private String picture;
 }
