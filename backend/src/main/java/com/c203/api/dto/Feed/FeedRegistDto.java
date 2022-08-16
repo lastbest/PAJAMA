@@ -11,5 +11,6 @@ public class FeedRegistDto {
     private String roomIdx;
     private String email;
     private String description;
+    // 첫번째 사진을 대표 사진
     private String picture;
 }

@@ -26,20 +26,11 @@ public class FeedServiceImpl implements FeedService {
         // 방번호, 사진, 사용자가 같은 feed를 가져오기 - present를 true로 만들기
         Feed feed = feedRepository.findByFeedRoomIdxAndFeedPictureAndFeedUser(id, feedRegistDto.getPicture(), feedRegistDto.getEmail());
         List<Feed> list = feedRepository.findByFeedRoomIdxAndFeedUser(id, feedRegistDto.getEmail());
-        int size = list.size();
-        System.out.println(size);
-        for (int i=0;i<size;i++){
-            Feed feedtemp = list.get(i);
-            if(feedtemp.getFeedRepresent()){ // 대표 사진이 있는 경우
-                feedtemp.setFeedRepresent(false);
-                feedtemp.setFeed_description("");
-            }
-            feedRepository.save(feedtemp);
-        }
-        feed.setFeedRepresent(true);
-        feed.setFeed_description(feedRegistDto.getDescription());
-        feed.setFeedRoomIdx(id);
-        feedRepository.save(feed);
+        // 처음 사진이 대표 사진
+        Feed feedTitle = list.get(0);
+        feedTitle.setFeedRepresent(true);
+        feedTitle.setFeed_description(feedRegistDto.getDescription());
+        feedRepository.save(feedTitle);
         FeedShowDto feedShowDto = new FeedShowDto();
         feedShowDto.setTime(feed.getFeed_time());
         feedShowDto.setDescription(feed.getFeed_description());

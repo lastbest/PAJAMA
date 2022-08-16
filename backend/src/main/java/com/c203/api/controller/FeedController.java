@@ -27,11 +27,12 @@ public class FeedController {
         this.feedService = feedService;
     }
     // 피드 생성
-    @PostMapping("/mypage/{roomIdx}")
-    public ResponseEntity<?> registFeed(@RequestBody FeedRegistDto feedRegistDto, HttpServletRequest request,@PathVariable("roomIdx") String roomIdx){
+    @PostMapping("/mypage")
+    public ResponseEntity<?> registFeed(@RequestBody FeedRegistDto feedRegistDto, HttpServletRequest request){
         Map<String,Object> result = new HashMap<>();
         HttpStatus status;
 
+        String roomIdx = feedRegistDto.getRoomIdx();
         roomIdx = roomIdx.replace("&","%26");
         roomIdx = roomIdx.replace("+","%2B");
         roomIdx = roomIdx.replace("=","%3D");
@@ -52,7 +53,6 @@ public class FeedController {
                 status = HttpStatus.UNAUTHORIZED;
             }
         }catch (Exception e){
-            System.out.println(e);
             result.put("result","서버에러");
             status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
