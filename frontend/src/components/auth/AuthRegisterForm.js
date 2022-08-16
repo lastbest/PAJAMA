@@ -461,7 +461,7 @@ const AuthRegisterForm = () => {
         <StyledInput
           autoComplete="tel"
           name="tel"
-          placeholder=" 전화번호"
+          placeholder=" 전화번호 ex) 010XXXXXXXX"
           onInput={(event) => {
             setTel(event.target.value);
           }}
