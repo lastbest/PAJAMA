@@ -32,15 +32,15 @@ const StyledBtn = styled.button`
   }
 `;
 
-const Div = styled.div`
-  text-align: left;
-  margin-top: 50px;
-  margin-left: 100px;
-`;
+// const Div = styled.div`
+//   text-align: left;
+//   margin-top: 50px;
+//   margin-left: 100px;
+// `;
 
 function NotFound() {
   return (
-    <Div>
+    <div>
       <div>
         <img src="/errorpageimg.png" style={{display:"flex",margin:"auto", 'width':"50%", 'marginBottom':"50px"}} />
       </div>
@@ -54,7 +54,7 @@ function NotFound() {
           홈으로 이동
         </StyledBtn>
       </div>
-    </Div>
+    </div>
   );
 }
 

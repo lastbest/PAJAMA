@@ -568,13 +568,15 @@ class OpenVideo extends Component {
         <button
           className="takebtn"
           onClick={() => {
-            this.removediv();
-            // this.setState({ shot: true });
-            this.state.session.signal({
-              data: `${this.state.myUserName},timer`,
-              to: [],
-              type: "picture",
-            });
+            if (this.state.partyHost === this.state.myEmail && this.state.partyHost != "") {
+              this.removediv();
+              // this.setState({ shot: true });
+              this.state.session.signal({
+                data: `${this.state.myUserName},timer`,
+                to: [],
+                type: "picture",
+              });
+            }
           }}
         >
           사진찍기
@@ -662,6 +664,7 @@ class OpenVideo extends Component {
     let Firecssshow = "";
 
     if (cakeshow === true) {
+      this.setState({show2:true})
       Cakeshow = "cake";
       Main = "main-container1";
       Candleshow = "candle";
@@ -773,6 +776,7 @@ class OpenVideo extends Component {
 
     return (
       <div>
+        
         {this.state.session === undefined ? (
           <div id="join">
             <div id="img-div">
@@ -824,7 +828,7 @@ class OpenVideo extends Component {
               {/* 호스트인지 게스트인지 버튼 구분 */}
               {this.state.partyHost === this.state.myEmail && this.state.partyHost != "" ? (
                 <>
-                  <div className="musicmodal" style={{ display: "none" }}>
+                  <div className="musicmodal" style={{ display: "none"}}>
                     <div>
                       <div className="musicDiv">
                         <Music />
@@ -840,7 +844,7 @@ class OpenVideo extends Component {
                       className="capture"
                       src="/camera.png"
                       alt="capture"
-                      style={{ width: "60px", height: "60px" }}
+                      style={{ width: "60px", height: "60px", "cursor":"pointer" }}
                     />
                   </OverlayTrigger>
                   <Image
@@ -861,9 +865,9 @@ class OpenVideo extends Component {
                 </>
               ) : (
                 <>
-                  <div className="musicmodal">
+                  <div className="musicmodal" style={{ display: "none" }}>
                     <div>
-                      <div className="musicDiv" style={{ display: "block" }}>
+                      <div className="musicDiv" >
                         <Music />
                         <div className="chatbox__footer"></div>
                       </div>
@@ -945,6 +949,7 @@ class OpenVideo extends Component {
               </div>
             ) : null}
             <div className="main-footer">
+            
               <div className="footer">
                 {this.state.videostate === undefined || this.state.videostate
                   ? (this.state.videostate = true)
@@ -1015,7 +1020,6 @@ class OpenVideo extends Component {
               <div className="chatbox__messages" ref="chatoutput">
                 <Messages messages={messages} myUserName={this.state.myUserName} />
               </div>
-
               <div className="chatbox__footer">
                 <input
                   id="chat_message"
