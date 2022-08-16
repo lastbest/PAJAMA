@@ -172,7 +172,7 @@ const AuthForm = () => {
                 color: "white",
               }}
               onClick={() => {
-                if (roomIdx == undefined) {
+                if (roomIdx == undefined || roomIdx == "undefined") {
                   document.location.href = "/login";
                 } else {
                   document.location.href = `/login/${roomIdx}`;
