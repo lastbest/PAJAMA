@@ -117,7 +117,7 @@ const AuthForm = () => {
                   if (roomIdx == undefined || roomIdx == "undefined") {
                     document.location.href = "/";
                   } else {
-                    document.location.href = `/room/${roomIdx}`;
+                    document.location.href = `/invite/${roomIdx}`;
                   }
                 }
               })
