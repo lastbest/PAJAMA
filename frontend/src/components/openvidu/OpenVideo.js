@@ -676,9 +676,6 @@ class OpenVideo extends Component {
         <button className="voicebtn" onClick={lowerPitch}>
           <img className="voice2" src="/down-arrow.png" alt="voice2" />
         </button>
-        <button className="voicebtn">
-          <img className="voice3" src="/mic2.png" alt="voice3" />
-        </button>
         <button className="voicebtn" onClick={removeFilters}>
           <img className="voice4" src="/voiceoff.png" alt="voice4" />
         </button>

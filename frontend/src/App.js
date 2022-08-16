@@ -12,12 +12,14 @@ import FindIdPage from "./pages/FindIdPage";
 import FindpwdPage from "./pages/FindpwdPage";
 import InvitePage from "./pages/InvitePage";
 import NotFound from "./pages/NotFound";
+import GuidePage from "./pages/GuidePage"
 
 function App() {
   return (
     <>
       <Routes>
         <Route element={<HomePage />} path="/" />
+        <Route element={<GuidePage />} path="/guide" />
         <Route element={<LoginPage />} path="/login/:roomIdx" />
         <Route element={<LoginPage />} path="/login" />
         <Route element={<FindIdPage />} path="/findId" />
