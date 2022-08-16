@@ -118,8 +118,8 @@ public class RoomServiceImpl implements RoomService {
             roomShowDto.setPartyCandle(roomDeco.getRoomdeco_candle());
             // 호스트 설정
             roomShowDto.setPartyHost(room.get().getRoomHost());
-            // 닉네임 설정
-            Optional<User> user = userRepository.findByUserEmail(email);
+            // 닉네임 설정 - 호스트 닉네임으로 설정
+            Optional<User> user = userRepository.findByUserEmail(room.get().getRoomHost());
             roomShowDto.setPartyNickname(user.get().getUserNickname());
             roomShowDto.setPartyDate(room.get().getRoom_date());
             roomShowDto.setPartyDesc(room.get().getRoomDesc());
