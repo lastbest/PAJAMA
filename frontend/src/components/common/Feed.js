@@ -131,15 +131,17 @@ function Feed(props) {
         onClick={handleClose2}>취소</Button>
         <Button 
         style={{'color':'black', 'backgroundColor':'#FD7A99', 'border':'none','font-family':'oldpicture', 'box-shadow':'none' }}
-        onClick={()=>{
+        onClick={() => {
           axios({
-            url: `https://i7c203.p.ssafy.io/api/mypage/${roomIdx}`,
-            method: 'delete',
-            headers: {accessToken : token}
-          })
-          .then((res)=>{
-            document.location.href='/mypage'
-          })
+            url: `https://i7c203.p.ssafy.io/api/mypage`,
+            method: "delete",
+            headers: { accessToken: token },
+            data: {
+              email: roomIdx,
+            },
+          }).then((res) => {
+            document.location.href = "/mypage";
+          });
         }}
         >삭제하기</Button>
       </Modal.Footer>
