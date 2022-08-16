@@ -117,19 +117,19 @@ const HomePage = () => {
                 <img src="/maintext3.png" alt="maintext" style={{width:'80%', marginTop:"20px"}}/>
             </Img>
             <Img>
-                <img src="/subtext1.png" alt="subtext1" style={{width:'70%'}}/>
+                <img src="/subtext1.png" alt="subtext1" style={{width:'70%', "marginBottom":"50px"}}/>
             </Img>
             <Img>
-                <img src="/subtext2.png" alt="subtext2" style={{width:'70%'}}/>
+                <img src="/subtext2.png" alt="subtext2" style={{width:'70%', "marginBottom":"50px"}}/>
             </Img>
             <Img>
-                <img src="/subtext3.png" alt="subtext3" style={{width:'70%'}}/>
+                <img src="/subtext3.png" alt="subtext3" style={{width:'70%', "marginBottom":"50px"}}/>
             </Img>
             <Img>
-                <img src="/subtext4.png" alt="subtext4" style={{width:'70%'}}/>
+                <img src="/subtext4.png" alt="subtext4" style={{width:'70%', "marginBottom":"50px"}}/>
             </Img>
             <Img>
-                <img src="/subtext5.png" alt="subtext4" style={{width:'70%'}}/>
+                <img src="/subtext5.png" alt="subtext4" style={{width:'70%', "marginBottom":"50px"}}/>
             </Img>
 
             <Modal

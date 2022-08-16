@@ -42,13 +42,14 @@ function NotFound() {
   return (
     <Div>
       <div>
-        <img src="/errorpageimg.png" />
+        <img src="/errorpageimg.png" style={{display:"flex",margin:"auto", 'width':"50%", 'marginBottom':"50px"}} />
       </div>
       <div>
         <StyledBtn
           onClick={() => {
             document.location.href = "/";
           }}
+          style={{margin:"auto", display:"flex", 'justifyContent':"center", 'alignItems':"center"}}
         >
           홈으로 이동
         </StyledBtn>
