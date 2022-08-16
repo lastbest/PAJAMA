@@ -84,6 +84,8 @@ public class FeedServiceImpl implements FeedService {
                 }
                 innerMap.put("picture",arr);
                 innerMap.put("comment",arr2);
+                String roomIdx = encryptionService.encrypt(Integer.toString(feedtemp.getFeedRoomIdx()));
+                innerMap.put("roomidx", roomIdx);
                 map.put(feedtemp.getFeedRoomIdx(),innerMap);
             }
         }
