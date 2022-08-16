@@ -1,5 +1,6 @@
 package com.c203.api.controller;
 
+import com.c203.api.dto.Participant.RegParticipantDto;
 import com.c203.api.service.JwtService;
 import com.c203.api.service.ParticipantService;
 import com.c203.api.service.RoomService;
@@ -29,14 +30,15 @@ public class ParticipantController {
         this.participantService = participantService;
     }
     // 참여하기 버튼 누르는 경우 파티 참여자 정보 추가
-    @PostMapping("/participant/{roomIdx}")
-    public ResponseEntity<?> registParticipant(@PathVariable ("roomIdx") String roomIdx, HttpServletRequest request){
+    @PostMapping("/participant")
+    public ResponseEntity<?> registParticipant(@RequestBody RegParticipantDto regParticipantDto, HttpServletRequest request){
         Map<String,Object> result = new HashMap<>();
         HttpStatus status;
         try{
             String accessToken = request.getHeader("accessToken");
             String decodeEmail = jwtService.decodeToken(accessToken);
 
+            String roomIdx = regParticipantDto.getRoomIdx();
             roomIdx = roomIdx.replace("&","%26");
             roomIdx = roomIdx.replace("+","%2B");
             roomIdx = roomIdx.replace("=","%3D");
