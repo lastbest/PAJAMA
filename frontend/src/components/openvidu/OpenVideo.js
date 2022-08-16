@@ -635,16 +635,16 @@ class OpenVideo extends Component {
 
     const popover2 = (
       <Popover className="popover2">
-        <button className="voicebtn" onClick={this.higherPitch}>
+        <button className="voicebtn" onClick={higherPitch}>
           <img className="voice1" src="/arrow-up.png" alt="voice1" />
         </button>
-        <button className="voicebtn" onClick={this.lowerPitch}>
+        <button className="voicebtn" onClick={lowerPitch}>
           <img className="voice2" src="/down-arrow.png" alt="voice2" />
         </button>
         <button className="voicebtn">
           <img className="voice3" src="/mic2.png" alt="voice3" />
         </button>
-        <button className="voicebtn" onClick={this.removeFilters}>
+        <button className="voicebtn" onClick={removeFilters}>
           <img className="voice4" src="/voiceoff.png" alt="voice4" />
         </button>
       </Popover>
