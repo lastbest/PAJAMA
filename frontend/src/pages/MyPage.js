@@ -9,8 +9,8 @@ import axios from "axios";
 function MyPage() {
   let token = sessionStorage.getItem("accessToken");
   let [nickname, setNickname] = useState("");
-  let [roomInfo, setRoomInfo] = useState({})
-  let [keys, setKeys] = useState([])
+  let [roomInfo, setRoomInfo] = useState({});
+  let [keys, setKeys] = useState([]);
 
   useEffect(() => {
     axios({
@@ -27,24 +27,27 @@ function MyPage() {
       });
   }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     axios({
       url: "https://i7c203.p.ssafy.io/api/mypage",
       method: "get",
-      headers: { accessToken: token }
+      headers: { accessToken: token },
     })
-    .then((res)=>{
-      setRoomInfo(res.data.result)
-      setKeys(Object.keys(res.data.result))
-      setLoading(false);
-    })
-    .then(()=>{console.log(roomInfo)
-      console.log(keys)})
-    .catch((err)=>{console.log(err)})
-  }, [])
+      .then((res) => {
+        setRoomInfo(res.data.result);
+        setKeys(Object.keys(res.data.result));
+        setLoading(false);
+      })
+      .then(() => {
+        console.log(roomInfo);
+        console.log(keys);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   const [loading, setLoading] = useState(true);
-  
   // const [feeds, setFeeds] = useState([]);
   // const getMovies = async () => {
   //   const json = await (
@@ -66,45 +69,49 @@ function MyPage() {
   }
   return (
     <>
-    <NavBar></NavBar>
-    <div className="container">
-      <header>
-        <div className={styles.header}>
-          <span className={styles.userName}>{nickname}의 Party</span>
-          <Button className={styles.link} onClick={moveUpdate}>
-            회원정보수정
-          </Button>
+      <NavBar></NavBar>
+      <div className="container">
+        <header>
+          <div className={styles.header}>
+            <span className={styles.userName}>{nickname}의 Party</span>
+            <Button className={styles.link} onClick={moveUpdate}>
+              회원정보수정
+            </Button>
+          </div>
+        </header>
+        <div className={styles.feedContainer}>
+          {loading ? (
+            <div className={styles.loader}>
+              <span>Loading...</span>
+            </div>
+          ) : (
+            <div className={styles.feeds}>
+              {keys.map((room) => (
+                <Feed
+                  roomIdx={room}
+                  comment={roomInfo[room].comment}
+                  pictures={roomInfo[room].picture}
+                  partyTime={roomInfo[room].time}
+                />
+              ))}
+            </div>
+          )}
         </div>
-      </header>
-      <div className={styles.feedContainer}>
-        {loading ? (
-          <div className={styles.loader}>
-            <span>Loading...</span>
-          </div>
-        ) : (
-          <div className={styles.feeds}>
-            {keys.map((room) => (
-              <Feed
-                roomIdx={room}
-                comment={roomInfo[room].comment}
-                pictures={roomInfo[room].picture}
-                partyTime={roomInfo[room].time}
-              />
-            ))}
-          </div>
-        )}
-      </div>
-      { !roomInfo ? (
+        {keys.length === 0 ? (
           <div className={styles.emptycontainer}>
             <a className={styles.text1}>파티를 만들어보세요!</a>
             <br></br>
             <br></br>
-            <Button onClick={()=>{ document.location.href="/createparty"}}>
+            <Button
+              onClick={() => {
+                document.location.href = "/createparty";
+              }}
+            >
               CREATE PARTY
             </Button>
           </div>
-        ) : ( null )}
-    </div>
+        ) : null}
+      </div>
     </>
   );
 }
