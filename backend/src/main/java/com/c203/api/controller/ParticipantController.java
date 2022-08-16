@@ -54,7 +54,6 @@ public class ParticipantController {
                 status = HttpStatus.UNAUTHORIZED;
             }
         }catch (Exception e){
-            System.out.println(e);
             result.put("result","서버에러");
             status = HttpStatus.INTERNAL_SERVER_ERROR;
         }

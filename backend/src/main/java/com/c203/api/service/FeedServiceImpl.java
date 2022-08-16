@@ -27,12 +27,14 @@ public class FeedServiceImpl implements FeedService {
         Feed feed = feedRepository.findByFeedRoomIdxAndFeedPictureAndFeedUser(id, feedRegistDto.getPicture(), feedRegistDto.getEmail());
         List<Feed> list = feedRepository.findByFeedRoomIdxAndFeedUser(id, feedRegistDto.getEmail());
         int size = list.size();
+        System.out.println(size);
         for (int i=0;i<size;i++){
             Feed feedtemp = list.get(i);
             if(feedtemp.getFeedRepresent()){ // 대표 사진이 있는 경우
                 feedtemp.setFeedRepresent(false);
                 feedtemp.setFeed_description("");
             }
+            feedRepository.save(feedtemp);
         }
         feed.setFeedRepresent(true);
         feed.setFeed_description(feedRegistDto.getDescription());
@@ -60,12 +62,12 @@ public class FeedServiceImpl implements FeedService {
     public Map showPicture(String decodeEmail, String roomIdx) throws Exception {
         String temp = encryptionService.decrypt(roomIdx);
         int id = Integer.parseInt(temp); // room_idx
-        Map<Integer,Byte[]> map = new HashMap<>();
+        Map<Integer,String> map = new HashMap<>();
         List<Feed> list = feedRepository.findByFeedRoomIdxAndFeedUser(id, decodeEmail);
         int size = list.size();
         for (int i=0;i<size;i++){
             Feed feedtemp = list.get(i);
-            Byte[] pictureName = feedtemp.getFeedPicture();
+            String pictureName = feedtemp.getFeedPicture();
             map.put(i,pictureName);
         }
         return map;
