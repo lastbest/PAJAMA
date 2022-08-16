@@ -93,6 +93,7 @@ class OpenVideo extends Component {
       partyDate: props.partyDate,
       shot: false,
       imgUrl: undefined,
+      fileName: '',
       countCompleted: true,
       count: 0,
     };
@@ -581,7 +582,7 @@ class OpenVideo extends Component {
 
         <div id="frame" className="frame"></div>
         <div className="bar">
-          <p className="text5">최대 5장까지 저장할 수 있습니다.</p>
+          <p className="text5">저장된 사진은 피드에서 볼 수 있습니다.</p>
           <button
             className="downloadbtn"
             onClick={() => {
@@ -589,18 +590,32 @@ class OpenVideo extends Component {
               let token = sessionStorage.getItem("accessToken");
               this.removediv();
               
-              
-              axios({
-                url: "https://i7c203.p.ssafy.io/image/upload",
-                method: "post",
-                headers: {
-                  processData: false,
-                  'Content-Type': 'multipart/form-data',
-                },
-                data: this.state.imgUrl
-              })
-              .then((res)=>{console.log(res.data)})
-              .catch((err)=>{console.log(err)})
+              axios.all(
+                [axios({
+                  url: "https://i7c203.p.ssafy.io/image/upload",
+                  method: "post",
+                  headers: {
+                    processData: false,
+                    'Content-Type': 'multipart/form-data',
+                  },
+                  data: this.state.imgUrl
+                })
+                .then((res)=>{console.log(res.data)})
+                .catch((err)=>{console.log(err)}),
+
+                axios({
+                  url: "https://i7c203.p.ssafy.io/api/picture",
+                  method: "post",
+                  data: {
+                    roomIdx: this.state.roomId,
+                    picture: `https://i7c203.p.ssafy.io/images/${this.state.fileName}`
+                  }
+                })
+                .then((res)=>{console.log(res.data)})
+                .catch((err)=>{console.log(err)})
+              ]
+              )
+
             }}
           >
             <img className="download" src="/download.png" alt="download" />
@@ -1122,10 +1137,12 @@ class OpenVideo extends Component {
       }
     
       const file = new Blob([new Uint8Array(array)], {type: 'image/png'});
-      const fileName = 'canvas_img_' + new Date().getMilliseconds() + '.png';
+      const fileName = 'img_' + new Date().getFullYear()+ (new Date().getMonth()+1)+ new Date().getDate() + new Date().getHours() + new Date().getMinutes() + new Date().getSeconds() +'.png';
+      this.setState({fileName:fileName})
       let formData = new FormData();
       formData.append('uploadFile', file, fileName);
       this.setState({imgUrl: formData})
+      
 
       // const mimeType = "image/png"; // image/jpeg
       // const realData = canvdata.split(",")[1]; // 이 경우에선 /9j/4AAQSkZJRgABAQAAAQABAAD...
@@ -1146,7 +1163,7 @@ class OpenVideo extends Component {
       var photo = document.createElement("img");
       photo.setAttribute("src", canvdata);
       photo.setAttribute("width", 200);
-      photo.setAttribute("height", 100);
+      photo.setAttribute("height", 120);
       document.getElementById("frame").appendChild(photo);
     });
   }
