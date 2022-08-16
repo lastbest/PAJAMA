@@ -100,6 +100,7 @@ const RoomPage = () => {
         btn.className = "joinbtn";
         document.getElementById("bu").appendChild(btn);
       }
+      document.getElementById("counter").innerHTML = "D-00 : 00 : 00 : 00";
     }
   }, 1000);
 

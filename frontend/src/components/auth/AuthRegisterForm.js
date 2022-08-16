@@ -81,7 +81,12 @@ const StyleButton = styled.button`
 
 const Counter = styled.div`
   display: flex;
-  size: 20px;
+  size: 30px;
+`;
+
+const Mid = styled.div`
+  display: flex;
+  margin-top: 5px;
 `;
 
 const AuthRegisterForm = () => {
@@ -115,7 +120,6 @@ const AuthRegisterForm = () => {
 
   const [playing, setPlaying] = useState(false);
   const [replay, setReplay] = useState(false);
-
   const timerProps = {
     isPlaying: playing,
     size: 30,
@@ -135,7 +139,12 @@ const AuthRegisterForm = () => {
 
   let stratTime = Date.now() / 1000;
   let endTime = stratTime + 180;
+
   let remainingTime = endTime - stratTime;
+
+  function initTime() {
+    remainingTime = 180;
+  }
   const getTimeSeconds = (time) => (minuteSeconds - time) | 0;
   const getTimeMinutes = (time) => ((time % hourSeconds) / minuteSeconds) | 0;
 
@@ -162,6 +171,7 @@ const AuthRegisterForm = () => {
   let [userName, setUserName] = useState("");
   let [userNickname, setUserNickname] = useState("");
   let [code, setCode] = useState("");
+
   function onSubmit(e) {
     e.preventDefault();
     if (emailvalid) {
@@ -263,79 +273,107 @@ const AuthRegisterForm = () => {
     <AuthFormBlock>
       <h3>회원가입</h3>
       <form onSubmit={onSubmit}>
-        <div className="d-flex">
-          <StyledInput
-            autoComplete="userEmail"
-            name="userEmail"
-            placeholder=" 이메일"
-            onInput={(event) => {
-              setUserEmail(event.target.value);
-            }}
-            required
-          />
+        {emailvalid ? (
+          <div className="d-flex">
+            <StyledInput
+              autoComplete="userEmail"
+              name="userEmail"
+              disabled="disabled"
+              id="userEmail"
+              placeholder=" 이메일"
+              onInput={(event) => {
+                setUserEmail(event.target.value);
+              }}
+              required
+            />
 
-          <StyleButton
-            onClick={(e) => {
-              setPlaying(true);
-              e.preventDefault();
-              console.log("시작");
-            }}
-          >
-            <div>
-              {replay ? (
-                <Counter>
-                  <CountdownCircleTimer
-                    {...timerProps}
-                    colors="#000000"
-                    duration={hourSeconds}
-                    initialRemainingTime={remainingTime % hourSeconds}
-                    onComplete={() => {
-                      setReplay(false);
-                      if (remainingTime == 0) {
+            <StyleButton
+              onClick={(e) => {
+                setPlaying(true);
+                e.preventDefault();
+                console.log("시작");
+              }}
+            >
+              인증완료
+            </StyleButton>
+          </div>
+        ) : (
+          <div className="d-flex">
+            <StyledInput
+              autoComplete="userEmail"
+              name="userEmail"
+              id="userEmail"
+              placeholder=" 이메일"
+              onInput={(event) => {
+                setUserEmail(event.target.value);
+              }}
+              required
+            />
+
+            <StyleButton
+              onClick={(e) => {
+                setPlaying(true);
+                e.preventDefault();
+                console.log("시작");
+              }}
+            >
+              <div>
+                {replay ? (
+                  <Counter>
+                    <CountdownCircleTimer
+                      {...timerProps}
+                      colors="#000000"
+                      duration={hourSeconds}
+                      initialRemainingTime={remainingTime % hourSeconds}
+                      onComplete={() => {
+                        setReplay(false);
+                        if (remainingTime == 0) {
+                          expireCheck();
+                        }
+                      }}
+                    >
+                      {({ elapsedTime, color }) => (
+                        <span style={{ color }}>
+                          {renderTime(
+                            "",
+                            getTimeMinutes(hourSeconds - elapsedTime)
+                          )}
+                        </span>
+                      )}
+                    </CountdownCircleTimer>
+                    <Mid>:</Mid>
+                    <CountdownCircleTimer
+                      {...timerProps}
+                      colors="#000000"
+                      duration={minuteSeconds}
+                      initialRemainingTime={remainingTime}
+                      onComplete={() => {
                         expireCheck();
-                      }
+                      }}
+                    >
+                      {({ elapsedTime, color }) => (
+                        <span style={{ color }}>
+                          {renderTime("", getTimeSeconds(elapsedTime) % 60)}
+                        </span>
+                      )}
+                    </CountdownCircleTimer>
+                  </Counter>
+                ) : (
+                  <div
+                    onClick={() => {
+                      setReplay(true);
+                      sendCheck();
+                      setCount(count + 1);
                     }}
                   >
-                    {({ elapsedTime, color }) => (
-                      <span style={{ color }}>
-                        {renderTime(
-                          "",
-                          getTimeMinutes(hourSeconds - elapsedTime)
-                        )}
-                      </span>
-                    )}
-                  </CountdownCircleTimer>
-                  <div>:</div>
-                  <CountdownCircleTimer
-                    {...timerProps}
-                    colors="#000000"
-                    duration={minuteSeconds}
-                    initialRemainingTime={remainingTime}
-                    onComplete={() => {
-                      expireCheck();
-                    }}
-                  >
-                    {({ elapsedTime, color }) => (
-                      <span style={{ color }}>
-                        {renderTime("", getTimeSeconds(elapsedTime) % 60)}
-                      </span>
-                    )}
-                  </CountdownCircleTimer>
-                </Counter>
-              ) : (
-                <div
-                  onClick={() => {
-                    setReplay(true);
-                    sendCheck();
-                    setCount(count + 1);
-                  }}
-                >
-                  {count === 0 ? "인증하기" : "재인증"}
-                </div>
-              )}
-            </div>
-          </StyleButton>
-        </div>
+                    {count === 0 ? "인증하기" : "재인증"}
+                  </div>
+                )}
+              </div>
+            </StyleButton>
+          </div>
+        )}
+
         <div className="d-flex">
           <StyledInput
             autoComplete="userEmailCheck"
@@ -532,7 +570,9 @@ const AuthRegisterForm = () => {
               backgroundColor: "#9D9D9D",
               color: "white",
             }}
-            onClick={handleClose3}
+            onClick={() => {
+              document.location.href = "/register";
+            }}
           >
             Close
           </Button>
