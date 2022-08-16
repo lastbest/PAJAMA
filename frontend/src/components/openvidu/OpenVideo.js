@@ -680,7 +680,6 @@ class OpenVideo extends Component {
     let Firecssshow = "";
 
     if (cakeshow === true) {
-      this.setState({show2:true})
       Cakeshow = "cake";
       Main = "main-container1";
       Candleshow = "candle";
@@ -853,7 +852,10 @@ class OpenVideo extends Component {
                       </div>
                     </div>
                   </div>
-                  <button className="navbtn" onClick={this.sendcakeByClick}>
+                  <button className="navbtn" onClick={()=>{
+                    this.sendcakeByClick
+                    this.setState({show2:true})
+                  }}>
                     <img
                       src="/birthday-cake.png"
                       alt="logo"
