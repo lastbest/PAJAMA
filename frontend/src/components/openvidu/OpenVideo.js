@@ -642,7 +642,7 @@ class OpenVideo extends Component {
           </button>
           <button className="trashbtn" onClick={()=>{
             if (this.state.partyHost === this.state.myEmail && this.state.partyHost != "") {
-              this.removediv
+              this.removediv()
             }
           }}>
             <img className="trash" src="/trash.png" alt="trash" />
@@ -853,7 +853,7 @@ class OpenVideo extends Component {
                     </div>
                   </div>
                   <button className="navbtn" onClick={()=>{
-                    this.sendcakeByClick
+                    this.sendcakeByClick()
                     this.setState({show2:true})
                   }}>
                     <img
