@@ -381,6 +381,11 @@ class OpenVideo extends Component {
                 show2: false,
               });
               break;
+            case "fire-on":
+            this.setState({
+              show2: true,
+            });
+            break;
             default:
               break;
           }
@@ -854,7 +859,13 @@ class OpenVideo extends Component {
                   </div>
                   <button className="navbtn" onClick={()=>{
                     this.sendcakeByClick()
-                    this.setState({show2:true})
+                    // this.setState({show2:true})
+                    const mySession = this.state.session;
+                    mySession.signal({
+                      data: `${this.state.myUserName},fire-on`,
+                      to: [],
+                      type: "motion",
+                    });
                   }}>
                     <img
                       src="/birthday-cake.png"
@@ -1252,7 +1263,7 @@ class OpenVideo extends Component {
         new Date().getSeconds() +
         ".png";
       this.setState({ fileName: fileName });
-      let formData = new FormData();
+      let formData = new FormData();signal
       formData.append("uploadFile", file, fileName);
       this.setState({ imgUrl: formData });
 
