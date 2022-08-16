@@ -592,7 +592,7 @@ class OpenVideo extends Component {
 
         <div id="frame" className="frame"></div>
         <div className="bar">
-          <p className="text5">최대 5장까지 저장할 수 있습니다.</p>
+          <p className="text5">5장까지 피드에 저장할 수 있습니다.</p>
           <button
             className="downloadbtn"
             onClick={() => {
@@ -617,7 +617,7 @@ class OpenVideo extends Component {
                 });
             }}
           >
-            <img className="download" src="/download.png" alt="download" />
+            <img className="download" src="/save.png" alt="download" />
           </button>
           <button className="trashbtn" onClick={this.removediv}>
             <img className="trash" src="/trash.png" alt="trash" />
