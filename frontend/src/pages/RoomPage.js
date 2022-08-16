@@ -45,7 +45,7 @@ const RoomPage = () => {
   }, [flag]);
 
   axios({
-    url: "http://i7c203.p.ssafy.io:8082/rooms",
+    url: "https://i7c203.p.ssafy.io/api/rooms",
     method: "get",
     headers: { accessToken: token },
     params: {
@@ -98,6 +98,15 @@ const RoomPage = () => {
         var btn = document.createElement("button");
         btn.innerHTML = "참여하기";
         btn.className = "joinbtn";
+        btn.onclick = function () {
+          axios({
+            url: `https://i7c203.p.ssafy.io/api/participant/${roomIdx}`,
+            method: "post",
+            headers: { accessToken: token },
+          }).then((res) => {
+            console.log("success");
+          });
+        };
         document.getElementById("bu").appendChild(btn);
       }
     }

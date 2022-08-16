@@ -11,6 +11,7 @@ import UpdatePartyPage from "./pages/UpdatePartyPage";
 import FindIdPage from "./pages/FindIdPage";
 import FindpwdPage from "./pages/FindpwdPage";
 import InvitePage from "./pages/InvitePage";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route element={<CreatePartyPage />} path="/createparty" />
         <Route element={<UpdatePartyPage />} path="/updateparty/:roomIdx" />
         <Route element={<InvitePage />} path="/invite/:roomIdx" />
+        <Route element={<NotFound />} path="/*" />
       </Routes>
     </>
   );

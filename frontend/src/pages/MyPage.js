@@ -9,36 +9,57 @@ import axios from "axios";
 function MyPage() {
   let token = sessionStorage.getItem("accessToken");
   let [nickname, setNickname] = useState("");
-  // useEffect(() => {
-  //   axios({
-  //     url: "http://localhost:8080/users/me",
-  //     method: "get",
-  //     headers: { accessToken: token },
-  //   })
-  //     .then((res) => {
-  //       setNickname(res.data.result.nickname);
-  //     })
-  //     .catch(() => {
-  //       alert("불러오기 실패");
-  //       navigate("/login");
-  //     });
-  // }, []);
+  let [roomInfo, setRoomInfo] = useState({})
+  let [keys, setKeys] = useState([])
+
+  useEffect(() => {
+    axios({
+      url: "https://i7c203.p.ssafy.io/api/users/me",
+      method: "get",
+      headers: { accessToken: token },
+    })
+      .then((res) => {
+        setNickname(res.data.result.nickname);
+      })
+      .catch(() => {
+        alert("불러오기 실패");
+        navigate("/login");
+      });
+  }, []);
+
+  useEffect(()=>{
+    axios({
+      url: "https://i7c203.p.ssafy.io/api/mypage",
+      method: "get",
+      headers: { accessToken: token }
+    })
+    .then((res)=>{
+      setRoomInfo(res.data.result)
+      setKeys(Object.keys(res.data.result))
+      setLoading(false);
+    })
+    .then(()=>{console.log(roomInfo)
+      console.log(keys)})
+    .catch((err)=>{console.log(err)})
+  }, [])
 
   const [loading, setLoading] = useState(true);
-  const [feeds, setFeeds] = useState([]);
-  const getMovies = async () => {
-    const json = await (
-      await fetch(
-        `https://yts.mx/api/v2/list_movies.jsonminimum_rating=8.5&sort_by=year`
-      )
-    ).json();
-    setFeeds(json.data.movies);
-    setLoading(false);
-  };
-  useEffect(() => {
-    getMovies();
-  }, []);
-  var hasFeed = Object.keys(feeds).length > 0;
+  
+  // const [feeds, setFeeds] = useState([]);
+  // const getMovies = async () => {
+  //   const json = await (
+  //     await fetch(
+  //       `https://yts.mx/api/v2/list_movies.jsonminimum_rating=8.5&sort_by=year`
+  //     )
+  //   ).json();
+  //   setFeeds(json.data.movies);
+  //   setLoading(false);
+  // };
+  // useEffect(() => {
+  //   getMovies();
+  // }, []);
+  // var hasFeed = Object.keys(feeds).length > 0;
+
   const navigate = useNavigate();
   function moveUpdate() {
     navigate("/mypage/update");
@@ -62,13 +83,12 @@ function MyPage() {
           </div>
         ) : (
           <div className={styles.feeds}>
-            {feeds.map((movie) => (
+            {keys.map((room) => (
               <Feed
-                key={movie.id}
-                feed_idx={movie.id}
-                feed_user={movie.title}
-                feed_description="파티한 날!"
-                feed_picture={movie.medium_cover_image}
+                roomIdx={room}
+                comment={roomInfo[room].comment}
+                pictures={roomInfo[room].picture}
+                partyTime={roomInfo[room].time}
               />
             ))}
           </div>

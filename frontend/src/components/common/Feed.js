@@ -23,9 +23,14 @@ const StyledInput = styled.input`
   }
 `;
 
-function Feed({ feed_idx, feed_user, feed_description, feed_picture }) {
-  let [credentials, setCredentials] = useState({ comment: "" });
-  let [comment, setComment] = useState("");
+function Feed(props) {
+  let [credentials, setCredentials] = useState({  roomIdx: props.roomIdx,  description: ""});
+  let comment = props.comment;
+  let [write, setWrite] = useState("")
+  let pictures = props.pictures
+  const roomIdx = props.roomIdx
+  const token = sessionStorage.getItem('accessToken')
+  const partyTime = props.partyTime
   
   const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
@@ -42,17 +47,17 @@ function Feed({ feed_idx, feed_user, feed_description, feed_picture }) {
         <button className={styles.listbtn} onClick={handleShow}><img src="/list.png" style={{"width":"20px", "height":"20px"}}></img></button>
       </div>
       <br />
-      <img src={feed_picture} alt={feed_idx} className={styles.picture} />
+      <img src={pictures[0]} alt="대표사진" className={styles.picture} />
       <br />
       <div className={styles.comment}>
         <div className={styles.head}>
-          <div className={styles.date}>날짜</div>
+          <div className={styles.date}>{partyTime.substr(0,10)}</div>
           <div>
-            <button className={styles.downloadbtn}><img src="/download.png" style={{"width":"20px", "height":"20px"}}></img></button>
+
             <button className={styles.trashbtn} onClick={handleShow2}><img src="/trash.png" style={{"width":"20px", "height":"20px"}}></img></button>
           </div>
         </div>
-        <div className={styles.comment}>{feed_description}</div>
+        <div className={styles.comment}>{comment}</div>
       </div>
     </div>
 
@@ -68,10 +73,13 @@ function Feed({ feed_idx, feed_user, feed_description, feed_picture }) {
         <Modal.Title style={{'font-family':'star', "color":"#FD7A99"}}>PAZAMA</Modal.Title>
       </Modal.Header>
       <Modal.Body className={styles.body}>
-          <img src={feed_picture} alt={feed_idx} className={styles.picture} />
-          <img src="/frame1.png" style={{"width":"90%"}} className={styles.frameimg} />
-          <img src="/frame2.png" style={{"width":"90%"}} className={styles.frameimg}/>
-          <img src="/frame3.png" style={{"width":"90%"}} className={styles.frameimg}/>
+
+        {  pictures.map((picture)=>(
+
+          <img src={picture} alt="파티사진" className={styles.picture}></img>
+        )
+        ) 
+        }
       </Modal.Body>
       <Modal.Footer>
       <StyledInput
@@ -79,21 +87,25 @@ function Feed({ feed_idx, feed_user, feed_description, feed_picture }) {
           name="comment"
           placeholder=" How was the Party?"
           onInput={(event) => {
-            setComment(event.target.value);
+            setWrite(event.target.value);
           }}
         />
         <Button 
         style={{'color':'black', 'backgroundColor':'#FFA4BD', 'border':'none','font-family':'oldpicture', 'box-shadow':'none' }} 
         onClick={()=>{
-          setCredentials((credentials.comment = comment))
+          setCredentials((credentials.description = write))
+          console.log(credentials)
           axios({
-            url: "http://i7c203.p.ssafy.io:8082/mypage" +"feedidx",
+            url: "https://i7c203.p.ssafy.io/api/mypage",
             method:"post",
+            headers: {accessToken : token},
             data:credentials,
           })
             .then((res) => {
+              document.location.href='/mypage'
               console.log(res.data);
             })
+            .catch((err)=>{console.log(err)})
 
         }}>작성하기</Button>
       </Modal.Footer>
@@ -118,7 +130,17 @@ function Feed({ feed_idx, feed_user, feed_description, feed_picture }) {
         style={{'color':'white', 'backgroundColor':'#9D9D9D', 'border':'none','font-family':'oldpicture', 'box-shadow':'none' }} 
         onClick={handleClose2}>취소</Button>
         <Button 
-        style={{'color':'black', 'backgroundColor':'#FD7A99', 'border':'none','font-family':'oldpicture', 'box-shadow':'none' }} 
+        style={{'color':'black', 'backgroundColor':'#FD7A99', 'border':'none','font-family':'oldpicture', 'box-shadow':'none' }}
+        onClick={()=>{
+          axios({
+            url: `https://i7c203.p.ssafy.io/api/mypage/${roomIdx}`,
+            method: 'delete',
+            headers: {accessToken : token}
+          })
+          .then((res)=>{
+            document.location.href='/mypage'
+          })
+        }}
         >삭제하기</Button>
       </Modal.Footer>
     </Modal>

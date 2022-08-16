@@ -67,7 +67,7 @@ const AuthForm = () => {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
+  roomIdx = encodeURIComponent(roomIdx);
   let [credentials, setCredentials] = useState({ email: "", pwd: "" });
   let [userEmail, setUserEmail] = useState("");
   let [password, setPassword] = useState("");
@@ -103,7 +103,7 @@ const AuthForm = () => {
             setCredentials((credentials.email = userEmail));
             setCredentials((credentials.pwd = password));
             axios({
-              url: "http://i7c203.p.ssafy.io:8082/auth/login",
+              url: "https://i7c203.p.ssafy.io/api/auth/login",
               method: "post",
               data: credentials,
             })
@@ -112,18 +112,17 @@ const AuthForm = () => {
                 if (res.data.accessToken === undefined) {
                   handleShow();
                   // document.location.href = "/login";
-                  
                 } else {
                   sessionStorage.setItem("accessToken", res.data.accessToken);
-                  if (roomIdx !== undefined) {
-                    document.location.href = `/room/${roomIdx}`;
-                  } else {
+                  if (roomIdx == undefined || roomIdx == "undefined") {
                     document.location.href = "/";
+                  } else {
+                    document.location.href = `/invite/${roomIdx}`;
                   }
                 }
               })
               .catch(() => {
-                handleShow()
+                handleShow();
                 console.log("로그인 실패");
               });
           }}
@@ -144,42 +143,47 @@ const AuthForm = () => {
           회원가입
         </Link>
       </Footer>
-      {
-        show ? 
-      <Modal
-        centered
-        show={show}
-        onHide={handleClose}
-        backdrop="static"
-        keyboard={false}
-      >
-        <Modal.Header>
-          <Modal.Title style={{ "font-family": "star", color: "#FD7A99" }}>
-            PAZAMA
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body
-          style={{ "font-family": "oldpicture", "font-size": "20px" }}
+      {show ? (
+        <Modal
+          centered
+          show={show}
+          onHide={handleClose}
+          backdrop="static"
+          keyboard={false}
         >
-          이메일 또는 비밀번호를 잘못 입력했습니다.
-          <br />
-          입력하신 내용을 다시 확인해주세요.
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            style={{
-              border: "none",
-              "font-family": "oldpicture",
-              backgroundColor: "#9D9D9D",
-              color: "white",
-            }}
-            onClick={()=>{document.location.href="/login"}}
+          <Modal.Header>
+            <Modal.Title style={{ "font-family": "star", color: "#FD7A99" }}>
+              PAZAMA
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body
+            style={{ "font-family": "oldpicture", "font-size": "20px" }}
           >
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal> : null
-      }
+            이메일 또는 비밀번호를 잘못 입력했습니다.
+            <br />
+            입력하신 내용을 다시 확인해주세요.
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              style={{
+                border: "none",
+                "font-family": "oldpicture",
+                backgroundColor: "#9D9D9D",
+                color: "white",
+              }}
+              onClick={() => {
+                if (roomIdx == undefined || roomIdx == "undefined") {
+                  document.location.href = "/login";
+                } else {
+                  document.location.href = `/login/${roomIdx}`;
+                }
+              }}
+            >
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      ) : null}
     </AuthFormBlock>
   );
 };

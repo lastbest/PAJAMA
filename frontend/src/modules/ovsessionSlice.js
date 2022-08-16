@@ -8,6 +8,8 @@ const ovsessionSlice = createSlice({
     userid: 11,
     cake: 22,
     music: 33,
+    playerIdx: 0,
+    playerPlay: 0,
   },
   reducers: {
     setOvSession: (state, action) => {
@@ -22,6 +24,12 @@ const ovsessionSlice = createSlice({
     setMusic: (state, action) => {
       state.music = action.payload;
     },
+    setPlayerIdx: (state, action) => {
+      state.playerIdx = action.payload;
+    },
+    setPlayerPlay: (state, action) => {
+      state.playerPlay = action.payload;
+    },
   },
 });
 
@@ -29,7 +37,7 @@ const ovsessionSlice = createSlice({
 const { actions, reducer } = ovsessionSlice;
 
 // export individual action creator functions
-export const { setOvSession, setUserId, setCake, setMusic } = actions;
+export const { setOvSession, setUserId, setCake, setMusic, setPlayerIdx, setPlayerPlay } = actions;
 
 // often the reducer is a default export, but that doesn't matter
 export default reducer;
