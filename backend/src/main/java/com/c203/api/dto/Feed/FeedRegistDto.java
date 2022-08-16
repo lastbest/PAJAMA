@@ -11,5 +11,5 @@ public class FeedRegistDto {
     private String roomIdx;
     private String email;
     private String description;
-    private Byte[] picture;
+    private String picture;
 }

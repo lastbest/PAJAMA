@@ -26,5 +26,5 @@ public class Feed {
     private Boolean feedRepresent; // 대표하는 사진인지 체크
     private LocalDateTime feed_time;
     @Column(name = "feed_picture")
-    private Byte[] feedPicture;
+    private String feedPicture;
 }

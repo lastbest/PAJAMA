@@ -9,5 +9,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PictureRegistDto {
     String roomIdx; // 룸 번호
-    Byte[] picture; // 사진
+    String picture; // 사진
 }
