@@ -4,6 +4,7 @@ import { Link, Params, useNavigate } from "react-router-dom";
 import Button from "../common/Button";
 import axios from "axios";
 import styles from "./AuthUpdateForm.module.css";
+import Modal from 'react-bootstrap/Modal';
 
 const AuthFormBlock = styled.div`
   h3 {
@@ -93,6 +94,14 @@ const AuthUpdateForm = () => {
   let [nickname, setNickname] = useState("");
   const navigate = useNavigate();
 
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const [show2, setShow2] = useState(false);
+  const handleClose2 = () => setShow2(false);
+  const handleShow2 = () => setShow2(true);
+
   function onSubmit(e) {
     e.preventDefault();
     if (paw2 === pwd1) {
@@ -145,35 +154,13 @@ const AuthUpdateForm = () => {
     }
   }
 
-  const confirmDelete = () => {
-    if (window.confirm("정말 삭제합니까?")) {
-      alert("삭제되었습니다.");
-      axios({
-        url: "https://i7c203.p.ssafy.io/api/users",
-        method: "delete",
-        headers: { accessToken: token },
-      })
-        .then((res) => {
-          if (res.data.result === "success") {
-            window.alert("계정 삭제 성공");
-            sessionStorage.clear();
-            navigate("/");
-          } else {
-            window.alert("삭제 실페.");
-          }
-        })
-        .catch(() => {
-          alert("삭제 실패");
-        });
-    } else {
-      alert("취소합니다.");
-    }
-  };
+
 
   return (
+    <>
     <AuthFormBlock>
       <h3 className={styles.h3}>회원정보수정</h3>
-      <ButtonWithMarinTop onClick={confirmDelete} className={styles.button}>
+      <ButtonWithMarinTop onClick={handleShow} className={styles.button}>
         회원탈퇴
       </ButtonWithMarinTop>
       <form onSubmit={onSubmit}>
@@ -243,6 +230,67 @@ const AuthUpdateForm = () => {
         <ButtonWithMarinTop fullWidth>회원정보수정</ButtonWithMarinTop>
       </form>
     </AuthFormBlock>
+
+    <Modal
+    centered
+    show={show}
+    onHide={handleClose}
+    backdrop="static"
+    keyboard={false}
+    className={styles.dialog}
+    >
+    <Modal.Header closeButton>
+      <Modal.Title style={{'font-family':'star', "color":"#FD7A99"}}>PAZAMA</Modal.Title>
+    </Modal.Header>
+    <Modal.Body style={{'font-family':'oldpicture'}}>
+      계정을 삭제하시겠습니까?
+    </Modal.Body>
+    <Modal.Footer>
+    <Button 
+      style={{'color':'white', 'backgroundColor':'#9D9D9D', 'border':'none','font-family':'oldpicture', 'box-shadow':'none' }} 
+      onClick={handleClose}>취소</Button>
+      <Button 
+      style={{'color':'black', 'backgroundColor':'#FD7A99', 'border':'none','font-family':'oldpicture', 'box-shadow':'none' }}
+      onClick={()=>{
+        axios({
+          url: "https://i7c203.p.ssafy.io/api/users",
+          method: "delete",
+          headers: { accessToken: token },
+        })
+          .then((res) => {
+            handleShow2();
+            sessionStorage.clear();
+          })
+
+      }}
+      >삭제하기</Button>
+    </Modal.Footer>
+    </Modal>
+
+    <Modal
+      centered
+      show={show2}
+      onHide={handleClose2}
+      backdrop="static"
+      keyboard={false}
+      className={styles.dialog}
+    >
+    <Modal.Header closeButton>
+        <Modal.Title style={{'font-family':'star', "color":"#FD7A99"}}>PAZAMA</Modal.Title>
+      </Modal.Header>
+      <Modal.Body style={{'font-family':'oldpicture'}}>
+        삭제가 완료되었습니다!
+      </Modal.Body>
+      <Modal.Footer>
+        <Button 
+        style={{'color':'black', 'backgroundColor':'#FD7A99', 'border':'none','font-family':'oldpicture', 'box-shadow':'none' }}
+        onClick={()=>{
+          document.location.href='/'
+        }}
+        >확인</Button>
+      </Modal.Footer>
+    </Modal>
+</>
   );
 };
 

@@ -127,6 +127,9 @@ const CreatePartyPage = () => {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const [show2, setShow2] = useState(false);
+  const handleClose2 = () => setShow2(false);
+  const handleShow2 = () => setShow2(true);
 
   const [copySuccess, setCopySuccess] = useState("");
   const textAreaRef = useRef(null);
@@ -371,36 +374,40 @@ const CreatePartyPage = () => {
       </div>
       <div class="container"></div>
       <CreateBtn>
-        {/* <a href='/room'> */}
         <StyledBtn
           onClick={() => {
-            handleShow();
-            if (!(token == "" || token == undefined)) {
-              setPartyDate(partyDate.setHours(partyDate.getHours() + 9));
-              axios({
-                url: "https://i7c203.p.ssafy.io/api/rooms",
-                method: "post",
-                headers: { accessToken: token },
-                data: {
-                  partyHost: myEmail,
-                  partyName: partyName,
-                  partyDesc: partyDesc,
-                  partyBg: partyBg,
-                  partyCake: partyCake,
-                  partyCandle: partyCandle,
-                  partyDate: partyDate,
-                },
-              })
-                .then((res) => {
-                  console.log(res.data.result.roomId);
-                  setRoomId(res.data.result.roomId);
-                })
-                .catch((err) => {
-                  console.log(err);
-                });
+            if (partyDate <= new Date()) {
+              handleShow2();
             } else {
-              alert("로그인을 해주세요");
+              handleShow();
+              if (!(token == "" || token == undefined)) {
+                setPartyDate(partyDate.setHours(partyDate.getHours() + 9));
+
+                axios({
+                  url: "https://i7c203.p.ssafy.io/api/rooms",
+                  method: "post",
+                  headers: { accessToken: token },
+                  data: {
+                    partyHost: myEmail,
+                    partyName: partyName,
+                    partyDesc: partyDesc,
+                    partyBg: partyBg,
+                    partyCake: partyCake,
+                    partyCandle: partyCandle,
+                    partyDate: partyDate,
+                  },
+                })
+                  .then((res) => {
+                    console.log(res.data.result.roomId);
+                    setRoomId(res.data.result.roomId);
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
+              }
             }
+           
+            
           }}
         >
           CREATE PARTY
@@ -468,6 +475,25 @@ const CreatePartyPage = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      <Modal
+                centered
+                show={show2}
+                onHide={handleClose2}
+                backdrop="static"
+                keyboard={false}
+            >
+                <Modal.Header closeButton>
+                <Modal.Title style={{'font-family':'star'}}>PAZAMA</Modal.Title>
+                </Modal.Header>
+                <Modal.Body style={{'font-family':'oldpicture', 'font-size':'20px'}}>
+                 현재 시간보다 이후 시간을 선택해주세요.
+                </Modal.Body>
+                <Modal.Footer>
+                <Button style={{'color':'black', 'backgroundColor':'#FD7A99', 'border':'none','font-family':'oldpicture', 'box-shadow':'none' }} onClick={handleClose2} >닫기</Button>
+              
+                </Modal.Footer>
+            </Modal>
     </>
   );
 };
