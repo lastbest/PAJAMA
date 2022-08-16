@@ -1,58 +1,205 @@
-# 웹/모바일(웹 기술) 스켈레톤 프로젝트
+# 🎉 PAJAMA
 
-<!-- 필수 항목 --> 
+---
 
-## 카테고리
+# 1차배포 이용가이드
 
-| Application | Domain | Language | Framework |
-| ---- | ---- | ---- | ---- |
-| :white_check_mark: Desktop Web | :black_square_button: AI | :white_check_mark: JavaScript | :white_check_mark: Vue.js |
-| :white_check_mark: Mobile Web | :black_square_button: Big Data | :black_square_button: TypeScript | :black_square_button: React |
-| :white_check_mark: Responsive Web | :black_square_button: Blockchain | :black_square_button: C/C++ | :black_square_button: Angular |
-| :black_square_button: Android App | :black_square_button: IoT | :black_square_button: C# | :black_square_button: Node.js |
-| :black_square_button: iOS App | :black_square_button: AR/VR/Metaverse | :black_square_button: Python | :black_square_button: Flask/Django |
-| :black_square_button: Desktop App | :black_square_button: Game | :white_check_mark: Java | :white_check_mark: Spring/Springboot |
-| | | :black_square_button: Kotlin | |
+## 이용순서
 
-<!-- 필수 항목 -->
+1. 회원가입
+2. 로그인
+3. CREATE PARTY 클릭
+4. 파티 상세 정보 설정 후 CREATE PARTY 클릭
+5. 생성된 초대장 링크를 복사 후 다른 사용자에게 전달하여 초대
 
-## 프로젝트 소개
+host : 
 
-* 프로젝트명: 파자마
-* 서비스 특징: 웹/모바일(웹 기술) 프로젝트를 위한 스켈레톤 프로젝트
-* 주요 기능
-  - 회원 관리
-  - 화상 미팅룸
-  - 그룹 채팅
-* 주요 기술
-  - WebRTC
-  - WebSocket
-  - JWT Authentication
-  - REST API
-* 참조 리소스
-  * React
-  * Vuetify: 디자인 전반 적용
-  * Vue Argon Design System: 디자인 전반 적용
-  * Vue Black Dashboard Pro(유료): 캘린더 컴포넌트 사용
-  * AR Core: 구글에서 제공하는 AR 지원 라이브러리. 이미지 인식 및 오버레이 영상에 활용
-  * Color Thief: 이미지 색상 추출 라이브러리. 커버 사진 색상 추출 및 배경 변경에 활용
-  * Animation.css: CSS 애니메이션 지원 라이브러리. 메인 페이지 진입 애니메이션에 활용
-* 배포 환경
-  - URL: // 웹 서비스, 랜딩 페이지, 프로젝트 소개 등의 배포 URL 기입
-  - 테스트 계정: // 로그인이 필요한 경우, 사용 가능한 테스트 계정(ID/PW) 기입
+1. JOIN PARTY 클릭
+2. 파티 생성시 정했던 시간에 맞춰 카운트, 파티 시작 시간 이전에 들어오면 파티수정만 가능
+3. 파티 시작 시간 이후에 들어오면 참여하기 버튼 활성화
+4. 참여 후 파티 시작~
 
-<!-- 자유 양식 -->
+guest :
+
+1. 받은 초대장 링크를 클릭하여 로그인 ( 회원가입 필수 )
+2. JOIN PARTY 클릭
+3. 파티 생성 시간 이전에 들어오면 참여하기 버튼 비활성화
+4. 파티 생성 시간 이후에 들어오면 참여하기 버튼 활성화
+5. 참여 후 파티 시작~
+
+---
+
+## 로그인
+
+- 회원가입
+    - 본인확인을 위해 메일을 통해 인증번호를 받을 수 있습니다.
+- 아이디 찾기
+    - 연락처를 통해 가입된 이메일의 일부를 알 수 있습니다.
+- 비밀번호 찾기
+    - 초기화된 비밀번호를 메일로 받을 수 있습니다.
+    
+    ---
+    
+
+## 마이페이지
+
+- 피드확인
+    - 파티룸에서 촬영한 사진들을 확인할 수 있다.
+        
+        ![Untitled](%F0%9F%8E%89%20PAJAMA%200342b67ca23045a9b4ba2b79bf3b6543/Untitled.png)
+        
+- 회원 정보 수정
+    - 회원 정보를 수정할 수 있습니다.
+- 회원 탈퇴
+    - 회원 탈퇴를 할 수 있습니다.
+
+## 케이크
+
+- (호스트만 가능) 화면 상단의 케이크 버튼을 클릭하면 케이크를 모든 사용자의 화면에 띄웁니다.
+- (게스트도 가능) 모션인식-손바닥 뒤집기 기능을 사용해서 촛불을 끌 수 있습니다.
+
+## 모션인식
+
+- 손바닥 뒤집기
+    - 손바닥을 손바닥→손등→손바닥 차례대로 뒤집으면 모든 사용자의 화면에서 종이 폭죽효과가 나옵니다. ( 5회 이상 )
+    
+    ![Untitled](%F0%9F%8E%89%20PAJAMA%200342b67ca23045a9b4ba2b79bf3b6543/Untitled%201.png)
+    
+- 손날 흔들기
+    - 케이크가 화면에 있을 때 손을 카메라에 손 부채질 하듯 가로로 세워 좌우로 흔들면 촛불이 꺼집니다. ( 4회 이상 )
+        
+        ![Untitled](%F0%9F%8E%89%20PAJAMA%200342b67ca23045a9b4ba2b79bf3b6543/Untitled%202.png)
+        
+- 엄지검지하트 ( 손가락 하트 )
+    - 인식은 되지만 해당하는 효과를 아직 연결하지 않았습니다.(Console로 signal 오는 것  확인가능합니다.)
+    
+    ![Untitled](%F0%9F%8E%89%20PAJAMA%200342b67ca23045a9b4ba2b79bf3b6543/Untitled%203.png)
+    
+- 브이 : 하트와 동일 ( 콘솔로만 기능구현 확인 가능 )
+
+![Untitled](%F0%9F%8E%89%20PAJAMA%200342b67ca23045a9b4ba2b79bf3b6543/Untitled%204.png)
+
+![Untitled](%F0%9F%8E%89%20PAJAMA%200342b67ca23045a9b4ba2b79bf3b6543/Untitled%205.png)
+
+## 음성인식
+
+- 화면 하단 세번째 버튼을 클릭하고 원하는 명령어를 말합니다
+- 음악 재생 목록 ( 힙합, 생일축하, 발라드, 싸이월드, 재즈, 댄스 )
+    - ex) “파자마, 힙합 노래 틀어줘”
+    - 필수단어 : 파자마, ㅇㅇ(힙합, 생일축하, 발라드 등등) 노래 틀어줘
+- 불꽃놀이
+    - ex) “파자마, 폭죽(또는 불꽃놀이) 틀어줘”
+
+## 음성변조
+
+- 화면 하단 네번째 버튼을 클릭하고 원하는 필터를 선택합니다.
+    - 버튼별 기능 : 피치 높이기, 피치 낮추기, 필터제거
+- 한번에 하나의 필터만 적용할 수 있습니다.
+- 현재는 이미 필터가 적용되있는 경우에는 필터제거버튼을 클릭후 필터를 선택해야합니다.
+
+## 사진촬영
+
+- (호스트만 가능) 화면 상단의 카메라 버튼을 클릭하면 촬영한 사진을 미리 보기를 할 수 있으며 사진촬영을 클릭하면 3초 카운터 후 현재 화면의 사진을 찍을 수 있습니다.
+- (호스트만 가능) 미리 보기 화면 아래 저장 버튼을 클릭하면 이미지 서버에 사진을 저장하여 참가자 전원의 피드 페이지(마이페이지)에서 사진을 확인할 수 있습니다.
+- 게스트들은 현재 카메라 버튼을 클릭한 상태에서 호스트가 촬영버튼을 눌렀을 때만 타이머 효과와 미리보기를 이용할 수 있습니다.
+
+## 음악재생
+
+- (호스트만 가능, 음성인식을 통해 게스트도 가능) 화면 상단 세번째 음악버튼 클릭 시 총 6개의 장르 버튼이 나오며 원하는 장르 버튼을 선택하면 모든 사용자에게 음악이 나옵니다.
+- (호스트만 가능, 음성인식을 통해 게스트도 가능) 음악을 일시정지 및 재생, 이전/다음곡 을 클릭하면 모든 사용자에게 적용됩니다.
+
+## 채팅
+
+- 화면 하단 다섯 번째 버튼을 클릭하고 채팅을 시작합니다.
+- 파티룸내에서 텍스트 메세지를 주고받을 수 있습니다.
+
+## 💡기획배경
+
+저희 파자마 서비스 기획 배경은 코로나 장기화로부터 시작되었습니다.
+코로나 직후에는 비대면 생활이 매우 생소하였지만 코로나 장기화로 현재는 온라인 화상 회의, 강의등이 활성화 되었으며 이런 비대면 서비스가 익숙해졌고 다양하게 사용되고 있습니다.
+
+## ⭐프로젝트 소개
+
+### 화상 미팅룸 및 그룹 채팅
+
+ex)서비스사진
+
+ex)설명글
+
+### 모션인식
+
+### 음성인식(Speech-to-Text)
+
+### 음악재생
+
+### 사진촬영
+
+## 기술스택
+
+- 주요 기술
+    - AWS
+    - KMS (Kurento Media Server)
+    - Openvidu
+    - Tensorflow.js
+    - Web Speech Api
+    - Docker
+    - Jenkins
+    - Nginx
+    - Node.js (express.js)
+    - WebSocket
+    - JWT Authentication
+    - REST API
+    - Spring Boot 2.7.1 + JPA + Gradle
+    - React.js 18.2.0
+    - Redux 4.2.0
+    - My SQL 8.0.30
+    - Ubuntu 20.04.4
+- 협업툴
+    - Gitlab
+    - Jira
+    - Notion
+    - Mattermost
+    - Webex
+    - Figma
+    - Draw.io
+- 배포 환경
+    - URL : https: // i7c203.p.ssafy.io
+    - 테스트 계정: // 로그인이 필요한 경우, 사용 가능한 테스트 계정(ID/PW) 기입
 
 ## 팀 소개
-* 김준우: 팀장, 백엔드 개발, WebRTC 구현 담당
-* 김경호: 백엔드 개발, 모션인식 + 음성변조 구현 담당
-* 김유완: 백엔드 개발, 사용자 부분(JWT) + 그 외 기능 구현 담당 
-* 이동주: 프론트엔드 개발
-* 정재철: 프론트엔드 개발
-* 진주현: 프론트엔드 개발
 
-<!-- 자유 양식 -->
+- 김준우: 팀장, 백엔드 개발, WebRTC 구현, 서버 담당
+- 김경호: 백엔드 개발, 모션인식, 음성인식 담당
+- 김유완: 백엔드 개발, Entity 설계 및 API 구현, Jira관리자
+- 이동주: 프론트엔드 개발
+- 정재철: 프론트엔드 개발
+- 진주현: 프론트엔드 개발
 
 ## 프로젝트 상세 설명
 
 // 개발 환경, 기술 스택, 시스템 구성도, ERD, 기능 상세 설명 등
+
+## Git 컨벤션
+
+```bash
+# FEAT : 새로운 기능 추가
+# FIX : 버그 수정
+# DOCS : 문서 수정
+# DATA : DataSet, 단순 데이터 관련 사항
+# DB : 데이터베이스 관련 사항
+# TEST : 테스트 코드 추가
+# REFACTOR : 코드 리팩토링
+# STYLE : 코드 의미에 영향을 주지 않는 변경사항
+# CHORE : 빌드 부분 혹은 패키지 매니저 수정사항
+# DIR : 디렉토리 관련 변경사항 (추가/삭제/수정)
+# DEL : 삭제
+# ETC : 기타
+# Ex) [FEAT][A-01] : 회원가입 구현
+################
+# ! : 필요
+# Ex) !FIX : 버그 수정 필요, !FEAT : 기능 추가 필요, !DOCS : 문서화, 문서 수정 필요
+# HOT : 급한 작업(우선 순위 작업)
+# Ex) !HOTFIX : 긴급 버그 수정 필요
+# * : 두 가지 이상의 태그가 필요할 때 (권장하지 않음 - 되도록 따로따로 커밋 부탁드립니다.)
+# Ex) [FEAT] * [DIR] : 회원가입 구현, 디렉토리 변경 XXX.Java
+```
