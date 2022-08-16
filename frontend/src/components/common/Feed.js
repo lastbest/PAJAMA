@@ -62,7 +62,7 @@ function Feed(props) {
     </div>
 
     <Modal
-      style={{'top':'150px'}}
+      centered
       show={show}
       onHide={handleClose}
       backdrop="static"
