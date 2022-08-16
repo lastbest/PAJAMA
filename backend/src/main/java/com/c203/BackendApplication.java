@@ -1,21 +1,24 @@
 package com.c203;
 
-import com.c203.db.Entity.User;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.domain.Sort;
+import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.util.UrlPathHelper;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
 
 @SpringBootApplication
-public class BackendApplication {
+public class BackendApplication extends WebMvcConfigurerAdapter {
 
 	public static void main(String[] args) {
-
+		System.setProperty("org.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH", "true");
 	SpringApplication.run(BackendApplication.class, args);
 	}
-
+	@Override
+	public void configurePathMatch(PathMatchConfigurer configurer) {
+		UrlPathHelper urlPathHelper = new UrlPathHelper();
+		urlPathHelper.setUrlDecode(false);
+		urlPathHelper.setAlwaysUseFullPath(true);
+		configurer.setUrlPathHelper(urlPathHelper);
+	}
 }

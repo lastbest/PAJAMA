@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface FeedRepository extends JpaRepository<Feed, Integer> {
     Feed findByFeedRoomIdxAndFeedPictureAndFeedUser(int roomIdx,Byte[] picture,String email);
-    List<Feed> findByFeedRoomIdxAndFeedUser(int roomIdx, String email);
+    List<Feed> findByFeedRoomIdxAndFeedUser(int feedRoomIdx, String feedUser);
     void deleteByFeedRoomIdxAndFeedUser(int roomIdx, String email);
 }

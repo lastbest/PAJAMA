@@ -11,7 +11,7 @@ function MyPage() {
   let [nickname, setNickname] = useState("");
   // useEffect(() => {
   //   axios({
-  //     url: "http://localhost:8080/users/me",
+  //     url: "https://i7c203.p.ssafy.io/api/users/me",
   //     method: "get",
   //     headers: { accessToken: token },
   //   })

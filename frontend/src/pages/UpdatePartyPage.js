@@ -155,7 +155,7 @@ const UpdatePartyPage = () => {
   let token = sessionStorage.getItem("accessToken");
   useEffect(() => {
     axios({
-      url: "http://i7c203.p.ssafy.io:8082/rooms",
+      url: "https://i7c203.p.ssafy.io/api/rooms",
       method: "get",
       headers: { accessToken: token },
       params: {
@@ -411,7 +411,7 @@ const UpdatePartyPage = () => {
               <label className="itemBox" for="candle0">
                 <img
                   className="pointer"
-                  src="/iloveyou.png"
+                  src="/candle1.png"
                   style={{ width: "100px", height: "130px" }}
                   onClick={() => {
                     setPartyCandle(0);
@@ -439,7 +439,7 @@ const UpdatePartyPage = () => {
               <label className="itemBox" for="candle1">
                 <img
                   className="pointer"
-                  src="/heart.png"
+                  src="/candle2.png"
                   style={{ width: "100px", height: "130px" }}
                   onClick={() => {
                     setPartyCandle(1);
@@ -466,7 +466,7 @@ const UpdatePartyPage = () => {
               <label className="itemBox" for="candle2">
                 <img
                   className="pointer"
-                  src="/18th.png"
+                  src="/candle3.png"
                   style={{ width: "100px", height: "130px" }}
                   onClick={() => {
                     setPartyCandle(2);
@@ -487,7 +487,7 @@ const UpdatePartyPage = () => {
             if (!(token == "" || token == undefined)) {
               setPartyDate(partyDate.setHours(partyDate.getHours() + 9));
               axios({
-                url: "http://i7c203.p.ssafy.io:8082/rooms",
+                url: "https://i7c203.p.ssafy.io/api/rooms",
                 method: "put",
                 headers: { accessToken: token },
                 params: {

@@ -23,18 +23,19 @@ class ListenerButton extends React.Component {
     return (
       <button
         {...this.props}
-        className="button"
+        className="voicerecog-btn"
         onClick={this.handleStart}
         // onMouseMove={this.handleMove}
       >
-        <span>{this.props.buttonText}</span>
+        <img className="voicerecog" src="/voicerecog.png"></img>
+        {/* <span>{this.props.buttonText}</span> */}
       </button>
     );
   }
 }
 
-ListenerButton.defaultProps = {
-  buttonText: "Click me to listen",
-};
+// ListenerButton.defaultProps = {
+//   buttonText: "Click me to listen",
+// };
 
 export default ListenerButton;

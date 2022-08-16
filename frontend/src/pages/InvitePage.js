@@ -25,7 +25,7 @@ const InvitePage = () => {
 
   useEffect(() => {
     axios({
-      url: "http://i7c203.p.ssafy.io:8082/rooms",
+      url: "https://i7c203.p.ssafy.io/api/rooms",
       method: "get",
       headers: { accessToken: token },
       params: { roomIdx: roomIdx },
@@ -142,19 +142,7 @@ const InvitePage = () => {
                 style={{ width: "20%", height: "20%" }}
               ></img>
             </div>
-            <a
-              href={`/room/${validURL}`}
-              className="clicklink"
-              onClick={() => {
-                axios({
-                  url: `http://i7c203.p.ssafy.io:8082/participant/${validURL}`,
-                  method: "post",
-                  headers: { accessToken: token },
-                }).then((res) => {
-                  console.log("success");
-                });
-              }}
-            >
+            <a href={`/room/${validURL}`} className="clicklink">
               JOIN PARTY
             </a>
           </>

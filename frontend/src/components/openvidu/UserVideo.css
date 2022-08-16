@@ -12,11 +12,11 @@ video {
     color: black;
     background: none;
     background-color: none;
-    border-radius: 20px;
     position: absolute;
     padding: 5px;
     font-weight: bold;
     top: 95%;
+    margin-top:5px;
 }
 
 .streamcomponent {
@@ -24,4 +24,5 @@ video {
     justify-content: center;
     align-items: center;
     position: relative;
+    margin: 15px;
 }

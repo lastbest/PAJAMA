@@ -70,4 +70,27 @@ public class FeedController {
         }
         return new ResponseEntity<>(result,status);
     }
+    // 사진 불러오기
+    @GetMapping("/mypage/{roomIdx}")
+    public ResponseEntity<?> showPicture(HttpServletRequest request,@PathVariable("roomIdx") String roomIdx){
+        Map<String,Object> result = new HashMap<>();
+        HttpStatus status;
+        try{
+            String accessToken = request.getHeader("accessToken");
+            String decodeEmail = jwtService.decodeToken(accessToken);
+            if(!decodeEmail.equals("timeout")){
+                Map map = feedService.showPicture(decodeEmail, roomIdx);
+                result.put("result",map);
+                status = HttpStatus.OK;
+            }
+            else{
+                result.put("result","accessToken 타임아웃");
+                status = HttpStatus.UNAUTHORIZED;
+            }
+        }catch (Exception e){
+            result.put("result","서버에러");
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<>(result,status);
+    }
 }

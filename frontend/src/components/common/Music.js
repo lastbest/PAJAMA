@@ -15,6 +15,8 @@ import { setOvSession, setUserId, setCake, setMusic } from "../../modules/ovsess
 function Music() {
   const dispatch = useDispatch();
   let [genre, setGenre] = useState(null);
+  const mySession = useSelector((state) => state.ovsession.value);
+  const myUid = useSelector((state) => state.ovsession.userid);
   dispatch(setMusic(setGenre));
 
   return (
@@ -25,7 +27,11 @@ function Music() {
             <div className="lb-image">
               <img
                 onClick={() => {
-                  setGenre("hiphop");
+                  mySession.signal({
+                    data: `${myUid},music_hiphop`,
+                    to: [],
+                    type: "speech",
+                  });
                 }}
                 src="/hiphop.jpg"
               ></img>
@@ -35,7 +41,11 @@ function Music() {
             <div className="lb-image">
               <img
                 onClick={() => {
-                  setGenre("cyworld");
+                  mySession.signal({
+                    data: `${myUid},music_cyworld`,
+                    to: [],
+                    type: "speech",
+                  });
                 }}
                 src="/acorn.jpg"
               ></img>
@@ -47,7 +57,11 @@ function Music() {
             <div className="lb-image">
               <img
                 onClick={() => {
-                  setGenre("birthday");
+                  mySession.signal({
+                    data: `${myUid},music_birthday`,
+                    to: [],
+                    type: "speech",
+                  });
                 }}
                 src="/happybirthday.jpg"
               ></img>
@@ -57,7 +71,11 @@ function Music() {
             <div className="lb-image">
               <img
                 onClick={() => {
-                  setGenre("independent");
+                  mySession.signal({
+                    data: `${myUid},music_indie`,
+                    to: [],
+                    type: "speech",
+                  });
                 }}
                 src="/indie.jpg"
               ></img>
@@ -69,7 +87,11 @@ function Music() {
             <div className="lb-image">
               <img
                 onClick={() => {
-                  setGenre("dance");
+                  mySession.signal({
+                    data: `${myUid},music_dance`,
+                    to: [],
+                    type: "speech",
+                  });
                 }}
                 src="/dance.jpg"
               ></img>
@@ -79,7 +101,11 @@ function Music() {
             <div className="lb-image">
               <img
                 onClick={() => {
-                  setGenre("jazz");
+                  mySession.signal({
+                    data: `${myUid},music_jazz`,
+                    to: [],
+                    type: "speech",
+                  });
                 }}
                 src="/jazz.jpg"
               ></img>
