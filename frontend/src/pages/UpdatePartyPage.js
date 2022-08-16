@@ -148,7 +148,6 @@ const UpdatePartyPage = () => {
   const [partyBg, setPartyBg] = useState(null);
   const [partyCake, setPartyCake] = useState(null);
   const [partyCandle, setPartyCandle] = useState(null);
-  const [validURL, setValidURL] = useState("");
   useEffect(() => {
     console.log("배경은 -> " + partyBg);
   }, [setPartyBg]);
@@ -164,14 +163,12 @@ const UpdatePartyPage = () => {
     })
       .then((res) => {
         console.log(roomIdx);
-        setValidURL(encodeURIComponent(roomIdx));
         console.log("방정보 불러오기 성공");
         console.log(res);
         console.log(res.data.result.partyName);
         setMyEmail(res.data.result.partyHost);
         setPartyName(res.data.result.partyName);
         setPartyDesc(res.data.result.partyDesc);
-        setRoomId(res.data.result.validURL);
         // setPartyDate(res.data.result.partyDate);
 
         setPartyBg(res.data.result.partyBg);
@@ -491,10 +488,9 @@ const UpdatePartyPage = () => {
                 method: "put",
                 headers: { accessToken: token },
                 params: {
-                  roomIdx: validURL,
+                  roomIdx: roomIdx,
                 },
                 data: {
-                  partyHost: myEmail,
                   partyName: partyName,
                   partyDesc: partyDesc,
                   partyBg: partyBg,
@@ -546,7 +542,7 @@ const UpdatePartyPage = () => {
               "box-shadow": "none",
             }}
             onClick={() => {
-              document.location.href = `/room/${validURL}`;
+              document.location.href = `/room/${roomIdx}`;
             }}
           >
             닫기

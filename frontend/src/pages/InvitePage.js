@@ -146,9 +146,12 @@ const InvitePage = () => {
               href={`/room/${validURL}`}
               onClick={() => {
                 axios({
-                  url: `https://i7c203.p.ssafy.io/api/participant/${roomIdx}`,
+                  url: `https://i7c203.p.ssafy.io/api/participant`,
                   method: "post",
                   headers: { accessToken: token },
+                  data: {
+                    roomIdx: roomIdx,
+                  },
                 }).then((res) => {
                   console.log("success");
                 });
