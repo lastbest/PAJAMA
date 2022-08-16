@@ -588,47 +588,52 @@ class OpenVideo extends Component {
           <button
             className="downloadbtn"
             onClick={() => {
-              console.log(this.state.imgUrl);
               let token = sessionStorage.getItem("accessToken");
-              this.removediv();
-
-              axios.all([
-                axios({
-                  url: "https://i7c203.p.ssafy.io/image/upload",
-                  method: "post",
-                  headers: {
-                    processData: false,
-                    "Content-Type": "multipart/form-data",
-                  },
-                  data: this.state.imgUrl,
-                })
-                  .then((res) => {
-                    console.log(res.data);
+              if (this.state.partyHost === this.state.myEmail && this.state.partyHost != "") {
+                this.removediv();
+  
+                axios.all([
+                  axios({
+                    url: "https://i7c203.p.ssafy.io/image/upload",
+                    method: "post",
+                    headers: {
+                      processData: false,
+                      "Content-Type": "multipart/form-data",
+                    },
+                    data: this.state.imgUrl,
                   })
-                  .catch((err) => {
-                    console.log(err);
-                  }),
-
-                axios({
-                  url: "https://i7c203.p.ssafy.io/api/picture",
-                  method: "post",
-                  data: {
-                    roomIdx: this.state.roomId,
-                    picture: `https://i7c203.p.ssafy.io/images/${this.state.fileName}`,
-                  },
-                })
-                  .then((res) => {
-                    console.log(res.data);
+                    .then((res) => {
+                      console.log(res.data);
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                    }),
+  
+                  axios({
+                    url: "https://i7c203.p.ssafy.io/api/picture",
+                    method: "post",
+                    data: {
+                      roomIdx: this.state.roomId,
+                      picture: `https://i7c203.p.ssafy.io/images/${this.state.fileName}`,
+                    },
                   })
-                  .catch((err) => {
-                    console.log(err);
-                  }),
-              ]);
-            }}
+                    .then((res) => {
+                      console.log(res.data);
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                    }),
+                ]);
+              }}
+              }
           >
             <img className="download" src="/save.png" alt="download" />
           </button>
-          <button className="trashbtn" onClick={this.removediv}>
+          <button className="trashbtn" onClick={()=>{
+            if (this.state.partyHost === this.state.myEmail && this.state.partyHost != "") {
+              this.removediv
+            }
+          }}>
             <img className="trash" src="/trash.png" alt="trash" />
           </button>
         </div>
