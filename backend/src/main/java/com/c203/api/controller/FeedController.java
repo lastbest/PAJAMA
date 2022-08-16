@@ -42,9 +42,7 @@ public class FeedController {
             String accessToken = request.getHeader("accessToken");
             String decodeEmail = jwtService.decodeToken(accessToken);
             if(!decodeEmail.equals("timeout")){
-                feedRegistDto.setEmail(decodeEmail);
-                feedRegistDto.setRoomIdx(roomIdx);
-                FeedShowDto feedShowDto = feedService.registFeed(feedRegistDto);
+                FeedShowDto feedShowDto = feedService.registFeed(feedRegistDto, decodeEmail);
                 result.put("result",feedShowDto);
                 status = HttpStatus.OK;
             }
@@ -53,6 +51,7 @@ public class FeedController {
                 status = HttpStatus.UNAUTHORIZED;
             }
         }catch (Exception e){
+            System.out.println(e);
             result.put("result","서버에러");
             status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
@@ -93,7 +92,6 @@ public class FeedController {
             String accessToken = request.getHeader("accessToken");
             String decodeEmail = jwtService.decodeToken(accessToken);
             if(!decodeEmail.equals("timeout")){
-                // 완성하면 넣어야해요
                 Map map = feedService.showPicture(decodeEmail);
                 result.put("result",map);
                 status = HttpStatus.OK;
