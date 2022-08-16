@@ -35,7 +35,7 @@ const InvitePage = () => {
       setValidURL(encodeURIComponent(roomIdx));
       console.log(validURL);
       console.log(res.data.result);
-      // setPartyNickname(res.data.result.partyNickname);
+      setPartyNickname(res.data.result.partyNickname);
       setPartyName(res.data.result.partyName);
       setPartyDesc(res.data.result.partyDesc);
       setPartyDate(res.data.result.partyDate);

@@ -117,7 +117,7 @@ const AuthForm = () => {
                   if (roomIdx == undefined || roomIdx == "undefined") {
                     document.location.href = "/";
                   } else {
-                    document.location.href = `/room/${roomIdx}`;
+                    document.location.href = `/invite/${roomIdx}`;
                   }
                 }
               })
@@ -172,7 +172,7 @@ const AuthForm = () => {
                 color: "white",
               }}
               onClick={() => {
-                if (roomIdx == undefined) {
+                if (roomIdx == undefined || roomIdx == "undefined") {
                   document.location.href = "/login";
                 } else {
                   document.location.href = `/login/${roomIdx}`;
