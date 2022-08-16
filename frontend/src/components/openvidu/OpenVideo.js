@@ -572,17 +572,19 @@ class OpenVideo extends Component {
               console.log(this.state.imgUrl);
               let token = sessionStorage.getItem("accessToken");
               this.removediv();
+              
+              
               axios({
-                url: "https://i7c203.p.ssafy.io/api/picture",
+                url: "https://i7c203.p.ssafy.io/image/upload",
                 method: "post",
                 headers: {
-                  accessToken: token,
+                  processData: false,
+                  'Content-Type': 'multipart/form-data',
                 },
-                data: {
-                  roomIdx: this.state.roomId,
-                  picture: this.state.imgUrl,
-                },
-              });
+                data: this.state.imgUrl
+              })
+              .then((res)=>{console.log(res.data)})
+              .catch((err)=>{console.log(err)})
             }}
           >
             <img className="download" src="/download.png" alt="download" />
@@ -1099,10 +1101,22 @@ class OpenVideo extends Component {
     // const targetvideo = document.querySelector("#localUser").querySelector("video");
     html2canvas(targetvideo).then((xcanvas) => {
       const canvdata = xcanvas.toDataURL("image/png");
+      const decodImg = atob(canvdata.split(',')[1]);
+      let array = [];
+      for (let i = 0; i < decodImg .length; i++) {
+        array.push(decodImg .charCodeAt(i));
+      }
+    
+      const file = new Blob([new Uint8Array(array)], {type: 'image/png'});
+      const fileName = 'canvas_img_' + new Date().getMilliseconds() + '.png';
+      let formData = new FormData();
+      formData.append('uploadFile', file, fileName);
+      this.setState({imgUrl: formData})
 
-      const mimeType = "image/png"; // image/jpeg
-      const realData = canvdata.split(",")[1]; // 이 경우에선 /9j/4AAQSkZJRgABAQAAAQABAAD...
-      const blob = b64toBlob(realData, mimeType);
+      // const mimeType = "image/png"; // image/jpeg
+      // const realData = canvdata.split(",")[1]; // 이 경우에선 /9j/4AAQSkZJRgABAQAAAQABAAD...
+      // const blob = b64toBlob(realData, mimeType);
+      // this.setState({ imgUrl: window.URL.createObjectURL(blob) });
       // document.getElementById('myimage').src = window.URL.createObjectURL(blob)
 
       //시그널링 테스트 요기
@@ -1114,7 +1128,7 @@ class OpenVideo extends Component {
       // });
       // ============요기까지
 
-      this.setState({ imgUrl: window.URL.createObjectURL(blob) });
+      
       var photo = document.createElement("img");
       photo.setAttribute("src", canvdata);
       photo.setAttribute("width", 200);
