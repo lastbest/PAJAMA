@@ -68,7 +68,7 @@ class OpenVideo extends Component {
     this.animationInstance = null;
 
     this.state = {
-      mySessionId: props.roomIdx.slice(0, props.roomIdx.length - 6),
+      mySessionId: props.roomIdx.slice(0, props.roomIdx.length - 6).replace("%2F", ""),
       myUserName: "temp",
       session: undefined,
       mainStreamManager: undefined,
@@ -93,7 +93,7 @@ class OpenVideo extends Component {
       partyDate: props.partyDate,
       shot: false,
       imgUrl: undefined,
-      fileName: '',
+      fileName: "",
       countCompleted: true,
       count: 0,
     };
@@ -116,7 +116,7 @@ class OpenVideo extends Component {
         console.log(this.state.myUserName);
       })
       .catch(() => {
-        alert("회원정보 불러오기 실패");
+        document.location.href = "/NotFound";
       });
 
     // 현재 방정보 불로오기
@@ -145,7 +145,7 @@ class OpenVideo extends Component {
       })
       .then((res) => {})
       .catch(() => {
-        alert("방정보 불러오기 실패");
+        document.location.href = "/NotFound";
       });
 
     this.joinSession = this.joinSession.bind(this);
@@ -589,36 +589,42 @@ class OpenVideo extends Component {
               console.log(this.state.imgUrl);
               let token = sessionStorage.getItem("accessToken");
               this.removediv();
-              
-              axios.all(
-                [axios({
+
+              axios.all([
+                axios({
                   url: "https://i7c203.p.ssafy.io/image/upload",
                   method: "post",
                   headers: {
                     processData: false,
-                    'Content-Type': 'multipart/form-data',
+                    "Content-Type": "multipart/form-data",
                   },
-                  data: this.state.imgUrl
+                  data: this.state.imgUrl,
                 })
-                .then((res)=>{console.log(res.data)})
-                .catch((err)=>{console.log(err)}),
+                  .then((res) => {
+                    console.log(res.data);
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  }),
 
                 axios({
                   url: "https://i7c203.p.ssafy.io/api/picture",
                   method: "post",
                   data: {
                     roomIdx: this.state.roomId,
-                    picture: `https://i7c203.p.ssafy.io/images/${this.state.fileName}`
-                  }
+                    picture: `https://i7c203.p.ssafy.io/images/${this.state.fileName}`,
+                  },
                 })
-                .then((res)=>{console.log(res.data)})
-                .catch((err)=>{console.log(err)})
-              ]
-              )
-
+                  .then((res) => {
+                    console.log(res.data);
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  }),
+              ]);
             }}
           >
-            <img className="download" src="/download.png" alt="download" />
+            <img className="download" src="/save.png" alt="download" />
           </button>
           <button className="trashbtn" onClick={this.removediv}>
             <img className="trash" src="/trash.png" alt="trash" />
@@ -1130,19 +1136,26 @@ class OpenVideo extends Component {
     // const targetvideo = document.querySelector("#localUser").querySelector("video");
     html2canvas(targetvideo).then((xcanvas) => {
       const canvdata = xcanvas.toDataURL("image/png");
-      const decodImg = atob(canvdata.split(',')[1]);
+      const decodImg = atob(canvdata.split(",")[1]);
       let array = [];
-      for (let i = 0; i < decodImg .length; i++) {
-        array.push(decodImg .charCodeAt(i));
+      for (let i = 0; i < decodImg.length; i++) {
+        array.push(decodImg.charCodeAt(i));
       }
-    
-      const file = new Blob([new Uint8Array(array)], {type: 'image/png'});
-      const fileName = 'img_' + new Date().getFullYear()+ (new Date().getMonth()+1)+ new Date().getDate() + new Date().getHours() + new Date().getMinutes() + new Date().getSeconds() +'.png';
-      this.setState({fileName:fileName})
+
+      const file = new Blob([new Uint8Array(array)], { type: "image/png" });
+      const fileName =
+        "img_" +
+        new Date().getFullYear() +
+        (new Date().getMonth() + 1) +
+        new Date().getDate() +
+        new Date().getHours() +
+        new Date().getMinutes() +
+        new Date().getSeconds() +
+        ".png";
+      this.setState({ fileName: fileName });
       let formData = new FormData();
-      formData.append('uploadFile', file, fileName);
-      this.setState({imgUrl: formData})
-      
+      formData.append("uploadFile", file, fileName);
+      this.setState({ imgUrl: formData });
 
       // const mimeType = "image/png"; // image/jpeg
       // const realData = canvdata.split(",")[1]; // 이 경우에선 /9j/4AAQSkZJRgABAQAAAQABAAD...
@@ -1159,7 +1172,6 @@ class OpenVideo extends Component {
       // });
       // ============요기까지
 
-      
       var photo = document.createElement("img");
       photo.setAttribute("src", canvdata);
       photo.setAttribute("width", 200);

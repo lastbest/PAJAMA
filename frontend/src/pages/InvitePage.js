@@ -77,7 +77,7 @@ const InvitePage = () => {
                 style={{ width: "60%", height: "60%", maxWidth: "1024px" }}
               ></img>
             </div>
-            <a href={`/room/${roomIdx}`} className="clicklink">
+            <a href={`/room/${validURL}`} className="clicklink">
               JOIN PARTY
             </a>
           </>
@@ -99,7 +99,7 @@ const InvitePage = () => {
                 style={{ width: "60%", height: "60%", maxWidth: "1024px" }}
               ></img>
             </div>
-            <a href={`/login/${roomIdx}`} className="clicklink">
+            <a href={`/login/${validURL}`} className="clicklink">
               로그인이 필요합니다!
             </a>
           </>
@@ -142,7 +142,19 @@ const InvitePage = () => {
                 style={{ width: "20%", height: "20%" }}
               ></img>
             </div>
-            <a href={`/room/${validURL}`} className="clicklink">
+            <a
+              href={`/room/${validURL}`}
+              onClick={() => {
+                axios({
+                  url: `https://i7c203.p.ssafy.io/api/participant/${roomIdx}`,
+                  method: "post",
+                  headers: { accessToken: token },
+                }).then((res) => {
+                  console.log("success");
+                });
+              }}
+              className="clicklink"
+            >
               JOIN PARTY
             </a>
           </>

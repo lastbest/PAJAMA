@@ -57,7 +57,7 @@ const RoomPage = () => {
       console.log(res.data.result.partyDate);
     })
     .catch(() => {
-      alert("방정보 불러오기 실패??");
+      document.location.href = "/NotFound";
     });
   var dday = new Date(partyDate).getTime();
   const interval = setInterval(function () {
@@ -98,15 +98,6 @@ const RoomPage = () => {
         var btn = document.createElement("button");
         btn.innerHTML = "참여하기";
         btn.className = "joinbtn";
-        btn.onclick = function () {
-          axios({
-            url: `https://i7c203.p.ssafy.io/api/participant/${roomIdx}`,
-            method: "post",
-            headers: { accessToken: token },
-          }).then((res) => {
-            console.log("success");
-          });
-        };
         document.getElementById("bu").appendChild(btn);
       }
     }
@@ -116,7 +107,11 @@ const RoomPage = () => {
   return (
     <>
       <div>
-        <OpenVideo roomIdx={roomIdx} partyDate={partyDate} flag={flag} />
+        <OpenVideo
+          roomIdx={encodeURIComponent(roomIdx)}
+          partyDate={partyDate}
+          flag={flag}
+        />
       </div>
     </>
   );
