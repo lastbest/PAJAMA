@@ -107,7 +107,11 @@ const RoomPage = () => {
   return (
     <>
       <div>
-        <OpenVideo roomIdx={roomIdx} partyDate={partyDate} flag={flag} />
+        <OpenVideo
+          roomIdx={encodeURIComponent(roomIdx)}
+          partyDate={partyDate}
+          flag={flag}
+        />
       </div>
     </>
   );

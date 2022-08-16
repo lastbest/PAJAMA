@@ -428,7 +428,7 @@ const CreatePartyPage = () => {
             <form>
               <textarea
                 ref={textAreaRef}
-                value={`https://i7c203.p.ssafy.io/api/invite/${roomId}`}
+                value={`https://i7c203.p.ssafy.io/invite/${roomId}`}
                 style={{ width: "100%", height: "100%" }}
               />
             </form>

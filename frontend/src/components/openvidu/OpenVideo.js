@@ -43,6 +43,8 @@ const mapStateToProps = (state) => ({
   uid: state.ovsession.userid,
   ovcake: state.ovsession.cake,
   ovmusic: state.ovsession.music,
+  ovplayeridx: state.ovsession.playerIdx,
+  ovplayerplay: state.ovsession.playerPlay,
 });
 const mapDispatchToProps = () => ({
   setOvSession,
@@ -71,7 +73,9 @@ class OpenVideo extends Component {
     this.animationInstance = null;
 
     this.state = {
-      mySessionId: props.roomIdx.slice(0, props.roomIdx.length - 6),
+      mySessionId: props.roomIdx
+        .slice(0, props.roomIdx.length - 6)
+        .replace("%2F", ""),
       myUserName: "temp",
       session: undefined,
       mainStreamManager: undefined,
@@ -137,9 +141,9 @@ class OpenVideo extends Component {
           partyHost: res.data.result.partyHost,
           partyName: res.data.result.partyName,
           partyDesc: res.data.result.partyDesc,
-          partyBg: "/frame"+(res.data.result.partyBg+1)+".png",
-          partyCake: "/cake"+(res.data.result.partyCake+1)+".png",
-          partyCandle: "/candle"+(res.data.result.partyCandle+1)+".png"
+          partyBg: "/frame" + (res.data.result.partyBg + 1) + ".png",
+          partyCake: "/cake" + (res.data.result.partyCake + 1) + ".png",
+          partyCandle: "/candle" + (res.data.result.partyCandle + 1) + ".png",
         });
         if (this.state.partyHost == this.state.myEmail) {
           this.setState((state) => ({ isHost: true }));
@@ -403,6 +407,20 @@ class OpenVideo extends Component {
             case "music_indie":
               this.props.ovmusic("independent");
               break;
+            case "music_backward":
+              this.props.ovplayeridx(chatdata[2]);
+              this.props.ovplayerplay(true);
+              break;
+            case "music_forward":
+              this.props.ovplayeridx(chatdata[2]);
+              this.props.ovplayerplay(true);
+              break;
+            case "music_play":
+              this.props.ovplayerplay(true);
+              break;
+            case "music_pause":
+              this.props.ovplayerplay(false);
+              break;
             case "cake_show":
               this.setState({
                 cakeshow: true,
@@ -570,8 +588,8 @@ class OpenVideo extends Component {
           }}
         >
           사진찍기
-        </button>       
-        
+        </button>
+
         <div id="frame" className="frame"></div>
         <div className="bar">
           <p className="text5">최대 5장까지 저장할 수 있습니다.</p>
@@ -581,17 +599,22 @@ class OpenVideo extends Component {
               console.log(this.state.imgUrl);
               let token = sessionStorage.getItem("accessToken");
               this.removediv();
+
               axios({
-                url: "https://i7c203.p.ssafy.io/api/picture",
+                url: "https://i7c203.p.ssafy.io/image/upload",
                 method: "post",
                 headers: {
-                  accessToken: token,
+                  processData: false,
+                  "Content-Type": "multipart/form-data",
                 },
-                data: {
-                  roomIdx: this.state.roomId,
-                  picture: this.state.imgUrl,
-                },
-              });
+                data: this.state.imgUrl,
+              })
+                .then((res) => {
+                  console.log(res.data);
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
             }}
           >
             <img className="download" src="/download.png" alt="download" />
@@ -636,7 +659,7 @@ class OpenVideo extends Component {
       Main = "main-container1";
       Candleshow = "candle";
       Fireshow = "fire";
-      Firecssshow= "firecss";
+      Firecssshow = "firecss";
     } else {
       Cakeshow = "cake1";
       Main = "main-container";
@@ -885,7 +908,13 @@ class OpenVideo extends Component {
               )}
             </div>
 
-            <div id="session" className="main-session" style={{backgroundImage:"url("+`${this.state.partyBg}`+")"}}>
+            <div
+              id="session"
+              className="main-session"
+              style={{
+                backgroundImage: "url(" + `${this.state.partyBg}` + ")",
+              }}
+            >
               <div id="main-container" className={Main}>
                 {this.state.mainStreamManager !== undefined ? (
                   <div id="main-video" className="main-video">
@@ -903,49 +932,53 @@ class OpenVideo extends Component {
                 ) : null}
 
                 {this.state.subscribers.map((sub, i) => (
-                  <div
-                    key={i}
-                    className="stream-video"
-                    id="stream-video"
-                    onClick={() => this.handleMainVideoStream(sub)}
-                  >
+                  <div key={i} className="stream-video" id="stream-video">
                     <UserVideoComponent streamManager={sub} />
                   </div>
                 ))}
-                  <img id="cake1" className={Cakeshow} src={this.state.partyCake} alt="cake1"></img>
-                  <img id="heart" className={Candleshow} src={this.state.partyCandle} alt="heart" />
-                  <div className={Firecssshow}>
-                    <FadeInOut show={this.state.show2} duration={500}>
-                      <img className={Fireshow}
-                        id="heartfire"
-                        src="/fire.gif"
-                        alt="fire"
-                      />
-                    </FadeInOut>
-                  </div>
+                <img
+                  id="cake1"
+                  className={Cakeshow}
+                  src={this.state.partyCake}
+                  alt="cake1"
+                ></img>
+                <img
+                  id="heart"
+                  className={Candleshow}
+                  src={this.state.partyCandle}
+                  alt="heart"
+                />
+                <div className={Firecssshow}>
+                  <FadeInOut show={this.state.show2} duration={500}>
+                    <img
+                      className={Fireshow}
+                      id="heartfire"
+                      src="/fire.gif"
+                      alt="fire"
+                    />
+                  </FadeInOut>
+                </div>
               </div>
-
-
             </div>
             {this.state.shot ? (
-                  <div className="timer-wrapper">
-                    <CountdownCircleTimer
-                      isPlaying
-                      duration={3}
-                      colors={["#004777"]}
-                      trailStrokeWidth={0}
-                      strokeWidth={0}
-                      onComplete={() => {
-                        // 사진찍는 함수 삽입
-                        this.takepicture();
-                        this.setState({ shot: false });
-                        console.log("종료");
-                      }}
-                    >
-                      {({ remainingTime }) => remainingTime}
-                    </CountdownCircleTimer>
-                  </div>
-                ) : null}
+              <div className="timer-wrapper">
+                <CountdownCircleTimer
+                  isPlaying
+                  duration={3}
+                  colors={["#004777"]}
+                  trailStrokeWidth={0}
+                  strokeWidth={0}
+                  onComplete={() => {
+                    // 사진찍는 함수 삽입
+                    this.takepicture();
+                    this.setState({ shot: false });
+                    console.log("종료");
+                  }}
+                >
+                  {({ remainingTime }) => remainingTime}
+                </CountdownCircleTimer>
+              </div>
+            ) : null}
             <div className="main-footer">
               <div className="footer">
                 {this.state.videostate === undefined || this.state.videostate
@@ -983,9 +1016,7 @@ class OpenVideo extends Component {
                     <img className="micoff" src="/micoff.png" />
                   )}
                 </button>
-                <button className="voicerecog-btn">
-                    <img className="voicerecog" src="/voicerecog.png"></img>
-                </button>
+                <Speech />
                 <OverlayTrigger
                   trigger="click"
                   placement="top"
@@ -1011,7 +1042,7 @@ class OpenVideo extends Component {
               </div>
             </div>
             <Camera style="display: none" />
-            <Speech />
+
             <ReactCanvasConfetti
               refConfetti={this.getInstance}
               style={canvasStyles}
@@ -1177,10 +1208,22 @@ class OpenVideo extends Component {
     // const targetvideo = document.querySelector("#localUser").querySelector("video");
     html2canvas(targetvideo).then((xcanvas) => {
       const canvdata = xcanvas.toDataURL("image/png");
+      const decodImg = atob(canvdata.split(",")[1]);
+      let array = [];
+      for (let i = 0; i < decodImg.length; i++) {
+        array.push(decodImg.charCodeAt(i));
+      }
 
-      const mimeType = "image/png"; // image/jpeg
-      const realData = canvdata.split(",")[1]; // 이 경우에선 /9j/4AAQSkZJRgABAQAAAQABAAD...
-      const blob = b64toBlob(realData, mimeType);
+      const file = new Blob([new Uint8Array(array)], { type: "image/png" });
+      const fileName = "canvas_img_" + new Date().getMilliseconds() + ".png";
+      let formData = new FormData();
+      formData.append("uploadFile", file, fileName);
+      this.setState({ imgUrl: formData });
+
+      // const mimeType = "image/png"; // image/jpeg
+      // const realData = canvdata.split(",")[1]; // 이 경우에선 /9j/4AAQSkZJRgABAQAAAQABAAD...
+      // const blob = b64toBlob(realData, mimeType);
+      // this.setState({ imgUrl: window.URL.createObjectURL(blob) });
       // document.getElementById('myimage').src = window.URL.createObjectURL(blob)
 
       //시그널링 테스트 요기
@@ -1192,7 +1235,6 @@ class OpenVideo extends Component {
       // });
       // ============요기까지
 
-      this.setState({ imgUrl: window.URL.createObjectURL(blob) });
       var photo = document.createElement("img");
       photo.setAttribute("src", canvdata);
       photo.setAttribute("width", 200);

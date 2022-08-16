@@ -10,7 +10,14 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { useDispatch, useSelector } from "react-redux";
-import { setOvSession, setUserId, setCake, setMusic } from "../../modules/ovsessionSlice";
+import {
+  setOvSession,
+  setUserId,
+  setCake,
+  setMusic,
+  setPlayerIdx,
+  setPlayerPlay,
+} from "../../modules/ovsessionSlice";
 
 function Music() {
   const dispatch = useDispatch();
@@ -143,6 +150,13 @@ function Player(props) {
     setIsPlay(!isPlay);
   };
 
+  //redux
+  const dispatch = useDispatch();
+  const mySession = useSelector((state) => state.ovsession.value);
+  const myUid = useSelector((state) => state.ovsession.userid);
+  dispatch(setPlayerIdx(setIdx));
+  dispatch(setPlayerPlay(setIsPlay));
+
   return (
     <div className="Player">
       <iframe
@@ -160,8 +174,13 @@ function Player(props) {
           size="24"
           style={{ margin: "10px", color: "#FD7A99" }}
           onClick={() => {
-            setIdx((idx - 1 + videoList.length) % videoList.length);
-            setIsPlay(true);
+            // setIdx((idx - 1 + videoList.length) % videoList.length);
+            // setIsPlay(true);
+            mySession.signal({
+              data: `${myUid},music_backward,${(idx - 1 + videoList.length) % videoList.length}`,
+              to: [],
+              type: "speech",
+            });
           }}
         ></ImBackward2>
 
@@ -171,7 +190,12 @@ function Player(props) {
             size="24"
             style={{ margin: "10px", color: "#FD7A99" }}
             onClick={() => {
-              isPlayVideo();
+              // isPlayVideo();
+              mySession.signal({
+                data: `${myUid},music_pause`,
+                to: [],
+                type: "speech",
+              });
             }}
           ></ImPause2>
         ) : (
@@ -180,7 +204,12 @@ function Player(props) {
             className="Btn"
             style={{ margin: "10px", color: "#FD7A99" }}
             onClick={() => {
-              isPlayVideo();
+              // isPlayVideo();
+              mySession.signal({
+                data: `${myUid},music_play`,
+                to: [],
+                type: "speech",
+              });
             }}
           ></ImPlay3>
         )}
@@ -190,8 +219,15 @@ function Player(props) {
           size="24"
           style={{ margin: "10px", color: "#FD7A99" }}
           onClick={() => {
-            setIdx((idx + 1) % videoList.length);
-            setIsPlay(true);
+            // setIdx((idx + 1) % videoList.length);
+            // setIsPlay(true);
+            let prevsong = (idx - 1 + videoList.length) % videoList.length;
+            let nextsong = (prevsong + 2) % videoList.length;
+            mySession.signal({
+              data: `${myUid},music_forward,${nextsong}`,
+              to: [],
+              type: "speech",
+            });
           }}
         ></ImForward3>
       </div>

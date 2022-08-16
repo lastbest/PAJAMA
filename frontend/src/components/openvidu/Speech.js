@@ -11,7 +11,12 @@ const mapStateToProps = (state) => ({
   ovcake: state.ovsession.value,
   ovmusic: state.ovsession.music,
 });
-const mapDispatchToProps = () => ({ setOvSession, setUserId, setCake, setMusic });
+const mapDispatchToProps = () => ({
+  setOvSession,
+  setUserId,
+  setCake,
+  setMusic,
+});
 
 class Speech extends Component {
   state = {
@@ -201,15 +206,16 @@ class Speech extends Component {
   render() {
     return (
       <main className="demo-1">
+        <ListenerButton onStart={this.start} onEnd={this.end} disabled={this.state.listening} />
         {this.state.show ? (
           <Word text={this.state.text} onClose={this.handleClose} />
         ) : (
-          <ListenerButton
-            onStart={this.start}
-            onEnd={this.end}
-            disabled={this.state.listening}
-            buttonText={this.state.listening ? "Listening..." : "Click me to listen"}
-          />
+          // <ListenerButton
+          //   onStart={this.start}
+          //   onEnd={this.end}
+          //   disabled={this.state.listening}
+          // />
+          console.log("인식불가")
         )}
       </main>
     );

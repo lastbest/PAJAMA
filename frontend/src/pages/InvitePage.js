@@ -35,7 +35,7 @@ const InvitePage = () => {
       setValidURL(encodeURIComponent(roomIdx));
       console.log(validURL);
       console.log(res.data.result);
-      // setPartyNickname(res.data.result.partyNickname);
+      setPartyNickname(res.data.result.partyNickname);
       setPartyName(res.data.result.partyName);
       setPartyDesc(res.data.result.partyDesc);
       setPartyDate(res.data.result.partyDate);
@@ -144,16 +144,16 @@ const InvitePage = () => {
             </div>
             <a
               href={`/room/${validURL}`}
-              className="clicklink"
               onClick={() => {
                 axios({
-                  url: `https://i7c203.p.ssafy.io/api/participant/${validURL}`,
+                  url: `https://i7c203.p.ssafy.io/api/participant/${roomIdx}`,
                   method: "post",
                   headers: { accessToken: token },
                 }).then((res) => {
                   console.log("success");
                 });
               }}
+              className="clicklink"
             >
               JOIN PARTY
             </a>
