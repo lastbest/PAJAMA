@@ -38,6 +38,8 @@ const mapStateToProps = (state) => ({
   uid: state.ovsession.userid,
   ovcake: state.ovsession.cake,
   ovmusic: state.ovsession.music,
+  ovplayeridx: state.ovsession.playerIdx,
+  ovplayerplay: state.ovsession.playerPlay,
 });
 const mapDispatchToProps = () => ({
   setOvSession,
@@ -397,6 +399,20 @@ class OpenVideo extends Component {
               break;
             case "music_indie":
               this.props.ovmusic("independent");
+              break;
+            case "music_backward":
+              this.props.ovplayeridx(chatdata[2]);
+              this.props.ovplayerplay(true);
+              break;
+            case "music_forward":
+              this.props.ovplayeridx(chatdata[2]);
+              this.props.ovplayerplay(true);
+              break;
+            case "music_play":
+              this.props.ovplayerplay(true);
+              break;
+            case "music_pause":
+              this.props.ovplayerplay(false);
               break;
             case "cake_show":
               this.setState({
