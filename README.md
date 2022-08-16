@@ -46,7 +46,7 @@ guest :
 - 피드확인
     - 파티룸에서 촬영한 사진들을 확인할 수 있다.
         
-        ![Untitled](%F0%9F%8E%89%20PAJAMA%200342b67ca23045a9b4ba2b79bf3b6543/Untitled.png)
+        ![111](/uploads/d1db0f8aeb64484e0cac09c05ff7e453/111.png)
         
 - 회원 정보 수정
     - 회원 정보를 수정할 수 있습니다.
@@ -63,23 +63,23 @@ guest :
 - 손바닥 뒤집기
     - 손바닥을 손바닥→손등→손바닥 차례대로 뒤집으면 모든 사용자의 화면에서 종이 폭죽효과가 나옵니다. ( 5회 이상 )
     
-    ![Untitled](%F0%9F%8E%89%20PAJAMA%200342b67ca23045a9b4ba2b79bf3b6543/Untitled%201.png)
+    ![222](/uploads/340da16decdc36da69a5cd2e1826f752/222.png)
     
 - 손날 흔들기
     - 케이크가 화면에 있을 때 손을 카메라에 손 부채질 하듯 가로로 세워 좌우로 흔들면 촛불이 꺼집니다. ( 4회 이상 )
         
-        ![Untitled](%F0%9F%8E%89%20PAJAMA%200342b67ca23045a9b4ba2b79bf3b6543/Untitled%202.png)
+        ![333](/uploads/36816deab4d763ba1fa68b46e03de5b8/333.png)
         
 - 엄지검지하트 ( 손가락 하트 )
     - 인식은 되지만 해당하는 효과를 아직 연결하지 않았습니다.(Console로 signal 오는 것  확인가능합니다.)
     
-    ![Untitled](%F0%9F%8E%89%20PAJAMA%200342b67ca23045a9b4ba2b79bf3b6543/Untitled%203.png)
+    ![444](/uploads/6df815eba18bfad4d7c7746f951718ac/444.png)
     
 - 브이 : 하트와 동일 ( 콘솔로만 기능구현 확인 가능 )
 
-![Untitled](%F0%9F%8E%89%20PAJAMA%200342b67ca23045a9b4ba2b79bf3b6543/Untitled%204.png)
+![555](/uploads/5a4c1d9e0e5e00e8102875d149d9a23b/555.png)
 
-![Untitled](%F0%9F%8E%89%20PAJAMA%200342b67ca23045a9b4ba2b79bf3b6543/Untitled%205.png)
+![666](/uploads/70f54670d01ecca93a178f85c969830e/666.png)
 
 ## 음성인식
 
