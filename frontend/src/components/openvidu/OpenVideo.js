@@ -122,7 +122,7 @@ class OpenVideo extends Component {
         console.log(this.state.myUserName);
       })
       .catch(() => {
-        alert("회원정보 불러오기 실패");
+        document.location.href = "/NotFound";
       });
 
     // 현재 방정보 불로오기
@@ -151,7 +151,7 @@ class OpenVideo extends Component {
       })
       .then((res) => {})
       .catch(() => {
-        alert("방정보 불러오기 실패");
+        document.location.href = "/NotFound";
       });
 
     this.joinSession = this.joinSession.bind(this);
