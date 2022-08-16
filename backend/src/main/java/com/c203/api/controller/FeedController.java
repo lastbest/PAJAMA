@@ -27,11 +27,12 @@ public class FeedController {
         this.feedService = feedService;
     }
     // 피드 생성
-    @PostMapping("/mypage/{roomIdx}")
-    public ResponseEntity<?> registFeed(@RequestBody FeedRegistDto feedRegistDto, HttpServletRequest request,@PathVariable("roomIdx") String roomIdx){
+    @PostMapping("/mypage")
+    public ResponseEntity<?> registFeed(@RequestBody FeedRegistDto feedRegistDto, HttpServletRequest request){
         Map<String,Object> result = new HashMap<>();
         HttpStatus status;
 
+        String roomIdx = feedRegistDto.getRoomIdx();
         roomIdx = roomIdx.replace("&","%26");
         roomIdx = roomIdx.replace("+","%2B");
         roomIdx = roomIdx.replace("=","%3D");
@@ -52,7 +53,6 @@ public class FeedController {
                 status = HttpStatus.UNAUTHORIZED;
             }
         }catch (Exception e){
-            System.out.println(e);
             result.put("result","서버에러");
             status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
@@ -84,21 +84,17 @@ public class FeedController {
         return new ResponseEntity<>(result,status);
     }
     // 사진 불러오기
-    @GetMapping("/mypage/{roomIdx}")
-    public ResponseEntity<?> showPicture(HttpServletRequest request,@PathVariable("roomIdx") String roomIdx){
+    @GetMapping("/mypage")
+    public ResponseEntity<?> showPicture(HttpServletRequest request){
         Map<String,Object> result = new HashMap<>();
         HttpStatus status;
-
-        roomIdx = roomIdx.replace("&","%26");
-        roomIdx = roomIdx.replace("+","%2B");
-        roomIdx = roomIdx.replace("=","%3D");
-        roomIdx = roomIdx.replace( "/","%2F");
 
         try{
             String accessToken = request.getHeader("accessToken");
             String decodeEmail = jwtService.decodeToken(accessToken);
             if(!decodeEmail.equals("timeout")){
-                Map map = feedService.showPicture(decodeEmail, roomIdx);
+                // 완성하면 넣어야해요
+                Map map = feedService.showPicture(decodeEmail);
                 result.put("result",map);
                 status = HttpStatus.OK;
             }
