@@ -104,6 +104,10 @@ public class RoomController {
         HttpStatus status;
         String accessToken = request.getHeader("accessToken");
         String decodeEmail = jwtService.decodeToken(accessToken);
+        roomIdx = roomIdx.replace("&","%26");
+        roomIdx = roomIdx.replace("+","%2B");
+        roomIdx = roomIdx.replace("=","%3D");
+        roomIdx = roomIdx.replace("/","%2F");
         try {
             // 모두 보여지게 수정하기
             if (!decodeEmail.equals("timeout")) {

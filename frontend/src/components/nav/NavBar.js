@@ -87,6 +87,9 @@ const NavBar = () => {
         <li>
           <a href="/">HOME</a>
         </li>
+        <li>
+          <a href="/guide">가이드</a>
+        </li>
         {token !== "undefined" && token ? (
           <>
             <li>
