@@ -793,7 +793,8 @@ class OpenVideo extends Component {
               <img
                 src="/pazamafont.png"
                 alt="pajama logo"
-                style={{ width: "200px", height: "100px" }}
+                style={{ width: "200px", height: "100px", "cursor":"pointer" }}
+                onClick={()=>{document.location.href="/"}}
               />
             </div>
             <div id="join-dialog" className="jumbotron vertical-center">
