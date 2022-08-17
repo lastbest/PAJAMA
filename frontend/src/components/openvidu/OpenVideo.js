@@ -80,6 +80,7 @@ class OpenVideo extends Component {
       message: "",
       show: false,
       show2: true,
+      show3: false,
       cakeshow: false,
 
       flag: props.flag,
@@ -162,6 +163,8 @@ class OpenVideo extends Component {
     this.chattoggle = this.chattoggle.bind(this);
     this.handleChatMessageChange = this.handleChatMessageChange.bind(this);
     this.toggleShow = this.toggleShow.bind(this);
+    this.deletetoggleShow = this.deletetoggleShow.bind(this);
+
     this.sendcakeByClick = this.sendcakeByClick.bind(this);
   }
 
@@ -289,6 +292,13 @@ class OpenVideo extends Component {
       this.setState({ show: true });
     } else {
       this.setState({ show: false });
+    }
+  }
+  deletetoggleShow() {
+    if (this.state.show3 === false) {
+      this.setState({ show3: true });
+    } else {
+      this.setState({ show3: false });
     }
   }
 
@@ -803,7 +813,8 @@ class OpenVideo extends Component {
                 <div id="counter" className="counter"></div>
                 <div id="bu"></div>
                 <br></br>
-                {this.state.partyHost === this.state.myEmail && this.state.partyHost != "" ? (
+                {this.state.partyHost === this.state.myEmail &&
+                this.state.partyHost != "" ? (
                   <div>
                     <p className="text-center">
                       <input
@@ -827,12 +838,12 @@ class OpenVideo extends Component {
                             url: "https://i7c203.p.ssafy.io/api/rooms",
                             method: "delete",
                             headers: {
-                              accessToken: sessionStorage.getItem("accessToken"),
+                              accessToken:
+                                sessionStorage.getItem("accessToken"),
                             },
                             params: { roomIdx: this.state.roomId },
                           }).then((res) => {
-                            alert("파티를 삭제했습니다");
-                            document.location.href = `/`;
+                            this.deletetoggleShow();
                           });
                         }}
                       />
@@ -1087,6 +1098,50 @@ class OpenVideo extends Component {
               </div>
             </div>
           </div>
+        </Modal>
+
+        <Modal
+          show={this.state.show3}
+          className="deletemodal"
+          onHide={this.toggleShow3}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title style={{ "font-family": "star", color: "#FD7A99" }}>
+              PAZAMA
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body
+            style={{ "font-family": "oldpicture", "font-size": "20px" }}
+          >
+            파티가 삭제되었습니다!
+          </Modal.Body>
+          <Modal.Footer>
+            <button
+              style={{
+                border: "none",
+                "font-family": "oldpicture",
+                backgroundColor: "#9D9D9D",
+                color: "white",
+                display: "none",
+              }}
+            >
+              Close
+            </button>
+            <button
+              style={{
+                color: "black",
+                backgroundColor: "#FD7A99",
+                border: "none",
+                "font-family": "oldpicture",
+                "box-shadow": "none",
+              }}
+              onClick={() => {
+                document.location.href = "/";
+              }}
+            >
+              close
+            </button>
+          </Modal.Footer>
         </Modal>
       </div>
     );
