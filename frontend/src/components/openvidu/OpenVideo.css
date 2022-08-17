@@ -5,11 +5,26 @@
 }
 
 .header {
+  position: relative;
   background-color: #ffe9ef;
   display: flex;
   justify-content: space-around;
   align-items: center;
   height: 10vh;
+  z-index: 20;
+}
+Particle1 {
+  position: flex;
+  z-index: -10;
+}
+Particles {
+  position: flex;
+  width: 100%;
+  z-index: -1;
+}
+ParticleEffect {
+  position: flex;
+  z-index: -9;
 }
 
 .navbtn {
@@ -112,6 +127,7 @@
 }
 
 .cake {
+  position: relative;
   text-align: center;
   width: 90%;
   height: 90%;
@@ -124,6 +140,7 @@
 }
 
 .cake1 {
+  position: relative;
   display: none;
   text-align: center;
   width: 100%;
@@ -136,6 +153,7 @@
 }
 
 .candle {
+  position: relative;
   width: 13%;
   height: 35%;
   margin: auto;
@@ -147,11 +165,13 @@
 }
 
 .fire {
+  position: relative;
   width: 100%;
   height: 100%;
 }
 
 .firecss {
+  position: relative;
   margin: auto;
   grid-column-start: 2;
   grid-column-end: 3;
@@ -165,6 +185,7 @@
 }
 
 .firecss1 {
+  position: relative;
   display: none !important;
   margin: auto;
   grid-column-start: 2;
@@ -179,6 +200,7 @@
 }
 
 .candle1 {
+  position: relative;
   display: none;
   width: 85px;
   height: 150px;
@@ -192,6 +214,7 @@
 }
 
 .fire1 {
+  position: relative;
   display: none;
   width: 100%;
   height: 100%;
@@ -326,6 +349,7 @@
   height: 10vh;
   display: flex;
   align-items: center;
+  z-index: 2;
 }
 
 .footer {
@@ -336,6 +360,7 @@
   width: 500px;
   background-color: #d9d9d9;
   border-radius: 30px;
+  z-index: 2;
 }
 
 .chatmodal {
@@ -470,7 +495,7 @@
   justify-content: center;
   align-items: center;
   text-align: center;
-  margin:auto;
+  margin: auto;
   font-size: 45px;
   font-family: "oldpicture";
   background-color: #fd7a99;
