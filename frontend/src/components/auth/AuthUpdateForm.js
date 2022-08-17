@@ -352,6 +352,7 @@ const AuthUpdateForm = () => {
         <Modal.Footer>
           <Button
             style={{
+              display: "none",
               border: "none",
               "font-family": "oldpicture",
               backgroundColor: "#9D9D9D",
@@ -373,7 +374,7 @@ const AuthUpdateForm = () => {
               document.location.href = "/";
             }}
           >
-            로그인
+            확인
           </Button>
         </Modal.Footer>
       </Modal>
