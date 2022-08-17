@@ -1,12 +1,15 @@
 package com.c203.api.service;
 
 import com.c203.api.dto.User.*;
+import com.c203.db.Entity.Feed;
+import com.c203.db.Entity.Room;
 import com.c203.db.Entity.User;
-import com.c203.db.Repository.UserRepository;
+import com.c203.db.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -14,6 +17,14 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private RoomRepository roomRepository;
+    @Autowired
+    private RoomDecoRepository roomDecoRepository;
+    @Autowired
+    private FeedRepository feedRepository;
+    @Autowired
+    private ParticipantRepository participantRepository;
     @Override
     public boolean loginUser(UserLoginDto userLoginDto) {
         Optional<User> res = userRepository.findByUserEmailAndUserPwd(userLoginDto.getEmail(), userLoginDto.getPwd());
@@ -78,6 +89,15 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public boolean deleteUser(String decodeEmail) {
+        // 사용자가 호스트인 방, 방데코 모두 삭제
+        List<Room> list = roomRepository.findByRoomHost(decodeEmail);
+        int size = list.size();
+        for(int i=0;i<size;i++){
+            Room room = list.get(i);
+            int idx = room.getRoomIdx();
+            roomRepository.deleteByRoomIdxAndRoomHost(idx, decodeEmail);
+            roomDecoRepository.deleteByRoomdecoIdx(idx);
+        }
         userRepository.deleteByUserEmail(decodeEmail);
         return true;
     }
