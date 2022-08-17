@@ -70,7 +70,9 @@ class OpenVideo extends Component {
     this.animationInstance = null;
 
     this.state = {
-      mySessionId: props.roomIdx.slice(0, props.roomIdx.length - 6).replace("%", ""),
+      mySessionId: props.roomIdx
+        .slice(0, props.roomIdx.length - 6)
+        .replace("%", ""),
       myUserName: "temp",
       session: undefined,
       mainStreamManager: undefined,
