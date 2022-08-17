@@ -75,7 +75,7 @@ class OpenVideo extends Component {
     this.state = {
       mySessionId: props.roomIdx
         .slice(0, props.roomIdx.length - 6)
-        .replace("%2F", ""),
+        .replace("%", ""),
       myUserName: "temp",
       session: undefined,
       mainStreamManager: undefined,
