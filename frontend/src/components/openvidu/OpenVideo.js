@@ -793,7 +793,8 @@ class OpenVideo extends Component {
               <img
                 src="/pazamafont.png"
                 alt="pajama logo"
-                style={{ width: "200px", height: "100px" }}
+                style={{ width: "200px", height: "100px", "cursor":"pointer" }}
+                onClick={()=>{document.location.href="/"}}
               />
             </div>
             <div id="join-dialog" className="jumbotron vertical-center">
@@ -804,17 +805,40 @@ class OpenVideo extends Component {
                 <div id="bu"></div>
                 <br></br>
                 {this.state.partyHost === this.state.myEmail && this.state.partyHost != "" ? (
-                  <p className="text-center">
-                    <input
-                      className="joinbtn"
-                      name="commit"
-                      type="button"
-                      value="파티수정"
-                      onClick={() => {
-                        document.location.href = `/updateparty/${validURL}`;
-                      }}
-                    />
-                  </p>
+                  <div>
+                    <p className="text-center">
+                      <input
+                        className="joinbtn"
+                        name="commit"
+                        type="button"
+                        value="파티수정"
+                        onClick={() => {
+                          document.location.href = `/updateparty/${validURL}`;
+                        }}
+                      />
+                    </p>
+                    <p className="text-center">
+                      <input
+                        className="joinbtn"
+                        name="commit"
+                        type="button"
+                        value="파티삭제"
+                        onClick={() => {
+                          axios({
+                            url: "https://i7c203.p.ssafy.io/api/rooms",
+                            method: "delete",
+                            headers: {
+                              accessToken: sessionStorage.getItem("accessToken"),
+                            },
+                            params: { roomIdx: this.state.roomId },
+                          }).then((res) => {
+                            alert("파티를 삭제했습니다");
+                            document.location.href = `/`;
+                          });
+                        }}
+                      />
+                    </p>
+                  </div>
                 ) : null}
               </form>
             </div>
