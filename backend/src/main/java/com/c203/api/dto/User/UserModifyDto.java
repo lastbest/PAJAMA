@@ -12,5 +12,5 @@ public class UserModifyDto {
     private String nickname;
     private String tel;
     private String pwd;
-
+    private String name;
 }
