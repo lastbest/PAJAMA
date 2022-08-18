@@ -29,6 +29,7 @@ import Music from "./../common/Music";
 import b64toBlob from "b64-to-blob";
 import Particle from "./Particle";
 import ParticleEffect from "./ParticleEffect";
+import { BrowserView, MobileView } from 'react-device-detect';
 
 tfjsWasm.setWasmPaths(
   `https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm@${tfjsWasm.version_wasm}/dist/`
@@ -832,13 +833,15 @@ class OpenVideo extends Component {
 
     return (
       <div>
+        <BrowserView>
+        
         {this.state.session === undefined ? (
           <div id="join">
             <div id="img-div">
               <img
                 src="/pazamafont.png"
                 alt="pajama logo"
-                style={{ width: "200px", height: "100px", cursor: "pointer" }}
+                style={{ width: "200px", height: "100px", cursor: "pointer","marginLeft":"1rem","marginTop":"1rem" }}
                 onClick={() => {
                   document.location.href = "/";
                 }}
@@ -859,6 +862,7 @@ class OpenVideo extends Component {
                         name="commit"
                         type="button"
                         value="파티수정"
+                        style={{"backgroundColor":"#FFE9EF"}}
                         onClick={() => {
                           document.location.href = `/updateparty/${validURL}`;
                         }}
@@ -870,6 +874,7 @@ class OpenVideo extends Component {
                         name="commit"
                         type="button"
                         value="파티삭제"
+                        style={{"backgroundColor":"#FFE9EF"}}
                         onClick={() => {
                           axios({
                             url: "https://i7c203.p.ssafy.io/api/rooms",
@@ -892,6 +897,73 @@ class OpenVideo extends Component {
         ) : (
           <div></div>
         )}
+        </BrowserView>
+
+        <MobileView>
+        {this.state.session === undefined ? (
+          <div id="join">
+            <div id="img-div">
+              <img
+                src="/pazamafont.png"
+                alt="pajama logo"
+                style={{ width: "120px", height: "60px", cursor: "pointer","marginLeft":"1rem","marginTop":"1rem" }}
+                onClick={() => {
+                  document.location.href = "/";
+                }}
+              />
+            </div>
+            <div id="join-dialog" className="jumbotron vertical-center">
+              <form className="form-group" onSubmit={this.joinSession}>
+                <div className="nameDiv" style={{"fontSize":"50px"}}>{this.state.partyName}</div>
+                <div className="descDiv" style={{"fontSize":"40px"}}>{this.state.partyDesc}</div>
+                <div id="counter" className="counter" style={{width:"100%", "fontSize":"30px","marginBottom":"1rem"}}></div>
+                <div id="bu"></div>
+                <br></br>
+                {this.state.partyHost === this.state.myEmail && this.state.partyHost != "" ? (
+                  <div>
+                    <p className="text-center">
+                      <input
+                        className="joinbtn"
+                        name="commit"
+                        type="button"
+                        value="파티수정"
+                        onClick={() => {
+                          document.location.href = `/updateparty/${validURL}`;
+                        }}
+                        style={{fontSize:"20px","width":"100px", "height":"55px","backgroundColor":"#FFE9EF"}}
+                      />
+                    </p>
+                    <p className="text-center">
+                      <input
+                        className="joinbtn"
+                        name="commit"
+                        type="button"
+                        value="파티삭제"
+                        style={{fontSize:"20px","width":"100px", "height":"55px","backgroundColor":"#FFE9EF"}}
+                        onClick={() => {
+                          axios({
+                            url: "https://i7c203.p.ssafy.io/api/rooms",
+                            method: "delete",
+                            headers: {
+                              accessToken: sessionStorage.getItem("accessToken"),
+                            },
+                            params: { roomIdx: this.state.roomId },
+                          }).then((res) => {
+                            this.deletetoggleShow();
+                          });
+                        }}
+                      />
+                    </p>
+                  </div>
+                ) : null}
+              </form>
+            </div>
+          </div>
+        ) : (
+          <div></div>
+        )}
+
+        </MobileView>
 
         {this.state.session !== undefined ? (
           <div className="partyroom">
