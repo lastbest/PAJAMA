@@ -334,7 +334,7 @@ class Camera extends Component {
       return "test";
     }
 
-    if (hand_cake_motion >= 4) {
+    if (hand_cake_motion >= 3) {
       hand_timer = 0;
       test_hand = 0;
       hand_cake_motion = 0; // hand_flip_cnt = 0;
