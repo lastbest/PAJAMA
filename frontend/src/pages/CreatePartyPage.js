@@ -17,6 +17,7 @@ const CreateBtn = styled.div`
 `;
 
 const StyledBtn = styled.button`
+  color:black;
   text-align: center;
   width: 200px;
   height: 70px;
