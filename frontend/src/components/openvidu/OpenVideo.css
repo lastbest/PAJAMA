@@ -343,6 +343,13 @@ ParticleEffect {
   height: 60px;
   display: inline;
   color:black;
+  text-align: center;
+}
+
+@media (max-width: 426px) {
+  .joinbtn {
+    font-size: 20px;
+  }
 }
 
 .main-footer {
