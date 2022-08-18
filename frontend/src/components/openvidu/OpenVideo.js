@@ -99,6 +99,7 @@ class OpenVideo extends Component {
       fileName: "",
       countCompleted: true,
       count: 0,
+      tempBg: "",
     };
     this.props.setCake("false");
 
@@ -141,6 +142,7 @@ class OpenVideo extends Component {
           partyBg: "/frame" + (res.data.result.partyBg + 1) + ".png",
           partyCake: "/cake" + (res.data.result.partyCake + 1) + ".png",
           partyCandle: "/candle" + (res.data.result.partyCandle + 1) + ".png",
+          tempBg: "/frame" + (res.data.result.partyBg + 1) + ".png",
         });
         if (this.state.partyHost == this.state.myEmail) {
           this.setState((state) => ({ isHost: true }));
@@ -371,15 +373,48 @@ class OpenVideo extends Component {
         //모션인식 받는 부분
         mySession.on("signal:motion", (event) => {
           let chatdata = event.data.split(",");
+          let prevbg = this.state.partyBg;
           switch (chatdata[1]) {
             case "hand-v":
+              // if (prevbg != this.state.tempBg) break;
+              if (this.state.tempBg == "v") break;
+              this.setState({
+                tempBg: "v",
+              });
+              setTimeout(() => {
+                if (this.state.tempBg == "v")
+                  this.setState({
+                    tempBg: prevbg,
+                  });
+              }, 5000);
               break;
             case "hand-heart":
+              // if (prevbg != this.state.tempBg) break;
+              if (this.state.tempBg == "heart") break;
+              this.setState({
+                tempBg: "heart",
+              });
+              setTimeout(() => {
+                if (this.state.tempBg == "heart")
+                  this.setState({
+                    tempBg: prevbg,
+                  });
+              }, 5000);
               break;
             case "hand-flip":
               this.confetti();
               break;
             case "hand-one":
+              if (this.state.tempBg == "one") break;
+              this.setState({
+                tempBg: "one",
+              });
+              setTimeout(() => {
+                if (this.state.tempBg == "one")
+                  this.setState({
+                    tempBg: prevbg,
+                  });
+              }, 5000);
               break;
             case "fire-off":
               this.setState({
@@ -959,7 +994,7 @@ class OpenVideo extends Component {
                 backgroundImage: "url(" + `${this.state.partyBg}` + ")",
               }}
             >
-              <Particle bg={this.state.partyBg} />
+              <Particle bg={this.state.tempBg} />
               <div id="main-container" className={Main}>
                 {this.state.mainStreamManager !== undefined ? (
                   <div id="main-video" className="main-video">
