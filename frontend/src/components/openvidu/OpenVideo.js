@@ -862,7 +862,7 @@ class OpenVideo extends Component {
                         name="commit"
                         type="button"
                         value="파티수정"
-                        style={{"backgroundColor":"#FFE9EF"}}
+                        style={{"backgroundColor":"#FFE9EF",'textAlign':"center"}}
                         onClick={() => {
                           document.location.href = `/updateparty/${validURL}`;
                         }}
@@ -874,7 +874,7 @@ class OpenVideo extends Component {
                         name="commit"
                         type="button"
                         value="파티삭제"
-                        style={{"backgroundColor":"#FFE9EF"}}
+                        style={{"backgroundColor":"#FFE9EF",'textAlign':"center"}}
                         onClick={() => {
                           axios({
                             url: "https://i7c203.p.ssafy.io/api/rooms",
@@ -916,7 +916,7 @@ class OpenVideo extends Component {
               <form className="form-group" onSubmit={this.joinSession}>
                 <div className="nameDiv" style={{"fontSize":"50px"}}>{this.state.partyName}</div>
                 <div className="descDiv" style={{"fontSize":"40px"}}>{this.state.partyDesc}</div>
-                <div id="counter" className="counter" style={{width:"100%", "fontSize":"30px","marginBottom":"1rem"}}></div>
+                <div id="counter" className="counter" style={{width:"100%", "fontSize":"30px","marginBottom":"1rem",'textAlign':"center"}}></div>
                 <div id="bu"></div>
                 <br></br>
                 {this.state.partyHost === this.state.myEmail && this.state.partyHost != "" ? (
@@ -930,7 +930,7 @@ class OpenVideo extends Component {
                         onClick={() => {
                           document.location.href = `/updateparty/${validURL}`;
                         }}
-                        style={{fontSize:"20px","width":"100px", "height":"55px","backgroundColor":"#FFE9EF"}}
+                        style={{fontSize:"17px","width":"120px", "height":"55px","backgroundColor":"#FFE9EF",'textAlign':"center"}}
                       />
                     </p>
                     <p className="text-center">
@@ -939,7 +939,7 @@ class OpenVideo extends Component {
                         name="commit"
                         type="button"
                         value="파티삭제"
-                        style={{fontSize:"20px","width":"100px", "height":"55px","backgroundColor":"#FFE9EF"}}
+                        style={{fontSize:"17px","width":"120px", "height":"55px","backgroundColor":"#FFE9EF"}}
                         onClick={() => {
                           axios({
                             url: "https://i7c203.p.ssafy.io/api/rooms",
