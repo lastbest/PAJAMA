@@ -70,9 +70,7 @@ class OpenVideo extends Component {
     this.animationInstance = null;
 
     this.state = {
-      mySessionId: props.roomIdx
-        .slice(0, props.roomIdx.length - 6)
-        .replace("%", ""),
+      mySessionId: props.roomIdx.slice(0, props.roomIdx.length - 6).replace(/%/g, ""),
       myUserName: "temp",
       session: undefined,
       mainStreamManager: undefined,
@@ -805,8 +803,10 @@ class OpenVideo extends Component {
               <img
                 src="/pazamafont.png"
                 alt="pajama logo"
-                style={{ width: "200px", height: "100px", "cursor":"pointer" }}
-                onClick={()=>{document.location.href="/"}}
+                style={{ width: "200px", height: "100px", cursor: "pointer" }}
+                onClick={() => {
+                  document.location.href = "/";
+                }}
               />
             </div>
             <div id="join-dialog" className="jumbotron vertical-center">
@@ -816,8 +816,7 @@ class OpenVideo extends Component {
                 <div id="counter" className="counter"></div>
                 <div id="bu"></div>
                 <br></br>
-                {this.state.partyHost === this.state.myEmail &&
-                this.state.partyHost != "" ? (
+                {this.state.partyHost === this.state.myEmail && this.state.partyHost != "" ? (
                   <div>
                     <p className="text-center">
                       <input
@@ -841,8 +840,7 @@ class OpenVideo extends Component {
                             url: "https://i7c203.p.ssafy.io/api/rooms",
                             method: "delete",
                             headers: {
-                              accessToken:
-                                sessionStorage.getItem("accessToken"),
+                              accessToken: sessionStorage.getItem("accessToken"),
                             },
                             params: { roomIdx: this.state.roomId },
                           }).then((res) => {
@@ -1103,19 +1101,11 @@ class OpenVideo extends Component {
           </div>
         </Modal>
 
-        <Modal
-          show={this.state.show3}
-          className="deletemodal"
-          onHide={this.toggleShow3}
-        >
+        <Modal show={this.state.show3} className="deletemodal" onHide={this.toggleShow3}>
           <Modal.Header closeButton>
-            <Modal.Title style={{ "font-family": "star", color: "#FD7A99" }}>
-              PAZAMA
-            </Modal.Title>
+            <Modal.Title style={{ "font-family": "star", color: "#FD7A99" }}>PAZAMA</Modal.Title>
           </Modal.Header>
-          <Modal.Body
-            style={{ "font-family": "oldpicture", "font-size": "20px" }}
-          >
+          <Modal.Body style={{ "font-family": "oldpicture", "font-size": "20px" }}>
             파티가 삭제되었습니다!
           </Modal.Body>
           <Modal.Footer>
