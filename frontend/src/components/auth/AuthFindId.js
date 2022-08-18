@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import Button from "../common/Button";
 import axios from "axios";
 import { useState } from "react";
-import Modal from 'react-bootstrap/Modal';
+import Modal from "react-bootstrap/Modal";
 
 const AuthFormBlock = styled.div`
   h3 {
@@ -20,12 +20,13 @@ const StyledInput = styled.input`
   font-size: 1rem;
   border: none;
   border-bottom: 1px solid #ffe9ef;
+  padding-left: 10px;
   padding-top: 0.7rem;
   padding-bottom: 0.7rem;
   outline: none;
   width: 100%;
   display: flex;
-  font-family:"oldpicture";
+  font-family: "oldpicture";
   &:focus {
     color: $oc-teal-7;
     border-bottom: 1px solid #fd7a99;
@@ -63,10 +64,10 @@ const ButtonWithMarinTop = styled(Button)`
 `;
 
 const AuthFindId = () => {
-  const [show1, setShow1] = useState(false);  //아이디찾기 성공
+  const [show1, setShow1] = useState(false); //아이디찾기 성공
   const handleClose1 = () => setShow1(false);
   const handleShow1 = () => setShow1(true);
-  const [show2, setShow2] = useState(false);  //아이디찾기 실패
+  const [show2, setShow2] = useState(false); //아이디찾기 실패
   const handleClose2 = () => setShow2(false);
   const handleShow2 = () => setShow2(true);
   let [FindId, setFindId] = useState("");
@@ -80,7 +81,7 @@ const AuthFindId = () => {
         <StyledInput
           autoComplete="tel"
           name="tel"
-          placeholder=" 전화번호"
+          placeholder="전화번호"
           onInput={(event) => {
             setTel(event.target.value);
           }}
@@ -97,7 +98,7 @@ const AuthFindId = () => {
               params: { tel: tel },
             })
               .then((res) => {
-                console.log(res.data.result)
+                console.log(res.data.result);
                 setFindId(res.data.result);
                 handleShow1();
               })
@@ -129,18 +130,43 @@ const AuthFindId = () => {
         onHide={handleClose1}
         backdrop="static"
         keyboard={false}
-    >
+      >
         <Modal.Header closeButton>
-        <Modal.Title style={{'font-family':'star', 'color':'#FD7A99'}}>PAZAMA</Modal.Title>
+          <Modal.Title style={{ "font-family": "star", color: "#FD7A99" }}>
+            PAZAMA
+          </Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{'font-family':'oldpicture', 'font-size':'20px'}}>
+        <Modal.Body
+          style={{ "font-family": "oldpicture", "font-size": "20px" }}
+        >
           가입된 이메일은 {FindId} 입니다.
         </Modal.Body>
         <Modal.Footer>
-        <Button style={{'border':'none','font-family':'oldpicture', 'backgroundColor':'#9D9D9D', 'color':'white',}} onClick={handleClose1}>
+          <Button
+            style={{
+              border: "none",
+              "font-family": "oldpicture",
+              backgroundColor: "#9D9D9D",
+              color: "white",
+            }}
+            onClick={handleClose1}
+          >
             Close
-        </Button>
-        <Button style={{'color':'black', 'backgroundColor':'#FD7A99', 'border':'none','font-family':'oldpicture', 'box-shadow':'none' }} onClick={()=>{document.location.href='/login'}}>로그인</Button>
+          </Button>
+          <Button
+            style={{
+              color: "black",
+              backgroundColor: "#FD7A99",
+              border: "none",
+              "font-family": "oldpicture",
+              "box-shadow": "none",
+            }}
+            onClick={() => {
+              document.location.href = "/login";
+            }}
+          >
+            로그인
+          </Button>
         </Modal.Footer>
       </Modal>
 
@@ -151,22 +177,32 @@ const AuthFindId = () => {
         onHide={handleClose2}
         backdrop="static"
         keyboard={false}
-    >
+      >
         <Modal.Header closeButton>
-        <Modal.Title style={{'font-family':'star', 'color':'#FD7A99'}}>PAZAMA</Modal.Title>
+          <Modal.Title style={{ "font-family": "star", color: "#FD7A99" }}>
+            PAZAMA
+          </Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{'font-family':'oldpicture', 'font-size':'20px'}}>
-        전화번호를 확인해주세요.
+        <Modal.Body
+          style={{ "font-family": "oldpicture", "font-size": "20px" }}
+        >
+          전화번호를 확인해주세요.
         </Modal.Body>
         <Modal.Footer>
-        <Button style={{'border':'none','font-family':'oldpicture', 'backgroundColor':'#9D9D9D', 'color':'white',}} onClick={handleClose2}>
+          <Button
+            style={{
+              border: "none",
+              "font-family": "oldpicture",
+              backgroundColor: "#9D9D9D",
+              color: "white",
+            }}
+            onClick={handleClose2}
+          >
             Close
-        </Button>
+          </Button>
         </Modal.Footer>
       </Modal>
     </AuthFormBlock>
-    
-    
   );
 };
 

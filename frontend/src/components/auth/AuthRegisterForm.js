@@ -20,6 +20,7 @@ const StyledInput = styled.input`
   font-size: 1rem;
   border: none;
   border-bottom: 1px solid #ffe9ef;
+  padding-left: 10px;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   margin-bottom: 1rem;
@@ -280,7 +281,7 @@ const AuthRegisterForm = () => {
               name="userEmail"
               disabled="disabled"
               id="userEmail"
-              placeholder=" 이메일"
+              placeholder="이메일"
               onInput={(event) => {
                 setUserEmail(event.target.value);
               }}
@@ -303,7 +304,7 @@ const AuthRegisterForm = () => {
               autoComplete="userEmail"
               name="userEmail"
               id="userEmail"
-              placeholder=" 이메일"
+              placeholder="이메일"
               onInput={(event) => {
                 setUserEmail(event.target.value);
               }}
@@ -378,7 +379,7 @@ const AuthRegisterForm = () => {
           <StyledInput
             autoComplete="userEmailCheck"
             name="userEmailCheck"
-            placeholder=" 이메일 인증번호"
+            placeholder="이메일 인증번호"
             type="emailcheck"
             onInput={(event) => {
               event.preventDefault();
@@ -432,7 +433,7 @@ const AuthRegisterForm = () => {
         <StyledInput
           autoComplete="current-password"
           name="password"
-          placeholder=" 비밀번호"
+          placeholder="비밀번호"
           type="password"
           onInput={(event) => {
             setPassword1(event.target.value);
@@ -442,7 +443,7 @@ const AuthRegisterForm = () => {
         <StyledInput
           autoComplete="new-password"
           name="passwordConfirm"
-          placeholder=" 비밀번호 확인"
+          placeholder="비밀번호 확인"
           type="password"
           onChange={(event) => {
             setPassword2(event.target.value);
@@ -452,7 +453,7 @@ const AuthRegisterForm = () => {
         <StyledInput
           autoComplete="userName"
           name="userName"
-          placeholder=" 이름"
+          placeholder="이름"
           required
           onInput={(event) => {
             setUserName(event.target.value);
@@ -461,7 +462,7 @@ const AuthRegisterForm = () => {
         <StyledInput
           autoComplete="tel"
           name="tel"
-          placeholder=" 전화번호 ex) 010XXXXXXXX"
+          placeholder='전화번호 ("-"없이 숫자만 입력)'
           onInput={(event) => {
             setTel(event.target.value);
           }}
@@ -470,7 +471,7 @@ const AuthRegisterForm = () => {
         <StyledInput
           autoComplete="userNickname"
           name="userNickname"
-          placeholder=" 닉네임"
+          placeholder="닉네임"
           onInput={(event) => {
             setUserNickname(event.target.value);
           }}

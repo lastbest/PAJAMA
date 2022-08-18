@@ -20,6 +20,7 @@ const StyledInput = styled.input`
   font-size: 1rem;
   border: none;
   border-bottom: 1px solid #ffe9ef;
+  padding-left: 10px;
   padding-top: 0.7rem;
   padding-bottom: 0.7rem;
   outline: none;
@@ -80,7 +81,7 @@ const AuthForm = () => {
         <StyledInput
           autoComplete="username"
           name="username"
-          placeholder=" 이메일"
+          placeholder="이메일"
           onInput={(event) => {
             setUserEmail(event.target.value);
           }}
@@ -88,7 +89,7 @@ const AuthForm = () => {
         <StyledInput
           autoComplete="current-password"
           name="password"
-          placeholder=" 비밀번호"
+          placeholder="비밀번호"
           type="password"
           onInput={(event) => {
             setPassword(event.target.value);
