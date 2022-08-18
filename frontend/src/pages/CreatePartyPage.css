@@ -106,6 +106,7 @@
 
 .itemBox {
   position: relative;
+  margin: auto;
 }
 
 .pointer:hover {

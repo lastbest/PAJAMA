@@ -227,7 +227,7 @@ const CreatePartyPage = () => {
                 <img
                   className="pointer"
                   src="/frame1.png"
-                  style={{ width: "250px" }}
+                  style={{ width: "100%" }}
                   onClick={() => {
                     setPartyBg(0);
                   }}
@@ -245,7 +245,7 @@ const CreatePartyPage = () => {
                 <img
                   className="pointer"
                   src="/frame2.png"
-                  style={{ width: "250px" }}
+                  style={{ width: "100%" }}
                   onClick={() => {
                     setPartyBg(1);
                   }}
@@ -263,7 +263,7 @@ const CreatePartyPage = () => {
                 <img
                   className="pointer"
                   src="/frame3.png"
-                  style={{ width: "250px" }}
+                  style={{ width: "100%" }}
                   onClick={() => {
                     setPartyBg(2);
                   }}
@@ -285,7 +285,7 @@ const CreatePartyPage = () => {
                 <img
                   className="pointer"
                   src="/cake1.png"
-                  style={{ width: "160px" }}
+                  style={{ width: "100%" }}
                   onClick={() => {
                     setPartyCake(0);
                   }}
@@ -303,7 +303,7 @@ const CreatePartyPage = () => {
                 <img
                   className="pointer"
                   src="/cake2.png"
-                  style={{ width: "160px" }}
+                  style={{ width: "80%" }}
                   onClick={() => {
                     setPartyCake(1);
                   }}
@@ -325,7 +325,7 @@ const CreatePartyPage = () => {
                 <img
                   className="pointer"
                   src="/candle1.png"
-                  style={{ width: "100px", height: "130px" }}
+                  style={{ width: "100%"}}
                   onClick={() => {
                     setPartyCandle(0);
                   }}
@@ -343,7 +343,7 @@ const CreatePartyPage = () => {
                 <img
                   className="pointer"
                   src="/candle2.png"
-                  style={{ width: "100px", height: "130px" }}
+                  style={{ width: "100%"}}
                   onClick={() => {
                     setPartyCandle(1);
                   }}
@@ -361,7 +361,7 @@ const CreatePartyPage = () => {
                 <img
                   className="pointer"
                   src="/candle3.png"
-                  style={{ width: "100px", height: "130px" }}
+                  style={{ width: "100%"}}
                   onClick={() => {
                     setPartyCandle(2);
                   }}
