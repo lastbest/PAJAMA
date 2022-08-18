@@ -22,8 +22,7 @@ function MyPage() {
         setNickname(res.data.result.nickname);
       })
       .catch(() => {
-        alert("불러오기 실패");
-        navigate("/login");
+        document.location.href = "/NotFound";
       });
   }, []);
 
@@ -43,7 +42,7 @@ function MyPage() {
         console.log(keys);
       })
       .catch((err) => {
-        console.log(err);
+        document.location.href = "/NotFound";
       });
   }, []);
 
