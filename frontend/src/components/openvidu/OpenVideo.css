@@ -342,7 +342,8 @@ ParticleEffect {
   width: 130px;
   height: 60px;
   display: inline;
-} 
+  color:black;
+}
 
 .main-footer {
   width: 100%;

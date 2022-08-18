@@ -20,6 +20,7 @@ const StyledInput = styled.input`
   font-size: 1rem;
   border: none;
   border-bottom: 1px solid #ffe9ef;
+  padding-left: 10px;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   margin-bottom: 1rem;
@@ -182,7 +183,7 @@ const AuthUpdateForm = () => {
             <StyledInput
               autoComplete="email"
               name="email"
-              placeholder=" 이메일"
+              placeholder="이메일"
               type="email"
               onInput={(event) => {
                 setEmail(event.target.value);
@@ -194,7 +195,7 @@ const AuthUpdateForm = () => {
           <StyledInput
             autoComplete="current-password"
             name="password"
-            placeholder=" 비밀번호"
+            placeholder="비밀번호"
             type="password"
             onInput={(event) => {
               setPwd1(event.target.value);
@@ -204,7 +205,7 @@ const AuthUpdateForm = () => {
           <StyledInput
             autoComplete="new-password"
             name="passwordConfirm"
-            placeholder=" 비밀번호 확인"
+            placeholder="비밀번호 확인"
             type="password"
             onChange={(event) => {
               setPaw2(event.target.value);
@@ -214,7 +215,7 @@ const AuthUpdateForm = () => {
           <StyledInput
             autoComplete="name"
             name="name"
-            placeholder=" 이름"
+            placeholder="이름"
             onInput={(event) => {
               setName(event.target.value);
             }}
@@ -224,7 +225,7 @@ const AuthUpdateForm = () => {
           <StyledInput
             autoComplete="tel"
             name="tel"
-            placeholder=" 전화번호"
+            placeholder="전화번호"
             onInput={(event) => {
               setTel(event.target.value);
             }}
@@ -234,7 +235,7 @@ const AuthUpdateForm = () => {
           <StyledInput
             autoComplete="nickname"
             name="nickname"
-            placeholder=" 닉네임"
+            placeholder="닉네임"
             onInput={(event) => {
               setNickname(event.target.value);
             }}

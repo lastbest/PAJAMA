@@ -20,6 +20,7 @@ const Header = styled.div`
 `;
 
 const StyledBtn = styled.button`
+  color:black;
   width: 100px;
   height: 70px;
   border: none;
