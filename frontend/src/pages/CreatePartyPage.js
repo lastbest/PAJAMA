@@ -10,7 +10,7 @@ import axios from "axios";
 import { FiCheckCircle } from "react-icons/fi";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
-import { BrowserView, MobileView } from 'react-device-detect';
+import { BrowserView, MobileView } from "react-device-detect";
 
 const CreateBtn = styled.div`
   display: flex;
@@ -18,7 +18,7 @@ const CreateBtn = styled.div`
 `;
 
 const StyledBtn = styled.button`
-  color:black;
+  color: black;
   text-align: center;
   width: 200px;
   height: 70px;
@@ -104,7 +104,7 @@ const CreateFormBlockMobile = styled.div`
   .item5 {
     margin-bottom: 2rem;
   }
-  
+
   .itemBox {
     margin-bottom: 1rem;
   }
@@ -191,235 +191,18 @@ const CreatePartyPage = () => {
       .then((res) => {
         setMyEmail(res.data.result.email);
         console.log("회원정보 불러오기 성공");
-        console.log(res);
-        console.log(this.state.myUserName);
       })
-      .catch(() => {});
+      .catch(() => {
+        document.location.href = "/NotFound";
+      });
   }, []);
   return (
     <>
       <NavBar></NavBar>
 
       <BrowserView>
-
-      <div class="container">
-        <CreateFormBlock>
-          <div class="item1">
-            <h5>파티 이름</h5>
-            <StyledInput
-              onInput={(e) => {
-                setPartyName(e.target.value);
-              }}
-              autoComplete="partyname"
-              name="partyname"
-              placeholder=" PARTY NAME"
-            />
-          </div>
-          <div class="item2">
-            <h5>날짜 선택</h5>
-            <DatePicker
-              className="pointer"
-              selected={partyDate}
-              onChange={(date) => setPartyDate(date)}
-              showTimeSelect
-              timeFormat="HH:mm"
-              timeIntervals={5}
-              timeCaption="Time"
-              dateFormat="yyyy/MM/dd eee, aa h:mm"
-              locale={ko}
-              minDate={new Date()}
-              customInput={
-                <Form.Control
-                  as="textarea"
-                  rows={1}
-                  style={{ width: "250px" }}
-                />
-              }
-            />
-          </div>
-          <div class="item3">
-            <h5>파티 내용</h5>
-            <StyledTextArea
-              onInput={(e) => {
-                setPartyDesc(e.target.value);
-              }}
-              autoComplete="partydetail"
-              name="partydetail"
-              placeholder=" PARTY DETAIL"
-            />
-          </div>
-          <div class="item4">
-            <h5>배경 선택</h5>
-            <Pinkbox className="d-flex justify-content-around">
-              <input
-                type="radio"
-                name="back"
-                id="back0"
-                className="input-hidden"
-              />
-              <label className="itemBox" for="back0">
-                <img
-                  alt="frame1"
-                  className="pointer"
-                  src="/frame1.png"
-                  style={{ width: "100%" }}
-                  onClick={() => {
-                    setPartyBg(0);
-                  }}
-                ></img>
-                <FiCheckCircle id="itemImg" className="backCheckIcon" />
-              </label>
-
-              <input
-                type="radio"
-                name="back"
-                id="back1"
-                className="input-hidden"
-              />
-              <label className="itemBox" for="back1">
-                <img
-                  className="pointer"
-                  alt = 'frame2'
-                  src="/frame2.png"
-                  style={{ width: "100%" }}
-                  onClick={() => {
-                    setPartyBg(1);
-                  }}
-                ></img>
-                <FiCheckCircle id="itemImg" className="backCheckIcon" />
-              </label>
-
-              <input
-                type="radio"
-                name="back"
-                id="back2"
-                className="input-hidden"
-              />
-              <label className="itemBox" for="back2">
-                <img
-                  className="pointer"
-                  alt="frame3"
-                  src="/frame3.png"
-                  style={{ width: "100%" }}
-                  onClick={() => {
-                    setPartyBg(2);
-                  }}
-                ></img>
-                <FiCheckCircle id="itemImg" className="backCheckIcon" />
-              </label>
-            </Pinkbox>
-          </div>
-          <div class="item5">
-            <h5>케이크 선택</h5>
-            <Pinkbox className="d-flex justify-content-between">
-              <input
-                type="radio"
-                name="cake"
-                id="cake0"
-                className="input-hidden"
-              />
-              <label className="itemBox" for="cake0">
-                <img
-                  className="pointer"
-                  alt="cake1"
-                  src="/cake1.png"
-                  style={{ width: "100%" }}
-                  onClick={() => {
-                    setPartyCake(0);
-                  }}
-                ></img>
-                <FiCheckCircle id="itemImg" className="cake0CheckIcon" />
-              </label>
-
-              <input
-                type="radio"
-                name="cake"
-                id="cake1"
-                className="input-hidden"
-              />
-              <label className="itemBox" for="cake1">
-                <img
-                  className="pointer"
-                  alt="cake2"
-                  src="/cake2.png"
-                  style={{ width: "80%" }}
-                  onClick={() => {
-                    setPartyCake(1);
-                  }}
-                ></img>
-                <FiCheckCircle id="itemImg" className="cake1CheckIcon" />
-              </label>
-            </Pinkbox>
-          </div>
-          <div class="item6">
-            <h5>초 선택</h5>
-            <Pinkbox className="d-flex justify-content-around align-items-center">
-              <input
-                type="radio"
-                name="candle"
-                id="candle0"
-                className="input-hidden"
-              />
-              <label className="itemBox" for="candle0">
-                <img
-                  className="pointer"
-                  alt="candle1"
-                  src="/candle1.png"
-                  style={{ width: "100%"}}
-                  onClick={() => {
-                    setPartyCandle(0);
-                  }}
-                ></img>
-                <FiCheckCircle id="itemImg" className="candle0CheckIcon" />
-              </label>
-
-              <input
-                type="radio"
-                name="candle"
-                id="candle1"
-                className="input-hidden"
-              />
-              <label className="itemBox" for="candle1">
-                <img
-                  className="pointer"
-                  alt="candle2"
-                  src="/candle2.png"
-                  style={{ width: "100%"}}
-                  onClick={() => {
-                    setPartyCandle(1);
-                  }}
-                ></img>
-                <FiCheckCircle id="itemImg" className="candle1CheckIcon" />
-              </label>
-
-              <input
-                type="radio"
-                name="candle"
-                id="candle2"
-                className="input-hidden"
-              />
-              <label className="itemBox" for="candle2">
-                <img
-                  className="pointer"
-                  alt="candle3"
-                  src="/candle3.png"
-                  style={{ width: "100%"}}
-                  onClick={() => {
-                    setPartyCandle(2);
-                  }}
-                ></img>
-                <FiCheckCircle id="itemImg" className="candle2CheckIcon" />
-              </label>
-            </Pinkbox>
-          </div>
-        </CreateFormBlock>
-      </div>
-
-      </BrowserView>
-      
-      <MobileView>
-      <div className="container" style={{justifyContent:"center"}}>
-          <CreateFormBlockMobile>
+        <div class="container">
+          <CreateFormBlock>
             <div class="item1">
               <h5>파티 이름</h5>
               <StyledInput
@@ -431,19 +214,6 @@ const CreatePartyPage = () => {
                 placeholder=" PARTY NAME"
               />
             </div>
-            
-            <div class="item3">
-              <h5>파티 내용</h5>
-              <StyledTextArea
-                onInput={(e) => {
-                  setPartyDesc(e.target.value);
-                }}
-                autoComplete="partydetail"
-                name="partydetail"
-                placeholder=" PARTY DETAIL"
-              />
-            </div>
-            
             <div class="item2">
               <h5>날짜 선택</h5>
               <DatePicker
@@ -461,15 +231,25 @@ const CreatePartyPage = () => {
                   <Form.Control
                     as="textarea"
                     rows={1}
-                    style={{ width: "100%" }}
+                    style={{ width: "250px" }}
                   />
                 }
               />
             </div>
-
+            <div class="item3">
+              <h5>파티 내용</h5>
+              <StyledTextArea
+                onInput={(e) => {
+                  setPartyDesc(e.target.value);
+                }}
+                autoComplete="partydetail"
+                name="partydetail"
+                placeholder=" PARTY DETAIL"
+              />
+            </div>
             <div class="item4">
               <h5>배경 선택</h5>
-              <Pinkbox className="block">
+              <Pinkbox className="d-flex justify-content-around">
                 <input
                   type="radio"
                   name="back"
@@ -498,7 +278,7 @@ const CreatePartyPage = () => {
                 <label className="itemBox" for="back1">
                   <img
                     className="pointer"
-                    alt = 'frame2'
+                    alt="frame2"
                     src="/frame2.png"
                     style={{ width: "100%" }}
                     onClick={() => {
@@ -584,7 +364,7 @@ const CreatePartyPage = () => {
                     className="pointer"
                     alt="candle1"
                     src="/candle1.png"
-                    style={{ width: "100%"}}
+                    style={{ width: "100%" }}
                     onClick={() => {
                       setPartyCandle(0);
                     }}
@@ -603,7 +383,7 @@ const CreatePartyPage = () => {
                     className="pointer"
                     alt="candle2"
                     src="/candle2.png"
-                    style={{ width: "100%"}}
+                    style={{ width: "100%" }}
                     onClick={() => {
                       setPartyCandle(1);
                     }}
@@ -622,7 +402,225 @@ const CreatePartyPage = () => {
                     className="pointer"
                     alt="candle3"
                     src="/candle3.png"
-                    style={{ width: "100%"}}
+                    style={{ width: "100%" }}
+                    onClick={() => {
+                      setPartyCandle(2);
+                    }}
+                  ></img>
+                  <FiCheckCircle id="itemImg" className="candle2CheckIcon" />
+                </label>
+              </Pinkbox>
+            </div>
+          </CreateFormBlock>
+        </div>
+      </BrowserView>
+
+      <MobileView>
+        <div className="container" style={{ justifyContent: "center" }}>
+          <CreateFormBlockMobile>
+            <div class="item1">
+              <h5>파티 이름</h5>
+              <StyledInput
+                onInput={(e) => {
+                  setPartyName(e.target.value);
+                }}
+                autoComplete="partyname"
+                name="partyname"
+                placeholder=" PARTY NAME"
+              />
+            </div>
+
+            <div class="item3">
+              <h5>파티 내용</h5>
+              <StyledTextArea
+                onInput={(e) => {
+                  setPartyDesc(e.target.value);
+                }}
+                autoComplete="partydetail"
+                name="partydetail"
+                placeholder=" PARTY DETAIL"
+              />
+            </div>
+
+            <div class="item2">
+              <h5>날짜 선택</h5>
+              <DatePicker
+                className="pointer"
+                selected={partyDate}
+                onChange={(date) => setPartyDate(date)}
+                showTimeSelect
+                timeFormat="HH:mm"
+                timeIntervals={5}
+                timeCaption="Time"
+                dateFormat="yyyy/MM/dd eee, aa h:mm"
+                locale={ko}
+                minDate={new Date()}
+                customInput={
+                  <Form.Control
+                    as="textarea"
+                    rows={1}
+                    style={{ width: "100%" }}
+                  />
+                }
+              />
+            </div>
+
+            <div class="item4">
+              <h5>배경 선택</h5>
+              <Pinkbox className="block">
+                <input
+                  type="radio"
+                  name="back"
+                  id="back0"
+                  className="input-hidden"
+                />
+                <label className="itemBox" for="back0">
+                  <img
+                    alt="frame1"
+                    className="pointer"
+                    src="/frame1.png"
+                    style={{ width: "100%" }}
+                    onClick={() => {
+                      setPartyBg(0);
+                    }}
+                  ></img>
+                  <FiCheckCircle id="itemImg" className="backCheckIcon" />
+                </label>
+
+                <input
+                  type="radio"
+                  name="back"
+                  id="back1"
+                  className="input-hidden"
+                />
+                <label className="itemBox" for="back1">
+                  <img
+                    className="pointer"
+                    alt="frame2"
+                    src="/frame2.png"
+                    style={{ width: "100%" }}
+                    onClick={() => {
+                      setPartyBg(1);
+                    }}
+                  ></img>
+                  <FiCheckCircle id="itemImg" className="backCheckIcon" />
+                </label>
+
+                <input
+                  type="radio"
+                  name="back"
+                  id="back2"
+                  className="input-hidden"
+                />
+                <label className="itemBox" for="back2">
+                  <img
+                    className="pointer"
+                    alt="frame3"
+                    src="/frame3.png"
+                    style={{ width: "100%" }}
+                    onClick={() => {
+                      setPartyBg(2);
+                    }}
+                  ></img>
+                  <FiCheckCircle id="itemImg" className="backCheckIcon" />
+                </label>
+              </Pinkbox>
+            </div>
+            <div class="item5">
+              <h5>케이크 선택</h5>
+              <Pinkbox className="d-flex justify-content-between">
+                <input
+                  type="radio"
+                  name="cake"
+                  id="cake0"
+                  className="input-hidden"
+                />
+                <label className="itemBox" for="cake0">
+                  <img
+                    className="pointer"
+                    alt="cake1"
+                    src="/cake1.png"
+                    style={{ width: "100%" }}
+                    onClick={() => {
+                      setPartyCake(0);
+                    }}
+                  ></img>
+                  <FiCheckCircle id="itemImg" className="cake0CheckIcon" />
+                </label>
+
+                <input
+                  type="radio"
+                  name="cake"
+                  id="cake1"
+                  className="input-hidden"
+                />
+                <label className="itemBox" for="cake1">
+                  <img
+                    className="pointer"
+                    alt="cake2"
+                    src="/cake2.png"
+                    style={{ width: "80%" }}
+                    onClick={() => {
+                      setPartyCake(1);
+                    }}
+                  ></img>
+                  <FiCheckCircle id="itemImg" className="cake1CheckIcon" />
+                </label>
+              </Pinkbox>
+            </div>
+            <div class="item6">
+              <h5>초 선택</h5>
+              <Pinkbox className="d-flex justify-content-around align-items-center">
+                <input
+                  type="radio"
+                  name="candle"
+                  id="candle0"
+                  className="input-hidden"
+                />
+                <label className="itemBox" for="candle0">
+                  <img
+                    className="pointer"
+                    alt="candle1"
+                    src="/candle1.png"
+                    style={{ width: "100%" }}
+                    onClick={() => {
+                      setPartyCandle(0);
+                    }}
+                  ></img>
+                  <FiCheckCircle id="itemImg" className="candle0CheckIcon" />
+                </label>
+
+                <input
+                  type="radio"
+                  name="candle"
+                  id="candle1"
+                  className="input-hidden"
+                />
+                <label className="itemBox" for="candle1">
+                  <img
+                    className="pointer"
+                    alt="candle2"
+                    src="/candle2.png"
+                    style={{ width: "100%" }}
+                    onClick={() => {
+                      setPartyCandle(1);
+                    }}
+                  ></img>
+                  <FiCheckCircle id="itemImg" className="candle1CheckIcon" />
+                </label>
+
+                <input
+                  type="radio"
+                  name="candle"
+                  id="candle2"
+                  className="input-hidden"
+                />
+                <label className="itemBox" for="candle2">
+                  <img
+                    className="pointer"
+                    alt="candle3"
+                    src="/candle3.png"
+                    style={{ width: "100%" }}
                     onClick={() => {
                       setPartyCandle(2);
                     }}
@@ -634,7 +632,6 @@ const CreatePartyPage = () => {
           </CreateFormBlockMobile>
         </div>
       </MobileView>
-
 
       <CreateBtn>
         <StyledBtn
@@ -669,8 +666,6 @@ const CreatePartyPage = () => {
                   });
               }
             }
-           
-            
           }}
         >
           CREATE PARTY
@@ -693,6 +688,8 @@ const CreatePartyPage = () => {
           style={{ "font-family": "oldpicture", "font-size": "20px" }}
         >
           초대장이 생성되었습니다.
+          <br></br>
+          아래 링크를 복사해서 친구를 초대해 보세요.
           <div>
             <form>
               <textarea
@@ -706,6 +703,21 @@ const CreatePartyPage = () => {
         <Modal.Footer>
           {document.queryCommandSupported("copy") && (
             <>
+              <div>
+                <Button
+                  style={{
+                    backgroundColor: "#Ffa4bd",
+                    border: "none",
+                    "font-family": "oldpicture",
+                    "box-shadow": "none",
+                  }}
+                  onClick={() => {
+                    document.location.href = `/invite/${roomId}`;
+                  }}
+                >
+                  바로참여
+                </Button>
+              </div>
               <div>
                 <Button
                   style={{
@@ -739,23 +751,35 @@ const CreatePartyPage = () => {
       </Modal>
 
       <Modal
-                centered
-                show={show2}
-                onHide={handleClose2}
-                backdrop="static"
-                keyboard={false}
-            >
-                <Modal.Header closeButton>
-                <Modal.Title style={{'font-family':'star'}}>PAZAMA</Modal.Title>
-                </Modal.Header>
-                <Modal.Body style={{'font-family':'oldpicture', 'font-size':'20px'}}>
-                 현재 시간보다 이후 시간을 선택해주세요.
-                </Modal.Body>
-                <Modal.Footer>
-                <Button style={{'color':'black', 'backgroundColor':'#FD7A99', 'border':'none','font-family':'oldpicture', 'box-shadow':'none' }} onClick={handleClose2} >닫기</Button>
-              
-                </Modal.Footer>
-            </Modal>
+        centered
+        show={show2}
+        onHide={handleClose2}
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title style={{ "font-family": "star" }}>PAZAMA</Modal.Title>
+        </Modal.Header>
+        <Modal.Body
+          style={{ "font-family": "oldpicture", "font-size": "20px" }}
+        >
+          현재 시간보다 이후 시간을 선택해주세요.
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            style={{
+              color: "black",
+              backgroundColor: "#FD7A99",
+              border: "none",
+              "font-family": "oldpicture",
+              "box-shadow": "none",
+            }}
+            onClick={handleClose2}
+          >
+            닫기
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };

@@ -75,7 +75,9 @@ const AuthUpdateForm = () => {
         setNickname(res.data.result.nickname);
         console.log(credentials);
       })
-      .catch(() => {});
+      .catch(() => {
+        document.location.href = "/NotFound";
+      });
   }, []);
 
   let [credentials, setCredentials] = useState({
