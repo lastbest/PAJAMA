@@ -102,7 +102,9 @@
   color: #cccccc !important;
 }
 
-
+.react-datepicker__triangle {
+  transform: translate3d(50px,0px,0px) !important;
+}
 
 .itemBox {
   position: relative;
