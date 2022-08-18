@@ -28,7 +28,7 @@ const StyledBtn = styled.button`
   font-family: "BRITANIC";
   outline: none;
   cursor: pointer;
-  color:black;
+  color: black;
   background: #fd7a99;
   &:hover {
     background: #ffa4bd;
@@ -179,7 +179,7 @@ const UpdatePartyPage = () => {
         console.log(partyName);
       })
       .catch(() => {
-        alert("오류");
+        document.location.href = "/NotFound";
       });
   }, []);
   return (
