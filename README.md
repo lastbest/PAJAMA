@@ -123,6 +123,9 @@
 # Ex) [FEAT] * [DIR] : 회원가입 구현, 디렉토리 변경 XXX.Java
 ```
 
+## 배포
+[바로가기](https://lab.ssafy.com/s07-webmobile1-sub1/S07P11C203/-/blob/master/exec/README.md)
+
 ## 💻서비스 화면
 
 ### 메인 페이지
